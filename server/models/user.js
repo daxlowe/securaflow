@@ -1,9 +1,28 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-    first_name: String,
-    last_name: String,
-    email: String,
-});
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model('User', userSchema);
+const userSchema = new Schema(
+    {
+	first_name:
+	{
+	    type: String,
+	    required: true
+	},
+	last_name:
+	{
+	    type: String,
+	    required: true
+	},
+	email:
+	{
+	    type: String,
+	    required: true
+	},
+	groups: [{ type: Schema.Types.ObjectId, ref: 'Group' }], 
+	tickets: [{ type: Schema.Types.ObjectId, ref: 'Ticket' }]
+    }
+);
+
+module.exports = mongoose.model('User', userSchema)
+
