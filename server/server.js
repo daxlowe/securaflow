@@ -1,4 +1,6 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const routes = require('./routes/routes');
 const { auth, requiredScopes } = require('express-oauth2-jwt-bearer');
 
@@ -41,7 +43,19 @@ app.get('/api/private-scoped', checkJwt, checkScopes, function(req, res) {
 
 // ... setup other middleware, error handling, etc.
 
+
+// Connecting to DB and Listening for requests
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const MONGO_URI = process.env.MONGO_URI;
+mongoose.connect(MONGO_URI)
+    .then(() =>
+	{
+	    app.listen(PORT, () => {
+		console.log(`Connected to DB. Server is running on port ${PORT}`);
+	    });
+	})
+    .catch((error) =>
+	{
+	    console.log(error);
+	});
+
