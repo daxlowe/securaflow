@@ -1,10 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+import { BrowserRouter } from "react-router-dom";
+import "@/assets/css/index.css"
+//import ThemeProvider from "@mui/material/styles";
+
+import App from "./routes";
+
+ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
-)
+  document.getElementById("root"),
+);
