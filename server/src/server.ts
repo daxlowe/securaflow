@@ -28,8 +28,8 @@ app.get('/', async (req: Request, res: Response) => {
         //res.status(200).send("Hello, World!");
         const ticket = await Ticket.create(
             {
-                name: "Leave Swamp", 
-                description: "You need to leave Shrek's swamp ASAP", 
+                name: "Test", 
+                description: "Test", 
                 difficulty: 10, 
                 assignees: [], 
                 time_estimate: 10, 
@@ -44,12 +44,12 @@ app.get('/', async (req: Request, res: Response) => {
                 ], 
                 vulnerability:
                 {
-                    name: "GET OUT ME SWAMP", 
+                    name: "Test", 
                     cve_id: "1", 
                     priority: "High", 
-                    imported_from: "Shrek"
+                    imported_from: "Test"
                 }, 
-                comments: ["Bruh, you've gotta go"]
+                comments: ["Test"]
             });
 
         res.status(200).json(ticket);
