@@ -54,8 +54,8 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //res.status(200).send("Hello, World!");
         const ticket = yield Ticket_1.default.create({
-            name: "Leave Swamp",
-            description: "You need to leave Shrek's swamp ASAP",
+            name: "Test",
+            description: "Test",
             difficulty: 10,
             assignees: [],
             time_estimate: 10,
@@ -68,12 +68,12 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 }
             ],
             vulnerability: {
-                name: "GET OUT ME SWAMP",
+                name: "Test",
                 cve_id: "1",
                 priority: "High",
-                imported_from: "Shrek"
+                imported_from: "Test"
             },
-            comments: ["Bruh, you've gotta go"]
+            comments: ["Test"]
         });
         res.status(200).json(ticket);
         //const user = await User.create({first_name: "Shad", last_name: "Boswell", email: "fakemail@gmail.com", groups: [], tickets: []});
