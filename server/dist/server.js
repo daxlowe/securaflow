@@ -37,6 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const ticketRoutes_1 = __importDefault(require("./routes/ticketRoutes"));
 const mongoose = __importStar(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const Ticket_1 = __importDefault(require("./models/Ticket"));
@@ -49,6 +50,7 @@ const DB_CONN_STRING = `${process.env.DB_CONN}${process.env.DB_NAME}${process.en
 // Middleware to parse request body
 app.use(express_1.default.json());
 app.use('/users', userRoutes_1.default);
+app.use('/tickets', ticketRoutes_1.default);
 // Define a route handler for GET requests to the root URL ('/')
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

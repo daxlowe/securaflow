@@ -55,7 +55,6 @@ const ticketSchema = new mongoose_1.Schema({
         },
         imported_from: {
             type: String,
-            required: true
         }
     },
     comments: {

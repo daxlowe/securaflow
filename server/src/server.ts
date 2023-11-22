@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import userRoutes from './routes/userRoutes';
+import ticketRoutes from './routes/ticketRoutes';
 import * as mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import User from './models/User';
@@ -20,7 +21,7 @@ const DB_CONN_STRING: string = `${process.env.DB_CONN}${process.env.DB_NAME}${pr
 app.use(express.json());
 
 app.use('/users', userRoutes);
-
+app.use('/tickets', ticketRoutes)
 // Define a route handler for GET requests to the root URL ('/')
 app.get('/', async (req: Request, res: Response) => {
     try
