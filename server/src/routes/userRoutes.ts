@@ -8,6 +8,10 @@ router.get('/users/:id', (req: Request, res: Response) => {
     // Logic here, e.g., fetching user data
 });
 
+router.get('/login', (req: Request, res: Response) => {
+    // Logic here
+})
+
 // Other user routes (POST, PUT, DELETE, etc.)
 
 export default router;
