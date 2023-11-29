@@ -5,7 +5,8 @@ import
     get_single_ticket,
     create_ticket, 
     delete_ticket,
-    update_ticket 
+    update_ticket,
+    get_users_tickets,
 } from '../controllers/ticketControllers';
 
 const router = express.Router();
@@ -24,6 +25,9 @@ router.delete('/:id', delete_ticket);
 
 // PATCH a ticket
 router.patch('/:id', update_ticket);
+
+// GET all tickets associated with user
+router.get('/user/:userId', get_users_tickets);
 
 // Other user routes (POST, PUT, DELETE, etc.)
 
