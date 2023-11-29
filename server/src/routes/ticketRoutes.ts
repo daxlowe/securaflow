@@ -7,7 +7,7 @@ import
     delete_ticket,
     update_ticket,
     get_users_tickets,
-} from '../controllers/ticketControllers';
+} from '../controllers/ticketController';
 
 const router = express.Router();
 
