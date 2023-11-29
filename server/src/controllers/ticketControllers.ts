@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
-import Ticket from '../models/Ticket'
-import { get } from 'http';
+import Ticket from '../models/Ticket';
 
 // GET all workouts
 const get_all_tickets = async (req: Request, res: Response) =>
@@ -25,6 +24,7 @@ const get_single_ticket = async (req: Request, res: Response) =>
     
     res.status(200).json(ticket);
 }
+
 // POST a new workout 
 const create_ticket = async (req: Request, res: Response) =>
 {
@@ -33,7 +33,8 @@ const create_ticket = async (req: Request, res: Response) =>
     try
     {
 	    const ticket = await Ticket.create({ name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
-	    res.status(200).json(ticket);
+        
+        res.status(200).json(ticket);
     }
     catch (error)
     {
@@ -75,11 +76,25 @@ const update_ticket = async (req: Request, res: Response) =>
     res.status(200).json(ticket);
 }
 
+// GET user's tickets
+const get_users_tickets = async (req: Request, res: Response) =>
+{
+    const userId = req.params.userId;
+    try {
+        const tickets = await Ticket.find({ assignees: userId }).exec();
+
+        res.status(200).json(tickets);
+    } catch (error) {
+        res.status(500).json({ message: `Error fetching tickets for user ${userId}.`});
+    }
+}
+
 export 
 {
     get_all_tickets,
     get_single_ticket, 
     create_ticket, 
     delete_ticket, 
-    update_ticket
+    update_ticket,
+    get_users_tickets,
 }

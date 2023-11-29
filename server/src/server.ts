@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 
 app.use('/users', userRoutes);
-app.use('/tickets', ticketRoutes)
+app.use('/api/tickets', ticketRoutes)
 
 app.get('/login', (req: Request, res: Response) => {
     // __dirname is the directory of the current module, i.e., where server.ts is located
