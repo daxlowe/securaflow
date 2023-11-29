@@ -80,6 +80,9 @@ const Tickets: React.FC = () => {
             }}
             pageSizeOptions={[5, 10, 25]}
             sx={{
+                '& .MuiDataGrid-main': {
+                    backgroundColor: 'background.paper'
+                },
                 '& .MuiDataGrid-cell:hover': {
                     color: 'secondary.main',
                 },
@@ -90,7 +93,8 @@ const Tickets: React.FC = () => {
                 },
                 '& .MuiDataGrid-columnHeaders': {
                 },
-                '& .MuiTablePagination-root': {
+                '& .MuiDataGrid-footerContainer': {
+                    backgroundColor: 'background.paper'
                 },
             }}
         />
