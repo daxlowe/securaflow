@@ -1,3 +1,5 @@
+import { Ticket } from "@/types";
+
 export const getTickets = async () => {
     try {
         const response = await fetch('http://localhost:3000/api/tickets/');
@@ -5,7 +7,8 @@ export const getTickets = async () => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const data: Ticket[] = await response.json();
+        console.log(data)
         return data;
     } catch (error) {
         console.error(error);

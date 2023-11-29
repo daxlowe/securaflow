@@ -8,7 +8,7 @@ const Tickets: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tickets = await getTickets();
+            const tickets: Ticket[] = await getTickets();
             setVulnerabilityTickets(tickets);
         };
 
@@ -25,7 +25,7 @@ const Tickets: React.FC = () => {
     ];
 
     const rows = vulnerabilityTickets.map((ticket) => ({
-        id: ticket.id,
+        id: ticket._id,
         title: ticket.name,
         team: 'need to add team',
         priority: ticket.vulnerability.priority,
