@@ -1,3 +1,8 @@
-DataGrid {
-    color: #000; /* Set the desired text color */
-  }
+.tickets-container {
+  padding: 5vw;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+}
