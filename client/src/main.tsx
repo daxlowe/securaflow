@@ -3,14 +3,16 @@ import ReactDOM from "react-dom";
 
 import { BrowserRouter } from "react-router-dom";
 import "@/assets/css/index.css"
-//import ThemeProvider from "@mui/material/styles";
+import { ThemeProvider } from "@/assets/theme";
 
 import App from "./routes";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root"),
