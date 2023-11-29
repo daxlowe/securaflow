@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import Ticket from '../models/Ticket';
+import { addTicketsToUser } from './userController';
 
 // GET all workouts
 const get_all_tickets = async (req: Request, res: Response) =>
@@ -25,7 +26,7 @@ const get_single_ticket = async (req: Request, res: Response) =>
     res.status(200).json(ticket);
 }
 
-// POST a new workout 
+// POST a new ticket 
 const create_ticket = async (req: Request, res: Response) =>
 {
     const { name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
@@ -34,6 +35,13 @@ const create_ticket = async (req: Request, res: Response) =>
     {
 	    const ticket = await Ticket.create({ name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
         
+        // Add the new ticket to each assignee's array of tickets
+        if (ticket.assignees && ticket.assignees.length > 0) {
+            await Promise.all(
+                ticket.assignees.map(assigneeId => addTicketsToUser(assigneeId, [ticket._id]))
+            );
+        }
+
         res.status(200).json(ticket);
     }
     catch (error)
