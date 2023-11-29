@@ -8,5 +8,6 @@ export const modifyTicket = (ticket: Ticket) => {
         },
         body: JSON.stringify(ticket)
     };
-    fetch("http://localhost:3000/", options)
+    fetch(`http://localhost:3000/api/tickets/${ticket.id}`, options).then(response => response.json()).catch(error => console.error(error))
 }
+                                                                                                            
