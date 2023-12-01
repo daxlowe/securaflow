@@ -4,14 +4,14 @@ import Ticket from '../models/Ticket';
 import { addTicketsToUser, removeTicketsFromUser } from './userController';
 
 // GET all tickets
-const get_all_tickets = async (req: Request, res: Response) =>
+const getAllTickets = async (req: Request, res: Response) =>
 {
     const tickets = await Ticket.find({}).sort({createdAt: -1});
     res.status(200).json(tickets);
 }
 
 // GET a single ticket
-const get_single_ticket = async (req: Request, res: Response) =>
+const getSingleTicket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
 
@@ -27,7 +27,7 @@ const get_single_ticket = async (req: Request, res: Response) =>
 }
 
 // POST a new ticket 
-const create_ticket = async (req: Request, res: Response) =>
+const createTicket = async (req: Request, res: Response) =>
 {
     const { name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
 
@@ -51,7 +51,7 @@ const create_ticket = async (req: Request, res: Response) =>
 }
 
 // DELETE a ticket
-const delete_ticket = async (req: Request, res: Response) =>
+const deleteTicket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
 
@@ -67,7 +67,7 @@ const delete_ticket = async (req: Request, res: Response) =>
 }
 
 // UPDATE a ticket
-const update_ticket = async (req: Request, res: Response) =>
+const updateTicket = async (req: Request, res: Response) =>
 {
     const { ticketId } = req.params;
     if(!mongoose.Types.ObjectId.isValid(ticketId))
@@ -106,7 +106,7 @@ const update_ticket = async (req: Request, res: Response) =>
 }
 
 // GET user's tickets
-const get_users_tickets = async (req: Request, res: Response) =>
+const getUsersTickets = async (req: Request, res: Response) =>
 {
     const userId = req.params.userId;
     try {
@@ -120,10 +120,10 @@ const get_users_tickets = async (req: Request, res: Response) =>
 
 export 
 {
-    get_all_tickets,
-    get_single_ticket, 
-    create_ticket, 
-    delete_ticket, 
-    update_ticket,
-    get_users_tickets,
+    getAllTickets,
+    getSingleTicket, 
+    createTicket, 
+    deleteTicket, 
+    updateTicket,
+    getUsersTickets,
 }
