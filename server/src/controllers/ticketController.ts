@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import Ticket from '../models/Ticket';
+import { addTicketsToUser } from './userController';
 
-// GET all tickets
+// GET all workouts
 const get_all_tickets = async (req: Request, res: Response) =>
 {
     const tickets = await Ticket.find({}).sort({createdAt: -1});
     res.status(200).json(tickets);
 }
 
-// GET a single ticket
+// GET a single workout
 const get_single_ticket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
@@ -24,7 +25,8 @@ const get_single_ticket = async (req: Request, res: Response) =>
     
     res.status(200).json(ticket);
 }
-// POST a new ticket
+
+// POST a new ticket 
 const create_ticket = async (req: Request, res: Response) =>
 {
     const { name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
@@ -33,6 +35,13 @@ const create_ticket = async (req: Request, res: Response) =>
     {
 	    const ticket = await Ticket.create({ name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
         
+        // Add the new ticket to each assignee's array of tickets
+        if (ticket.assignees && ticket.assignees.length > 0) {
+            await Promise.all(
+                ticket.assignees.map(assigneeId => addTicketsToUser(assigneeId, [ticket._id]))
+            );
+        }
+
         res.status(200).json(ticket);
     }
     catch (error)
@@ -41,7 +50,7 @@ const create_ticket = async (req: Request, res: Response) =>
     }
 }
 
-// DELETE a ticket
+// DELETE a workout
 const delete_ticket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
@@ -57,12 +66,12 @@ const delete_ticket = async (req: Request, res: Response) =>
     res.status(200).json(ticket);
 }
 
-// UPDATE a ticket
+// UPDATE a workout
 const update_ticket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
     if(!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({error: "No such ticket"});
+        return res.status(404).json({error: "No such workout"});
     
     const ticket = await Ticket.findOneAndUpdate({_id: id},
 						   {
@@ -70,7 +79,7 @@ const update_ticket = async (req: Request, res: Response) =>
 						   });
 
     if(!ticket)
-        return res.status(404).json({error: "No such ticket"});
+        return res.status(404).json({error: "No such workout"});
     
     res.status(200).json(ticket);
 }

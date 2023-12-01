@@ -14,6 +14,16 @@ const theme = createTheme({
         primary: {
             main: '#2c719a',
         },
+        background: {
+            paper: '#242424',
+        },
+    },
+
+    typography: {
+        fontFamily: [
+            'Montserrat',
+            'sans-serif',
+        ].join(','),
     },
 });
 

@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import userRoutes from './routes/userRoutes';
 import ticketRoutes from './routes/ticketRoutes';
 import * as mongoose from 'mongoose';
@@ -17,6 +18,9 @@ const app = express();
 // Define the port the server will run on
 const PORT = process.env.PORT;
 const DB_CONN_STRING: string = `${process.env.DB_CONN}${process.env.DB_NAME}${process.env.DB_OPTIONS}`;
+
+// Use cors middleware
+app.use(cors());
 
 // Serve static files from the 'static' directory
 app.use(express.static(path.join(__dirname, 'static')));
@@ -47,32 +51,31 @@ app.get('/dashboard', (req: Request, res: Response) => {
 
 // Define a route handler for GET requests to the root URL ('/')
 app.get('/', async (req: Request, res: Response) => {
-    try
-    {
+    try {
         //res.status(200).send("Hello, World!");
         const ticket = await Ticket.create(
             {
-                name: "Test", 
-                description: "Test", 
-                difficulty: 10, 
-                assignees: [], 
-                time_estimate: 10, 
-                current_status: "Open", 
-                status_updates: 
-                [
-                    {
-                        body: "Open", 
-                        date_started: "2001-04-22", 
-                        date_ended: null
-                    }
-                ], 
+                name: "Test",
+                description: "Test",
+                difficulty: 10,
+                assignees: [],
+                time_estimate: 10,
+                current_status: "Open",
+                status_updates:
+                    [
+                        {
+                            body: "Open",
+                            date_started: "2001-04-22",
+                            date_ended: null
+                        }
+                    ],
                 vulnerability:
                 {
-                    name: "Test", 
-                    cve_id: "1", 
-                    priority: "High", 
+                    name: "Test",
+                    cve_id: "1",
+                    priority: "High",
                     imported_from: "Test"
-                }, 
+                },
                 comments: ["Test"]
             });
 
@@ -80,22 +83,19 @@ app.get('/', async (req: Request, res: Response) => {
         //const user = await User.create({first_name: "Shad", last_name: "Boswell", email: "fakemail@gmail.com", groups: [], tickets: []});
         //res.status(200).json(user);
     }
-    catch (error: any)
-    {
-        res.status(400).json({error: error.message });
+    catch (error: any) {
+        res.status(400).json({ error: error.message });
     }
 });
 
 // Start the server
 
 mongoose.connect(DB_CONN_STRING)
-    .then(() =>
-	{
-	    app.listen(PORT, () => {
-		console.log(`Connected to DB. Server is running on port ${PORT}`);
-	    });
-	})
-    .catch((error) =>
-	{
-	    console.log(error);
-	});
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Connected to DB. Server is running on port ${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.log(error);
+    });
