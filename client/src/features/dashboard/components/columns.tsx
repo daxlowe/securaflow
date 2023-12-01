@@ -21,7 +21,6 @@ export const columns: ColumnDef<Ticket>[] = [
                 }
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
-                className="translate-y-[-2px]"
             />
         ),
         cell: ({ row }) => (
@@ -29,23 +28,13 @@ export const columns: ColumnDef<Ticket>[] = [
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
                 aria-label="Select row"
-                className="translate-y-[2px]"
             />
         ),
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: "_id",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Ticket" />
-        ),
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue("_id")}</div>,
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: "title",
+        accessorKey: "name",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Title" />
         ),
@@ -56,7 +45,7 @@ export const columns: ColumnDef<Ticket>[] = [
                 <div className="flex space-x-2">
                     {label && <Badge variant="outline">{label.label}</Badge>}
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("title")}
+                        {row.getValue("name")}
                     </span>
                 </div>
             )
@@ -64,9 +53,7 @@ export const columns: ColumnDef<Ticket>[] = [
     },
     {
         accessorKey: "current_status",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Status" />
-        ),
+        header: "Status",
         cell: ({ row }) => {
             const label = labels.find((label) => label.value === row.original.current_status)
 
@@ -81,13 +68,11 @@ export const columns: ColumnDef<Ticket>[] = [
         },
     },
     {
-        accessorKey: "vulnerability.priority",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Priority" />
-        ),
+        accessorKey: "vulnerability",
+        header: "Priority",
         cell: ({ row }) => {
             const priority = priorities.find(
-                (priority) => priority.value === row.getValue("vulnerability.priority")
+                (priority) => priority.value === row.getValue("vulnerability")
             )
 
             if (!priority) {

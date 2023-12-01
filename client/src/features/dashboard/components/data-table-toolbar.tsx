@@ -37,9 +37,9 @@ export function DataTableToolbar<TData>({
             options={statuses}
           />
         )}
-        {table.getColumn("vulenerability.priority") && (
+        {table.getColumn("vulnerability") && (
           <DataTableFacetedFilter
-            column={table.getColumn("vulnerability.priority")}
+            column={table.getColumn("vulnerability")}
             title="Priority"
             options={priorities}
           />

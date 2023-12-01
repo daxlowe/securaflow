@@ -49,11 +49,17 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {translateIdToHeader(column.id)}
               </DropdownMenuCheckboxItem>
             )
           })}
       </DropdownMenuContent>
     </DropdownMenu>
   )
+}
+
+function translateIdToHeader(id: string): string {
+  if (id == 'current_status') return 'status';
+  if (id == 'vulnerability_priority') return 'priority';
+  return id;
 }
