@@ -3,6 +3,7 @@ import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
 import { Ticket } from '@/types';
 import { getTickets } from '@/utils/getTickets';
+import { ModeToggle } from '@/components/ui/mode-toggle';
 
 async function getData(): Promise<Ticket[]> {
   return getTickets();
@@ -25,8 +26,11 @@ export default function Dashboard() {
   }, []); // Empty dependency array to run the effect once on component mount
 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
-    </div>
+    <>
+      <ModeToggle />
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={data} />
+      </div>
+    </>
   );
 }

@@ -21,7 +21,7 @@ export const columns: ColumnDef<Ticket>[] = [
                 }
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
-                className="translate-y-[2px]"
+                className="translate-y-[-2px]"
             />
         ),
         cell: ({ row }) => (
@@ -38,7 +38,7 @@ export const columns: ColumnDef<Ticket>[] = [
     {
         accessorKey: "_id",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Task" />
+            <DataTableColumnHeader column={column} title="Ticket" />
         ),
         cell: ({ row }) => <div className="w-[80px]">{row.getValue("_id")}</div>,
         enableSorting: false,

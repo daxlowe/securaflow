@@ -2,6 +2,8 @@ import React from "react";
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from "react-router-dom";
 import "@/assets/css/global.css"
+import { ThemeProvider } from "@/assets/theme/theme-provider";
+
 
 import App from "./routes";
 
@@ -10,8 +12,10 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>,
 );
