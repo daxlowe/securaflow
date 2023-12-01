@@ -8,6 +8,10 @@ export const deleteTicket = (ticket: Ticket) => {
         },
         body: JSON.stringify(ticket)
     };
-    fetch(`http://localhost:3000/api/tickets/${ticket.id}`, options).then(response => response.json()).catch(error => console.error(error))
+    fetch(`http://localhost:3000/api/tickets/${ticket.id}`, options).then(response => {
+        if(!response.ok) {
+            window.alert(`The following error occured when trying to delete this ticket: ${response.statusText}`)
+        }
+    }).catch(error => console.error(error))
 }
                                                                                                             
