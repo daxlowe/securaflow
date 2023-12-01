@@ -1,39 +1,73 @@
-import React, { ReactNode } from 'react';
-import { ThemeProvider as MuiThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { createContext, useContext, useEffect, useState } from "react"
 
-interface ThemeProviderProps {
-    children: ReactNode;
+type Theme = "dark" | "light" | "system"
+
+type ThemeProviderProps = {
+    children: React.ReactNode
+    defaultTheme?: Theme
+    storageKey?: string
 }
 
-const theme = createTheme({
-    palette: {
-        secondary: {
-            main: '#008cd7',
-        },
-        mode: 'dark',
-        primary: {
-            main: '#2c719a',
-        },
-        background: {
-            paper: '#242424',
-        },
-    },
+type ThemeProviderState = {
+    theme: Theme
+    setTheme: (theme: Theme) => void
+}
 
-    typography: {
-        fontFamily: [
-            'Montserrat',
-            'sans-serif',
-        ].join(','),
-    },
-});
+const initialState: ThemeProviderState = {
+    theme: "system",
+    setTheme: () => null,
+}
 
-const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+
+export function ThemeProvider({
+    children,
+    defaultTheme = "system",
+    storageKey = "vite-ui-theme",
+    ...props
+}: ThemeProviderProps) {
+    const [theme, setTheme] = useState<Theme>(
+        () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    )
+
+    useEffect(() => {
+        const root = window.document.documentElement
+
+        root.classList.remove("light", "dark")
+
+        if (theme === "system") {
+            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+                .matches
+                ? "dark"
+                : "light"
+
+            root.classList.add(systemTheme)
+            return
+        }
+
+        root.classList.add(theme)
+    }, [theme])
+
+    const value = {
+        theme,
+        setTheme: (theme: Theme) => {
+            localStorage.setItem(storageKey, theme)
+            setTheme(theme)
+        },
+    }
+
     return (
-        <MuiThemeProvider theme={theme}>
-            <CssBaseline />
+        <ThemeProviderContext.Provider {...props} value={value}>
             {children}
-        </MuiThemeProvider>
-    );
-};
+        </ThemeProviderContext.Provider>
+    )
+}
 
-export default ThemeProvider;
+export const useTheme = () => {
+    const context = useContext(ThemeProviderContext)
+
+    if (context === undefined)
+        throw new Error("useTheme must be used within a ThemeProvider")
+
+    return context
+}
