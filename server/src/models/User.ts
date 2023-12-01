@@ -6,6 +6,7 @@ interface User
     first_name: string;
     last_name: string;
     email: string;
+	password: string;
     groups: Types.Array<Types.ObjectId>;
     tickets: Types.Array<Types.ObjectId>;
 }
@@ -26,6 +27,11 @@ const userSchema = new Schema<User, Model<User>>(
 	{
 	    type: String,
 	    required: true
+	},
+	password: 
+	{
+		type: String, 
+		required: true
 	},
 	groups: [{ type: Schema.Types.ObjectId, ref: 'Group' }], 
 	tickets: [{ type: Schema.Types.ObjectId, ref: 'Ticket' }]

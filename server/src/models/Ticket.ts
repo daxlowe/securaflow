@@ -22,6 +22,7 @@ interface Ticket
 {
     _id: Types.ObjectId;
     name: string;
+    team: string;
     description: string;
     difficulty: number;
     assignees?: Types.Array<Types.ObjectId>;
@@ -58,6 +59,10 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
             type: String, 
             required: true
         }, 
+        team:
+        {
+            type: String
+        },
         description:
         {
             type: String, 
