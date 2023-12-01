@@ -1,6 +1,7 @@
 export type Ticket = {
     _id?: string
-    name: string;
+    title: string;
+    team: string;
     description: string;
     difficulty: number;
     assignees?: Array<string>;

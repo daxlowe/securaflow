@@ -45,7 +45,7 @@ export const columns: ColumnDef<Ticket>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "name",
+        accessorKey: "title",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Title" />
         ),
@@ -56,7 +56,7 @@ export const columns: ColumnDef<Ticket>[] = [
                 <div className="flex space-x-2">
                     {label && <Badge variant="outline">{label.label}</Badge>}
                     <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("name")}
+                        {row.getValue("title")}
                     </span>
                 </div>
             )
