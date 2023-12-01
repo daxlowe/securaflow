@@ -1,39 +1,39 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import { Request, Response } from 'express';
 import Ticket from '../models/Ticket';
-import { addTicketsToUser } from './userController';
+import { addTicketsToUser, removeTicketsFromUser } from './userController';
 
-// GET all workouts
-const get_all_tickets = async (req: Request, res: Response) =>
+// GET all tickets
+const getAllTickets = async (req: Request, res: Response) =>
 {
     const tickets = await Ticket.find({}).sort({createdAt: -1});
     res.status(200).json(tickets);
 }
 
-// GET a single workout
-const get_single_ticket = async (req: Request, res: Response) =>
+// GET a single ticket
+const getSingleTicket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({error: "No such workout"});
+        return res.status(404).json({error: "No such ticket"});
     
     const ticket = await Ticket.findById(id);
 
     if(!ticket)
-        return res.status(404).json({error: "No such workout"});
+        return res.status(404).json({error: "No such ticket"});
     
     res.status(200).json(ticket);
 }
 
 // POST a new ticket 
-const create_ticket = async (req: Request, res: Response) =>
+const createTicket = async (req: Request, res: Response) =>
 {
     const { name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
 
     try
     {
-	    const ticket = await Ticket.create({ name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
+	    const ticket: Ticket = await Ticket.create({ name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
         
         // Add the new ticket to each assignee's array of tickets
         if (ticket.assignees && ticket.assignees.length > 0) {
@@ -50,42 +50,63 @@ const create_ticket = async (req: Request, res: Response) =>
     }
 }
 
-// DELETE a workout
-const delete_ticket = async (req: Request, res: Response) =>
+// DELETE a ticket
+const deleteTicket = async (req: Request, res: Response) =>
 {
     const { id } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({error: "No such workout"});
+        return res.status(404).json({error: "No such ticket"});
     
     const ticket = await Ticket.findOneAndDelete({_id: id});
 
     if(!ticket)
-        return res.status(404).json({error: "No such workout"});
+        return res.status(404).json({error: "No such ticket"});
     
     res.status(200).json(ticket);
 }
 
-// UPDATE a workout
-const update_ticket = async (req: Request, res: Response) =>
+// UPDATE a ticket
+const updateTicket = async (req: Request, res: Response) =>
 {
-    const { id } = req.params;
-    if(!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({error: "No such workout"});
-    
-    const ticket = await Ticket.findOneAndUpdate({_id: id},
-						   {
-						       ...req.body 
-						   });
+    const { ticketId } = req.params;
+    if(!mongoose.Types.ObjectId.isValid(ticketId))
+        return res.status(404).json({error: "No such ticket"});
 
-    if(!ticket)
-        return res.status(404).json({error: "No such workout"});
-    
-    res.status(200).json(ticket);
+    try {
+        // Fetch the current ticket to get the existing list of assignees
+        const currentTicket: Ticket | null = await Ticket.findById(ticketId);
+        
+        // Perform the tickt update
+        const modifiedTicket: Ticket | null = await Ticket.findByIdAndUpdate(ticketId, req.body, { new: true });
+        if (!modifiedTicket) {
+            return res.status(404).json({error: "No such ticket"});
+        }
+
+        // Compare assignees and update users if necessary
+        const newAssignees: mongoose.Types.ObjectId[] = modifiedTicket?.assignees || [];
+        const oldAssignees: mongoose.Types.ObjectId[] = currentTicket?.assignees || [];
+
+        const assigneesAdded: mongoose.Types.ObjectId[] = newAssignees.filter(assignee => !oldAssignees.includes(assignee));
+        const assigneesRemoved: mongoose.Types.ObjectId[] = oldAssignees.filter(assignee => !newAssignees.includes(assignee));
+
+        await Promise.all([
+            ...assigneesAdded.map(assigneeId => addTicketsToUser(assigneeId, [modifiedTicket._id])),
+            ...assigneesRemoved.map(assigneeId => removeTicketsFromUser(assigneeId, [modifiedTicket._id])),
+        ]);
+
+        res.status(200).json(modifiedTicket);
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: `An unknown error occurred while attempting to update ticket: ${ticketId}` });
+        }
+    }
 }
 
 // GET user's tickets
-const get_users_tickets = async (req: Request, res: Response) =>
+const getUsersTickets = async (req: Request, res: Response) =>
 {
     const userId = req.params.userId;
     try {
@@ -99,10 +120,10 @@ const get_users_tickets = async (req: Request, res: Response) =>
 
 export 
 {
-    get_all_tickets,
-    get_single_ticket, 
-    create_ticket, 
-    delete_ticket, 
-    update_ticket,
-    get_users_tickets,
+    getAllTickets,
+    getSingleTicket, 
+    createTicket, 
+    deleteTicket, 
+    updateTicket,
+    getUsersTickets,
 }
