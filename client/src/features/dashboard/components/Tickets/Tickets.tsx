@@ -57,7 +57,7 @@ const Tickets: React.FC = () => {
     ];
 
     const rows = vulnerabilityTickets.map((ticket) => ({
-        id: ticket._id,
+        id: ticket.id,
         title: ticket.name,
         team: 'need to add team',
         priority: ticket.vulnerability.priority,
