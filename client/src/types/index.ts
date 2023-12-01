@@ -1,5 +1,5 @@
 export type Ticket = {
-    _id: string
+    id?: string
     name: string;
     description: string;
     difficulty: number;
@@ -12,14 +12,14 @@ export type Ticket = {
 }
 
 export type Status = {
-    _id: string;
+    id: string;
     body: string;
     date_started: Date;
     date_ended: Date;
 }
 
 export type Vulnerability = {
-    _id: string;
+    id: string;
     name: string;
     description: string;
     cve_id: string;
