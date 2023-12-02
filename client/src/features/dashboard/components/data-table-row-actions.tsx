@@ -29,7 +29,7 @@ export function DataTableRowActions<TData>({
   // Manual validation
   if (
     !originalData._id ||
-    !originalData.name ||
+    !originalData.title ||
     !originalData.current_status ||
     !originalData.vulnerability ||
     !originalData.vulnerability.priority
