@@ -11,8 +11,8 @@ import {
 
 export const labels = [
   {
-    value: "bug",
-    label: "Bug",
+    value: "open",
+    label: "Open",
   },
   {
     value: "feature",
@@ -26,13 +26,13 @@ export const labels = [
 
 export const statuses = [
   {
-    value: "backlog",
-    label: "Backlog",
+    value: "",
+    label: "",
     icon: QuestionMarkCircledIcon,
   },
   {
-    value: "todo",
-    label: "Todo",
+    value: "Open",
+    label: "Open",
     icon: CircleIcon,
   },
   {
@@ -55,17 +55,17 @@ export const statuses = [
 export const priorities = [
   {
     label: "Low",
-    value: "low",
+    value: "Low",
     icon: ArrowDownIcon,
   },
   {
     label: "Medium",
-    value: "medium",
+    value: "Medium",
     icon: ArrowRightIcon,
   },
   {
     label: "High",
-    value: "high",
+    value: "High",
     icon: ArrowUpIcon,
   },
 ]

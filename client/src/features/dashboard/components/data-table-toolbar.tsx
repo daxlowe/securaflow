@@ -5,7 +5,7 @@ import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DataTableViewOptions } from "@/features/dashboard/components/data-table-view-options"
+import { DataTableViewOptions } from "./data-table-view-options"
 
 import { priorities, statuses } from "../data/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
@@ -24,22 +24,22 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter tasks..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("current_status") && (
+        {table.getColumn("status") && (
           <DataTableFacetedFilter
-            column={table.getColumn("current_status")}
+            column={table.getColumn("status")}
             title="Status"
             options={statuses}
           />
         )}
-        {table.getColumn("vulnerability") && (
+        {table.getColumn("priority") && (
           <DataTableFacetedFilter
-            column={table.getColumn("vulnerability")}
+            column={table.getColumn("priority")}
             title="Priority"
             options={priorities}
           />

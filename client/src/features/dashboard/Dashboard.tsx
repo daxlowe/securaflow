@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
-import { Ticket } from '@/types';
-import { getTickets } from '@/utils/getTickets';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { getTicketsAsTasks } from './utils/ticketToTask';
+import { Task } from './types';
 
-async function getData(): Promise<Ticket[]> {
-  return getTickets();
+async function getData() {
+  return getTicketsAsTasks();
 }
 
 export default function Dashboard() {
-  const [data, setData] = useState<Ticket[]>([]);
+  const [data, setData] = useState<Task[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
