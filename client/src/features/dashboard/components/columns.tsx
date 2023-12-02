@@ -14,43 +14,51 @@ export const columns: ColumnDef<Task>[] = [
     {
         id: "select",
         header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[2px]"
-            />
+            <div className="px-4">
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                    className="translate-y-[-3px]"
+                />
+            </div>
         ),
         cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-                className="translate-y-[2px]"
-            />
+            <div className="px-4">
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                    className="translate-y-[-3px] "
+                />
+            </ div>
         ),
         enableSorting: false,
         enableHiding: false,
     },
-    // {
-    //     accessorKey: "id",
-    //     header: ({ column }) => (
-    //         <DataTableColumnHeader column={column} title="Ticket" />
-    //     ),
-    //     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-    //     enableSorting: false,
-    // },
+    {
+        accessorKey: "id",
+        header: ({ column }) => (
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Ticket" />
+            </div>
+        ),
+        cell: ({ row }) => <div className="flex w-[80px] space-x-2 col-height items-center overflow-x-auto px-2">{row.getValue("id")}</div>,
+        enableSorting: false,
+    },
     {
         accessorKey: "title",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Title" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Title" />
+            </div>
         ),
         cell: ({ row }) => {
             return (
-                <div className="flex space-x-2">
+                <div className="flex min-w-[200px] space-x-2 col-height items-center overflow-x-auto px-2">
                     {row.getValue("title")}
                 </div>
             )
@@ -59,12 +67,14 @@ export const columns: ColumnDef<Task>[] = [
     {
         accessorKey: "team",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Team" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Team" />
+            </div>
         ),
         cell: ({ row }) => {
 
             return (
-                <div className="flex w-[100px] items-center">
+                <div className="flex space-x-2 col-height items-center overflow-x-auto px-2">
                     {row.getValue("team")}
                 </div>
             )
@@ -76,7 +86,9 @@ export const columns: ColumnDef<Task>[] = [
     {
         accessorKey: "status",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Status" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Status" />
+            </div>
         ),
         cell: ({ row }) => {
             const status = statuses.find(
@@ -88,7 +100,7 @@ export const columns: ColumnDef<Task>[] = [
             }
 
             return (
-                <div className="flex w-[100px] items-center">
+                <div className="flex col-height items-center overflow-x-auto px-2">
                     {status.icon && (
                         <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
@@ -103,7 +115,9 @@ export const columns: ColumnDef<Task>[] = [
     {
         accessorKey: "priority",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Priority" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Priority" />
+            </div>
         ),
         cell: ({ row }) => {
             const priority = priorities.find(
@@ -115,7 +129,7 @@ export const columns: ColumnDef<Task>[] = [
             }
 
             return (
-                <div className="flex items-center">
+                <div className="flex w-[80px] col-height items-center overflow-x-auto px-2">
                     {priority.icon && (
                         <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
@@ -130,11 +144,13 @@ export const columns: ColumnDef<Task>[] = [
     {
         accessorKey: "assignee",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Assignee" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Assignee" />
+            </div>
         ),
         cell: ({ row }) => {
             return (
-                <div className="flex w-[100px] items-center">
+                <div className="flex space-x-2 col-height items-center overflow-x-auto px-2">
                     {row.getValue("assignee")}
                 </div>
             )
@@ -145,6 +161,10 @@ export const columns: ColumnDef<Task>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} />,
+        cell: ({ row }) =>
+            <div className="px-2">
+                <DataTableRowActions row={row} />
+            </div>
+        ,
     },
 ]

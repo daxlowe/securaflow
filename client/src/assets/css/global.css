@@ -62,10 +62,6 @@
   }
 }
 
-.flex-2 {
-  flex-grow: 2;
-}
-
-.flex-3 {
-  flex-grow: 3;
+.col-height {
+  height: 70px;
 }

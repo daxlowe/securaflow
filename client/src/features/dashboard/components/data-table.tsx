@@ -78,7 +78,8 @@ export function DataTable<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                        <TableHead key={header.id} colSpan={header.colSpan}
+                                            className="p-0">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -99,7 +100,7 @@ export function DataTable<TData, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className="p-0">
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
@@ -116,35 +117,35 @@ export function DataTable<TData, TValue>({
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[200px]" />
+                                            <Skeleton className="h-4 w-[150px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[200px]" />
+                                            <Skeleton className="h-4 w-[150px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[200px]" />
+                                            <Skeleton className="h-4 w-[150px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[200px]" />
+                                            <Skeleton className="h-4 w-[150px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[200px]" />
+                                            <Skeleton className="h-4 w-[150px]" />
                                         </div>
                                     </div>
                                 </TableCell>
