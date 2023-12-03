@@ -6,3 +6,7 @@
   display: flex;
   justify-content: space-between;
 }
+
+button[data-state="checked"], button[data-state="indeterminate"] {
+  transform: translateY(3px);
+}

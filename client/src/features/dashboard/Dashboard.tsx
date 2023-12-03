@@ -3,6 +3,7 @@ import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { getTicketsAsTasks } from './utils/ticketToTask';
+import './assets/css/dashboard.css'
 import { Task } from './types';
 
 async function getData() {
