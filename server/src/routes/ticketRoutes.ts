@@ -8,7 +8,11 @@ import
     updateTicket
 } from '../controllers/ticketController';
 
+import { requireAuth } from '../middleware/requireAuth';
+
 const router = express.Router();
+
+router.use(requireAuth);
 
 // GET all tickets with user
 router.get('/', getAllTickets);

@@ -111,8 +111,7 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
             imported_from: 
             {
                 type: String, 
-            }, 
-            required: true
+            }
         }, 
         comments:
         {

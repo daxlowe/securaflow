@@ -11,7 +11,7 @@ async function getData(): Promise<Ticket[]> {
 
 export default function Dashboard() {
   const [data, setData] = useState<Ticket[]>([]);
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {

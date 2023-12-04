@@ -3,7 +3,7 @@ import User from '../models/User';
 import { Request, Response, NextFunction } from 'express';
 import { Secret } from 'jsonwebtoken';
 
-const requireAuth = async (request: Request, response: Response, next: NextFunction) =>
+export const requireAuth = async (request: Request, response: Response, next: NextFunction) =>
 {
     // Verify authentication
     const { authorization } = request.headers;
@@ -28,5 +28,3 @@ const requireAuth = async (request: Request, response: Response, next: NextFunct
         response.status(401).json({error: 'Request is not authorized'});
     }
 }
-
-export default requireAuth;

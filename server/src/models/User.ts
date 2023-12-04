@@ -61,7 +61,7 @@ const userSchema = new Schema<User, Model<User>>(
    }
 
    // Static Signup method
-   userSchema.statics.signup = async function(email, password)
+   userSchema.statics.signup = async function(first_name, last_name, email, password)
    {
 	   // Validation
 	   if(!email || !password)
@@ -83,7 +83,7 @@ const userSchema = new Schema<User, Model<User>>(
 	   const salt = await bcrypt.genSalt(10);
 	   const hash = await bcrypt.hash(password, salt);
 
-	   const user = await this.create({ email, password: hash });
+	   const user = await this.create({ first_name, last_name, email, password: hash });
 
 	   return user;
    }

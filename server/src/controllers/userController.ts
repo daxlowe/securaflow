@@ -19,7 +19,7 @@ const loginUser = async (request: Request, response: Response) =>
     {
         // @ts-ignore
         const user = await User.login(email, password);
-        console.log(user);
+        
         // Create a token
         const token = createToken(user._id);
 
@@ -34,13 +34,13 @@ const loginUser = async (request: Request, response: Response) =>
 // Signup user
 const signupUser = async (request: Request, response: Response) =>
 {
-    const {email, password} = request.body;
+    const {first_name, last_name, email, password} = request.body;
 
     try
     {
         // @ts-ignore
-        const user = await User.signup(email, password);
-
+        const user = await User.signup(first_name, last_name, email, password);
+        console.log(user);
         // Create a token
         const token = createToken(user._id);
 

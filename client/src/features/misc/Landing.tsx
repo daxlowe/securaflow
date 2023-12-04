@@ -1,22 +1,24 @@
+import { useNavigate } from 'react-router';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import { useState } from 'react';
-import { useLogin } from '../../hooks/useLogin';
+export const Landing = () => 
+{   
+    const navigate = useNavigate();
+    const { user } = useAuthContext();
 
-export default function Login() {
+    const handleStart = () => {
+        if (user) {
+          navigate('/dashboard');
+        } else {
+          navigate('/login');
+        }
+      };
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login, isLoading, error } = useLogin();
     
-    //@ts-expect-error e is any type
-    const handleLogin = async (e) =>
-    {
-        e.preventDefault();
-
-        console.log(email,password);
-        await login(email, password);
-    }
-
     return (
-        <form className="login" onSubmit={handleLogin}>
+        <form className="signup" onSubmit={handleStart}>
             <h3>Login</h3>
             <label>Email:</label>
             <input
@@ -31,8 +33,7 @@ export default function Login() {
                 value={password}
             />
 
-            <button disabled={isLoading}>Login</button>
-            {error && <div className="error">{error}</div>}
+            <button>Start</button>
         </form>
     )
-}
+};
