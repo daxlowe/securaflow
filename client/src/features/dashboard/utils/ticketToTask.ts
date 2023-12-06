@@ -1,6 +1,4 @@
 import { getTickets } from "@/utils/getTickets";
-import { z } from "zod";
-import { taskSchema } from "../data/schema";
 import { Task } from "../types";
 import { Ticket } from "@/types";
 
