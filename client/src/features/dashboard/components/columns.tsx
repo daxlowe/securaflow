@@ -141,7 +141,7 @@ export const columns: ColumnDef<Task>[] = [
         },
     },
     {
-        accessorKey: "assignee",
+        accessorKey: "assignees",
         header: ({ column }) => (
             <div className="px-2">
                 <DataTableColumnHeader column={column} title="Assignee" />

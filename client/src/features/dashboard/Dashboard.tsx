@@ -5,18 +5,20 @@ import { ModeToggle } from '@/components/ui/mode-toggle';
 import { getTicketsAsTasks } from './utils/ticketToTask';
 import './assets/css/dashboard.css'
 import { Task } from './types';
-
+import { useAuthContext } from '@/hooks/useAuthContext';
 async function getData() {
   return getTicketsAsTasks();
 }
 
 export default function Dashboard() {
   const [data, setData] = useState<Task[]>([]);
-
+  const { user } = useAuthContext(); 
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getData();
+        const result = await getTickets(user);
+        console.log(result);
         setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);

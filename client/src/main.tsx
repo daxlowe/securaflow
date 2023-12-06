@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from "react-router-dom";
 import "@/assets/css/global.css"
 import { ThemeProvider } from "@/assets/theme/theme-provider";
-
+import { AuthContextProvider } from "./context/AuthContext";
 
 import App from "./routes";
 
@@ -12,10 +12,12 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ThemeProvider>
+    <AuthContextProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
+    </AuthContextProvider>
   </React.StrictMode>,
 );
