@@ -61,11 +61,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.flex-2 {
-  flex-grow: 2;
-}
-
-.flex-3 {
-  flex-grow: 3;
-}

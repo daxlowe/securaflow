@@ -27,6 +27,7 @@ import {
 
 import { DataTablePagination } from "../components/data-table-pagination"
 import { DataTableToolbar } from "../components/data-table-toolbar"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -70,14 +71,15 @@ export function DataTable<TData, TValue>({
     return (
         <div className="space-y-4">
             <DataTableToolbar table={table} />
-            <div className="rounded-md border">
+            <div className="rounded-md border min-w-[575px]">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                        <TableHead key={header.id} colSpan={header.colSpan}
+                                            className="p-0">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -98,7 +100,7 @@ export function DataTable<TData, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className="p-0">
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
@@ -109,11 +111,43 @@ export function DataTable<TData, TValue>({
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
+                                <TableCell>
+                                    <div></div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[150px]" />
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[150px]" />
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[150px]" />
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[150px]" />
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[150px]" />
+                                        </div>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         )}

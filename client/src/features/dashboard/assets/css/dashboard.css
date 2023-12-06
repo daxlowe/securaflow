@@ -1,8 +1,13 @@
 .tickets-container {
   padding: 5vw;
+  --col-height: 50px;
 }
 
 .btn-container {
   display: flex;
   justify-content: space-between;
+}
+
+button[data-state="checked"], button[data-state="indeterminate"] {
+  transform: translateY(3px);
 }

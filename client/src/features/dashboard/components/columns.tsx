@@ -5,85 +5,118 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
-import { labels, priorities } from "../data/data"
-import { Ticket } from "@/types"
+import { labels, priorities, statuses } from "../data/data"
+import { Task } from "../data/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 
-export const columns: ColumnDef<Ticket>[] = [
+export const columns: ColumnDef<Task>[] = [
     {
         id: "select",
         header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[-2px]"
-            />
+            <div className="px-4 h-[50px] items-center flex">
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                    className="translate-y-[3px] "
+                />
+            </div>
         ),
         cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-                className="translate-y-[2px]"
-            />
+            <div className="px-4">
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                    className="translate-y-[-3px] "
+                />
+            </ div>
         ),
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: "_id",
+        accessorKey: "id",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Ticket" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Ticket" />
+            </div>
         ),
-        cell: ({ row }) => <div className="w-[80px]">{row.getValue("_id")}</div>,
+        cell: ({ row }) => <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2">{row.getValue("id")}</div>,
         enableSorting: false,
-        enableHiding: false,
     },
     {
         accessorKey: "title",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Title" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Title" />
+            </div>
         ),
         cell: ({ row }) => {
-            const label = labels.find((label) => label.value === row.original.current_status)
-
             return (
-                <div className="flex space-x-2">
-                    {label && <Badge variant="outline">{label.label}</Badge>}
-                    <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("title")}
-                    </span>
+                <div className="flex min-w-[200px] space-x-2 h-[50px] items-center overflow-x-auto px-2">
+                    {row.getValue("title")}
                 </div>
             )
         },
     },
     {
-        accessorKey: "current_status",
+        accessorKey: "team",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Status" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Team" />
+            </div>
         ),
         cell: ({ row }) => {
-            const label = labels.find((label) => label.value === row.original.current_status)
-
             return (
-                <div className="flex space-x-2">
-                    {label && <Badge variant="outline">{label.label}</Badge>}
-                    <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("current_status")}
-                    </span>
+                <div className="flex space-x-2 h-[50px] items-center overflow-x-auto px-2">
+                    {row.getValue("team")}
                 </div>
             )
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
+    },
+    {
+        accessorKey: "status",
+        header: ({ column }) => (
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Status" />
+            </div>
+        ),
+        cell: ({ row }) => {
+            const status = statuses.find(
+                (status) => status.value === row.getValue("status")
+            )
+
+            if (!status) {
+                return null
+            }
+
+            return (
+                <div className="flex w-[109px] h-[50px] items-center overflow-x-auto px-2">
+                    {status.icon && (
+                        <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span>{status.label}</span>
+                </div>
+            )
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
         },
     },
     {
         accessorKey: "priority",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Priority" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Priority" />
+            </div>
         ),
         cell: ({ row }) => {
             const priority = priorities.find(
@@ -95,7 +128,7 @@ export const columns: ColumnDef<Ticket>[] = [
             }
 
             return (
-                <div className="flex items-center">
+                <div className="flex w-[96px] h-[50px] items-center overflow-x-auto px-2">
                     {priority.icon && (
                         <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
@@ -110,23 +143,27 @@ export const columns: ColumnDef<Ticket>[] = [
     {
         accessorKey: "assignees",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Assignee" />
+            <div className="px-2">
+                <DataTableColumnHeader column={column} title="Assignee" />
+            </div>
         ),
         cell: ({ row }) => {
-            const label = labels.find((label) => label.value === row.original.current_status)
-
             return (
-                <div className="flex space-x-2">
-                    {label && <Badge variant="outline">{label.label}</Badge>}
-                    <span className="max-w-[500px] truncate font-medium">
-                        {row.getValue("assignee")}
-                    </span>
+                <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2">
+                    {row.getValue("assignee")}
                 </div>
             )
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
         },
     },
     {
         id: "actions",
-        cell: ({ row }) => <DataTableRowActions row={row} />,
+        cell: ({ row }) =>
+            <div className="px-2 h-[50px] items-center flex">
+                <DataTableRowActions row={row} />
+            </div>
+        ,
     },
 ]

@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
-import { Ticket } from '@/types';
-import { getTickets } from '@/utils/getTickets';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { getTicketsAsTasks } from './utils/ticketToTask';
+import './assets/css/dashboard.css'
+import { Task } from './types';
 import { useAuthContext } from '@/hooks/useAuthContext';
+async function getData() {
+  return getTicketsAsTasks();
+}
 
 export default function Dashboard() {
-  const [data, setData] = useState<Ticket[]>([]);
-  const { user } = useAuthContext();
+  const [data, setData] = useState<Task[]>([]);
+  const { user } = useAuthContext(); 
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {

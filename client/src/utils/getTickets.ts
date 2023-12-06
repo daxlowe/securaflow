@@ -12,7 +12,9 @@ export const getTickets = async (user: User) => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
+
+        const data: Ticket[] = await response.json();
+        console.log(data);
         const data = await response.json();
         console.log("Response", data);
         return data;
