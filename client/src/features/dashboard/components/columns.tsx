@@ -73,7 +73,7 @@ export const columns: ColumnDef<Task>[] = [
         ),
         cell: ({ row }) => {
             return (
-                <div className="flex space-x-2 h-[50px] items-center overflow-x-auto px-2">
+                <div className="flex space-x-2 h-[50px] w-[80px] items-center overflow-x-auto px-2">
                     {row.getValue("team")}
                 </div>
             )

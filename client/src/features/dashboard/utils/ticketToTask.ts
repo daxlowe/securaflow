@@ -11,7 +11,7 @@ export async function getTicketsAsTasks() {
         const task: Task = {
             id: ticket._id,
             title: ticket.title,
-            team: ticket.group,
+            team: ticket.team,
             priority: ticket.vulnerability.priority, // Use optional chaining to avoid potential null/undefined error
             status: ticket.current_status,
             assignee: ticket.assignees,

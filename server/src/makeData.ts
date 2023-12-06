@@ -42,7 +42,7 @@ const createDummyData = async () => {
                 title: 'Ticket1',
                 description: 'Description1',
                 difficulty: 3,
-                group: groups[0]._id,
+                team: groups[0]._id,
                 assignees: [users[0]._id, users[1]._id],
                 current_status: 'In Progress',
                 time_estimate: 10,
@@ -67,10 +67,10 @@ const createDummyData = async () => {
                 comments: ['First comment', 'Second comment']
             },
             {
-                name: 'Ticket2',
+                title: 'Ticket2',
                 description: 'Description2',
                 difficulty: 5,
-                group: groups[1]._id,
+                team: groups[1]._id,
                 assignees: [users[2]._id],
                 current_status: 'Assigned',
                 time_estimate: 5,
@@ -85,10 +85,10 @@ const createDummyData = async () => {
                 comments: ['Initial comment']
             },
             {
-                name: 'Ticket3',
+                title: 'Ticket3',
                 description: 'Description3',
                 difficulty: 2,
-                group: groups[0]._id,
+                team: groups[0]._id,
                 assignees: [users[1]._id, users[3]._id],
                 current_status: 'Assigned',
                 time_estimate: 15,
@@ -112,10 +112,9 @@ const createDummyData = async () => {
                 comments: ['Initial assessment completed', 'Awaiting further instructions']
             },
             {
-                name: 'Ticket4',
+                title: 'Ticket4',
                 description: 'Description4',
                 difficulty: 4,
-                group: groups[0]._id,
                 assignees: [], // No assignees yet
                 current_status: 'Open',
                 time_estimate: 20,
@@ -134,10 +133,10 @@ const createDummyData = async () => {
                 comments: ['Urgent issue, requires immediate attention']
             },
             {
-                name: 'Ticket5',
+                title: 'Ticket5',
                 description: 'Description5',
                 difficulty: 1,
-                group: groups[1]._id,
+                team: groups[1]._id,
                 assignees: [users[0]._id],
                 current_status: 'Closed',
                 time_estimate: 8,

@@ -1,15 +1,13 @@
-import { Schema, model, Types, Model} from 'mongoose';
+import { Schema, model, Types, Model } from 'mongoose';
 
-interface Status 
-{
+interface Status {
     _id: Types.ObjectId;
     body: string;
     date_started: Date;
     date_ended: Date;
 }
 
-interface Vulnerability
-{
+interface Vulnerability {
     _id: Types.ObjectId;
     name: string;
     description: string;
@@ -18,10 +16,9 @@ interface Vulnerability
     imported_from?: string;
 }
 
-interface Ticket
-{
+interface Ticket {
     _id: Types.ObjectId;
-    name: string;
+    title: string;
     team: string;
     description: string;
     difficulty: number;
@@ -37,14 +34,14 @@ const statusSchema = new Schema<Status, Model<Status>>(
     {
         body:
         {
-            type: String, 
+            type: String,
             required: true
-        }, 
-        date_started: 
+        },
+        date_started:
         {
-            type: Date, 
+            type: Date,
             required: true
-        }, 
+        },
         date_ended:
         {
             type: Date
@@ -54,39 +51,39 @@ const statusSchema = new Schema<Status, Model<Status>>(
 
 const ticketSchema = new Schema<Ticket, Model<Ticket>>(
     {
-        name:
+        title:
         {
-            type: String, 
+            type: String,
             required: true
-        }, 
+        },
         team:
         {
             type: String
         },
         description:
         {
-            type: String, 
-            required: true 
+            type: String,
+            required: true
         },
         difficulty:
         {
-            type: Number, 
+            type: Number,
             required: true
-        }, 
-        assignees: 
-        {
-            type: [{ type: Schema.Types.ObjectId, ref: 'User' }] 
         },
-        time_estimate: 
+        assignees:
         {
-            type: Number   
-        }, 
-        current_status: 
-        {
-            type: String, 
-            required: true 
+            type: [{ type: Schema.Types.ObjectId, ref: 'User' }]
         },
-        status_updates: 
+        time_estimate:
+        {
+            type: Number
+        },
+        current_status:
+        {
+            type: String,
+            required: true
+        },
+        status_updates:
         {
             type: [statusSchema]
         },
@@ -94,28 +91,28 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
         {
             name:
             {
-                type: String, 
-                required: true 
-            }, 
-            cve_id: 
+                type: String,
+                required: true
+            },
+            cve_id:
             {
-                type: String, 
-                required: true 
+                type: String,
+                required: true
             },
             priority:
             {
-                type: String, 
-                required: true 
-            }, 
-            imported_from: 
+                type: String,
+                required: true
+            },
+            imported_from:
             {
-                type: String, 
+                type: String,
             }
-        }, 
+        },
         comments:
         {
             type: [String]
-        }  
+        }
     }
 );
 
