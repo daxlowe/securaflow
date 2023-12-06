@@ -100,12 +100,12 @@ export function Ticket(ticket:Ticket, status:String) {
       <form>
         <CardContent>
           <Label htmlFor="title">Title</Label>
-          <Input type="text" id="title" value={ticket.title} />
+          <Input type="text" id="title" value={ticket.name} />
           <Select>
             <SelectTrigger>
-              <SelectValue placeholder= {ticket.team ?? "(Optional) Select a team" } />
+              <SelectValue placeholder= {ticket.group ?? "(Optional) Select a team" } />
             </SelectTrigger>
-            <SelectContent defaultValue={ticket.team ?? "soc"}>
+            <SelectContent defaultValue={ticket.group ?? "soc"}>
               <SelectItem value="engineering">Engineering</SelectItem>
               <SelectItem value="soc">SOC</SelectItem>
               <SelectItem value="it">IT</SelectItem>
@@ -154,16 +154,16 @@ export function Ticket(ticket:Ticket, status:String) {
     return (
       <Card className="ticket">
       <CardHeader>
-        <CardTitle>{ticket.title}</CardTitle> 
+        <CardTitle>{ticket.name}</CardTitle> 
       </CardHeader>
       <CardContent>
           <Label htmlFor="title">Title</Label>
-          <Input type="text" id="title" value={ticket.title} disabled />
+          <Input type="text" id="title" value={ticket.name} disabled />
           <Select disabled>
             <SelectTrigger>
-              <SelectValue placeholder= {ticket.team ?? "No Team Currently Assigned" } />
+              <SelectValue placeholder= {ticket.group ?? "No Team Currently Assigned" } />
             </SelectTrigger>
-            <SelectContent defaultValue={ticket.team ?? "soc"}>
+            <SelectContent defaultValue={ticket.group ?? "soc"}>
               <SelectItem value="engineering">Engineering</SelectItem>
               <SelectItem value="soc">SOC</SelectItem>
               <SelectItem value="it">IT</SelectItem>
