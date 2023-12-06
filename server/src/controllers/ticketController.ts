@@ -2,15 +2,13 @@ import mongoose, { mongo } from 'mongoose';
 import { Request, Response } from 'express';
 import Ticket from '../models/Ticket';
 import { addTicketsToUser, removeTicketsFromUser } from './userController';
-import { DiffieHellman } from 'crypto';
 
 // GET all tickets
 const getAllTickets = async (req: Request, res: Response) =>
 {
-    const user_id = req.body.user._id;
+    const user_id = req.body.user_id;
     console.log(user_id);
     const tickets = await Ticket.find({assignees: [user_id]});
-    console.log(tickets);
     res.status(200).json(tickets);
 }
 
@@ -76,7 +74,7 @@ const createTicket = async (req: Request, res: Response) =>
         // Add the new ticket to each assignee's array of tickets
         if (ticket.assignees && ticket.assignees.length > 0) {
             await Promise.all(
-                ticket.assignees.map(assigneeId => addTicketsToUser(assigneeId, [ticket._id]))
+                ticket.assignees.map(assigneeId => addTicketsToUser(user_id, [ticket._id]))
             );
         }
 

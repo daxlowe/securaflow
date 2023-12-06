@@ -6,8 +6,10 @@ import { getTicketsAsTasks } from './utils/ticketToTask';
 import './assets/css/dashboard.css'
 import { Task } from './types';
 import { useAuthContext } from '@/hooks/useAuthContext';
-async function getData() {
-  return getTicketsAsTasks();
+import { User } from '@/types';
+
+async function getData(user: User) {
+  return getTicketsAsTasks(user);
 }
 
 export default function Dashboard() {
@@ -17,8 +19,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getTickets(user);
-        console.log(result);
+        const result = await getData(user);
+
         setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);
