@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { columns } from './components/columns';
 import { DataTable } from './components/data-table';
-import { ModeToggle } from '@/components/ui/mode-toggle';
 import { getTicketsAsTasks } from './utils/ticketToTask';
 import './assets/css/dashboard.css'
 import { Task } from './types';
@@ -32,7 +31,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <ModeToggle />
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={data} />
       </div>

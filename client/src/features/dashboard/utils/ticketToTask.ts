@@ -9,9 +9,9 @@ export async function getTicketsAsTasks(user: User) {
 
     const tasks: Task[] = tickets.map(ticket => {
         const task: Task = {
-            id: ticket._id, // Adjust as needed
-            title: ticket.name,
-            team: ticket.group,
+            id: ticket._id,
+            title: ticket.title,
+            team: ticket.team,
             priority: ticket.vulnerability.priority, // Use optional chaining to avoid potential null/undefined error
             status: ticket.current_status,
             assignee: ticket.assignees,

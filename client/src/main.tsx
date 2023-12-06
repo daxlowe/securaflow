@@ -13,7 +13,7 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <BrowserRouter>
           <App />
         </BrowserRouter>

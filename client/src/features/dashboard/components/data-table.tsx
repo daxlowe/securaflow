@@ -117,35 +117,42 @@ export function DataTable<TData, TValue>({
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[150px]" />
+                                            <Skeleton className="h-4 w-[80px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[150px]" />
+                                            <Skeleton className="h-4 w-[200px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[150px]" />
+                                            <Skeleton className="h-4 w-[80px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[150px]" />
+                                            <Skeleton className="h-4 w-[80px]" />
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-4">
                                         <div className="space-y-2">
-                                            <Skeleton className="h-4 w-[150px]" />
+                                            <Skeleton className="h-4 w-[80px]" />
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[80px]" />
                                         </div>
                                     </div>
                                 </TableCell>

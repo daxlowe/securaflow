@@ -39,9 +39,10 @@ const createDummyData = async () => {
         // Creating Tickets with varying properties and status updates
         const tickets = await Ticket.create([
             {
-                name: 'Ticket1',
+                title: 'Ticket1',
                 description: 'Description1',
                 difficulty: 3,
+                team: groups[0]._id,
                 assignees: [users[0]._id, users[1]._id],
                 current_status: 'In Progress',
                 time_estimate: 10,
@@ -66,9 +67,10 @@ const createDummyData = async () => {
                 comments: ['First comment', 'Second comment']
             },
             {
-                name: 'Ticket2',
+                title: 'Ticket2',
                 description: 'Description2',
                 difficulty: 5,
+                team: groups[1]._id,
                 assignees: [users[2]._id],
                 current_status: 'Assigned',
                 time_estimate: 5,
@@ -83,9 +85,10 @@ const createDummyData = async () => {
                 comments: ['Initial comment']
             },
             {
-                name: 'Ticket3',
+                title: 'Ticket3',
                 description: 'Description3',
                 difficulty: 2,
+                team: groups[0]._id,
                 assignees: [users[1]._id, users[3]._id],
                 current_status: 'Assigned',
                 time_estimate: 15,
@@ -101,15 +104,15 @@ const createDummyData = async () => {
                         date_ended: null // Work is still ongoing
                     }
                 ],
-                vulnerability: { 
-                    name: 'Vulnerability3', 
-                    cve_id: 'CVE-0003', 
+                vulnerability: {
+                    name: 'Vulnerability3',
+                    cve_id: 'CVE-0003',
                     priority: 'Low'
                 },
                 comments: ['Initial assessment completed', 'Awaiting further instructions']
             },
             {
-                name: 'Ticket4',
+                title: 'Ticket4',
                 description: 'Description4',
                 difficulty: 4,
                 assignees: [], // No assignees yet
@@ -122,17 +125,18 @@ const createDummyData = async () => {
                         date_ended: null // Ticket still open, not yet assigned
                     }
                 ],
-                vulnerability: { 
-                    name: 'Vulnerability4', 
-                    cve_id: 'CVE-0004', 
+                vulnerability: {
+                    name: 'Vulnerability4',
+                    cve_id: 'CVE-0004',
                     priority: 'Critical'
                 },
                 comments: ['Urgent issue, requires immediate attention']
             },
             {
-                name: 'Ticket5',
+                title: 'Ticket5',
                 description: 'Description5',
                 difficulty: 1,
+                team: groups[1]._id,
                 assignees: [users[0]._id],
                 current_status: 'Closed',
                 time_estimate: 8,
@@ -158,14 +162,14 @@ const createDummyData = async () => {
                         date_ended: null // Ticket still closed
                     }
                 ],
-                vulnerability: { 
-                    name: 'Vulnerability5', 
-                    cve_id: 'CVE-0005', 
+                vulnerability: {
+                    name: 'Vulnerability5',
+                    cve_id: 'CVE-0005',
                     priority: 'Medium'
                 },
                 comments: ['Quick resolution required', 'Issue resolved and verified']
             },
-            
+
         ]);
 
         // Update Users with Ticket Information
@@ -174,7 +178,7 @@ const createDummyData = async () => {
                 continue;
             }
             await Promise.all(
-                ticket.assignees.map(userId => 
+                ticket.assignees.map(userId =>
                     User.findByIdAndUpdate(userId, { $push: { tickets: ticket._id } })
                 )
             );
