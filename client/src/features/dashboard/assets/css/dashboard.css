@@ -1,5 +1,6 @@
 .tickets-container {
   padding: 5vw;
+  --col-height: 50px;
 }
 
 .btn-container {

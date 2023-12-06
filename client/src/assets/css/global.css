@@ -61,7 +61,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.col-height {
-  height: 50px;
-}
