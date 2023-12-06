@@ -27,3 +27,9 @@ export type Vulnerability = {
     priority: string;
     imported_from?: string;
 }
+
+export type User =
+{
+    email: string, 
+    token: string
+}

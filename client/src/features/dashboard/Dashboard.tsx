@@ -4,18 +4,16 @@ import { DataTable } from './components/data-table';
 import { Ticket } from '@/types';
 import { getTickets } from '@/utils/getTickets';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-
-async function getData(): Promise<Ticket[]> {
-  return getTickets();
-}
+import { useAuthContext } from '@/hooks/useAuthContext';
 
 export default function Dashboard() {
   const [data, setData] = useState<Ticket[]>([]);
- 
+  const { user } = useAuthContext();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getData();
+        const result = await getTickets(user);
+        console.log(result);
         setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);

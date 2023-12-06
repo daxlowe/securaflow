@@ -8,7 +8,9 @@ import { DiffieHellman } from 'crypto';
 const getAllTickets = async (req: Request, res: Response) =>
 {
     const user_id = req.body.user._id;
-    const tickets = await Ticket.find({}).sort({createdAt: -1});
+    console.log(user_id);
+    const tickets = await Ticket.find({assignees: [user_id]});
+    console.log(tickets);
     res.status(200).json(tickets);
 }
 

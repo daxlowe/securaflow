@@ -1,65 +1,103 @@
-import { useSignup } from '@/hooks/useSignup';
-import { useState } from "react"
+"use client"
+
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+import { Icons } from "@/components/ui/icons"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
- 
-export function CreateAccount() {
+import { useSignup } from '@/hooks/useSignup';
+import { useState } from "react"
+
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function CreateAccount({ className, ...props }: UserAuthFormProps) {
+    const { signup, isLoading, error } = useSignup();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signup, isLoading, error } = useSignup();
-    
-    //@ts-expect-error e is any type
-    const handleSignup = async (e) =>
-    {
-        e.preventDefault();
+
+    async function onSubmit(event: React.SyntheticEvent) {
+        event.preventDefault();
 
         await signup(firstName, lastName, email, password);
     }
 
-  return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Create New Account</CardTitle>
-        <CardDescription>Sign Up with Securaflow</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSignup}>
-          <div className="grid w-full items-center gap-4">
-          <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input id="name" onChange={(e) => setFirstName(e.target.value)} />
+    return (
+        <div className={cn("grid gap-6", className)} {...props}>
+        <form onSubmit={onSubmit}>
+            <div className="grid gap-2">
+            <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="firstName">
+                First Name*
+                </Label>
+                <Input
+                id="firstName"
+                placeholder="First Name*"
+                type="name"
+                autoCapitalize="none"
+                autoCorrect="off"
+                disabled={isLoading}
+                onChange={(e) => setFirstName(e.target.value)}
+                />
             </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input id="name" onChange={(e) => setLastName(e.target.value)}/>
+            <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="lastName">
+                Last Name*
+                </Label>
+                <Input
+                id="lastName"
+                placeholder="Last Name*"
+                type="name"
+                autoCapitalize="none"
+                autoCorrect="off"
+                disabled={isLoading}
+                onChange={(e) => setLastName(e.target.value)}
+                />
             </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" onChange={(e) => setEmail(e.target.value)} />
+            <div className="grid gap-1">
+                <Label className="sr-only">
+                Email*
+                </Label>
+                <Input
+                id="email"
+                placeholder="name@example.com*"
+                disabled={isLoading}
+                onChange={(e) => setEmail(e.target.value)}
+                />
             </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" onChange={(e) => setPassword(e.target.value)}/>
+            <div className="grid gap-1">
+                <Label className="sr-only" htmlFor="password">
+                Password*
+                </Label>
+                <Input
+                id="password"
+                placeholder="Password*"
+                type="password"
+                autoCapitalize="none"
+                autoCorrect="off"
+                disabled={isLoading}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+                <p className="px-1 text-right text-sm text-muted-foreground">
+                * Required
+                </p>
+
+                <p className="px-1 text-left text-sm text-muted-foreground">
+                Passwords must be at least 8 characters long and contain at least: One uppercase letter, One lowercase letter, and One symbol
+                </p>
             </div>
-          </div>
+            <Button disabled={isLoading}>
+                {isLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Sign Up
+            </Button>
+            {error && <div className="error">{error}</div>}
+            </div>
         </form>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button disabled={isLoading} onClick={handleSignup}>Create Account</Button>
-        {error && <div className="error">{error}</div>}
-      </CardFooter>
-    </Card>
-  )
+        </div>
+    )
 }

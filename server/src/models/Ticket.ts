@@ -21,7 +21,7 @@ interface Vulnerability
 interface Ticket
 {
     _id: Types.ObjectId;
-    name: string;
+    title: string;
     team: string;
     description: string;
     difficulty: number;
@@ -54,7 +54,7 @@ const statusSchema = new Schema<Status, Model<Status>>(
 
 const ticketSchema = new Schema<Ticket, Model<Ticket>>(
     {
-        name:
+        title:
         {
             type: String, 
             required: true
