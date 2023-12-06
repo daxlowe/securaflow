@@ -28,7 +28,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <ModeToggle />
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={data} />
       </div>
