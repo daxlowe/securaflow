@@ -14,7 +14,7 @@ export const columns: ColumnDef<Task>[] = [
     {
         id: "select",
         header: ({ table }) => (
-            <div className="px-4">
+            <div className="px-4 h-[50px] items-center flex">
                 <Checkbox
                     checked={
                         table.getIsAllPageRowsSelected() ||
@@ -22,7 +22,7 @@ export const columns: ColumnDef<Task>[] = [
                     }
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                     aria-label="Select all"
-                    className="translate-y-[-3px]"
+                    className="translate-y-[3px] "
                 />
             </div>
         ),
@@ -46,7 +46,7 @@ export const columns: ColumnDef<Task>[] = [
                 <DataTableColumnHeader column={column} title="Ticket" />
             </div>
         ),
-        cell: ({ row }) => <div className="flex w-[80px] space-x-2 col-height items-center overflow-x-auto px-2">{row.getValue("id")}</div>,
+        cell: ({ row }) => <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2">{row.getValue("id")}</div>,
         enableSorting: false,
     },
     {
@@ -58,7 +58,7 @@ export const columns: ColumnDef<Task>[] = [
         ),
         cell: ({ row }) => {
             return (
-                <div className="flex min-w-[200px] space-x-2 col-height items-center overflow-x-auto px-2">
+                <div className="flex min-w-[200px] space-x-2 h-[50px] items-center overflow-x-auto px-2">
                     {row.getValue("title")}
                 </div>
             )
@@ -72,9 +72,8 @@ export const columns: ColumnDef<Task>[] = [
             </div>
         ),
         cell: ({ row }) => {
-
             return (
-                <div className="flex space-x-2 col-height items-center overflow-x-auto px-2">
+                <div className="flex space-x-2 h-[50px] items-center overflow-x-auto px-2">
                     {row.getValue("team")}
                 </div>
             )
@@ -100,7 +99,7 @@ export const columns: ColumnDef<Task>[] = [
             }
 
             return (
-                <div className="flex col-height items-center overflow-x-auto px-2">
+                <div className="flex w-[109px] h-[50px] items-center overflow-x-auto px-2">
                     {status.icon && (
                         <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
@@ -129,7 +128,7 @@ export const columns: ColumnDef<Task>[] = [
             }
 
             return (
-                <div className="flex w-[80px] col-height items-center overflow-x-auto px-2">
+                <div className="flex w-[96px] h-[50px] items-center overflow-x-auto px-2">
                     {priority.icon && (
                         <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
@@ -150,7 +149,7 @@ export const columns: ColumnDef<Task>[] = [
         ),
         cell: ({ row }) => {
             return (
-                <div className="flex space-x-2 col-height items-center overflow-x-auto px-2">
+                <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2">
                     {row.getValue("assignee")}
                 </div>
             )
@@ -162,7 +161,7 @@ export const columns: ColumnDef<Task>[] = [
     {
         id: "actions",
         cell: ({ row }) =>
-            <div className="px-2">
+            <div className="px-2 h-[50px] items-center flex">
                 <DataTableRowActions row={row} />
             </div>
         ,
