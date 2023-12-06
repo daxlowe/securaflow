@@ -2,10 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
-import { labels, priorities, statuses } from "../data/data"
+import { priorities, statuses } from "../data/data"
 import { Task } from "../data/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
@@ -141,7 +140,7 @@ export const columns: ColumnDef<Task>[] = [
         },
     },
     {
-        accessorKey: "assignee",
+        accessorKey: "assignees",
         header: ({ column }) => (
             <div className="px-2">
                 <DataTableColumnHeader column={column} title="Assignee" />

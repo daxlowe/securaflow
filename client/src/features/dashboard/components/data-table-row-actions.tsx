@@ -25,6 +25,20 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const originalData = row.original as Ticket;
+
+  // Manual validation
+  if (
+    !originalData._id ||
+    !originalData.title ||
+    !originalData.current_status ||
+    !originalData.vulnerability ||
+    !originalData.vulnerability.priority
+  ) {
+    // Handle validation error
+    console.error("Invalid Ticket data:", originalData);
+    return null; // or return an error component
+  }
+
   // Now you can safely use the data
   const task = originalData;
 

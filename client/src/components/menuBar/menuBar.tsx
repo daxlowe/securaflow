@@ -7,6 +7,7 @@ import {
     NavigationMenuLink,
     navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu"; // Adjust the import path as per your project setup
+import * as logo from '@/assets/images/securaflow-logo.png';
 
 const MenuBar: React.FC = () => {
     return (
