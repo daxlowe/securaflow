@@ -31,50 +31,16 @@ const getSingleTicket = async (req: Request, res: Response) =>
 // POST a new ticket 
 const createTicket = async (req: Request, res: Response) =>
 {
-    const { title, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
-    const { name, cve_id, priority } = vulnerability;
-    
-    let emptyFields = [];
-
-    if(!title)
-        emptyFields.push('Title');
-
-    if(!description)
-        emptyFields.push('Description');
-
-    if(!difficulty)
-        emptyFields.push('Difficulty');
-
-    if(!assignees)
-        emptyFields.push('Assignees');
-
-    if(!current_status)
-        emptyFields.push('Current Status');
-
-    if(!vulnerability)
-        emptyFields.push('Vulnerability required');
-
-    if(!name)
-        emptyFields.push('Vulnerability Name');
-
-    if(!cve_id)
-        emptyFields.push('CVE ID');
-
-    if(!priority)
-        emptyFields.push('Priority');
-
-    if(emptyFields.length > 0)
-        return res.status(400).json({ error: `Missing required fields: ${emptyFields}`, emptyFields});
+    const { name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
 
     try
     {
-        const user_id = req.body.user_id;
-	    const ticket: Ticket = await Ticket.create({ title, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
+	    const ticket: Ticket = await Ticket.create({ name, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
         
         // Add the new ticket to each assignee's array of tickets
         if (ticket.assignees && ticket.assignees.length > 0) {
             await Promise.all(
-                ticket.assignees.map(assigneeId => addTicketsToUser(user_id, [ticket._id]))
+                ticket.assignees.map(assigneeId => addTicketsToUser(assigneeId, [ticket._id]))
             );
         }
 
@@ -120,7 +86,7 @@ const updateTicket = async (req: Request, res: Response) =>
         }
 
         // Compare assignees and update users if necessary
-        const newAssignees: mongoose.Types.ObjectId[] = modifiedTicket.assignees || [];
+        const newAssignees: mongoose.Types.ObjectId[] = modifiedTicket?.assignees || [];
         const oldAssignees: mongoose.Types.ObjectId[] = currentTicket?.assignees || [];
 
         const assigneesAdded: mongoose.Types.ObjectId[] = newAssignees.filter(assignee => !oldAssignees.includes(assignee));
@@ -141,7 +107,6 @@ const updateTicket = async (req: Request, res: Response) =>
     }
 }
 
-/*
 // GET user's tickets
 const getUsersTickets = async (req: Request, res: Response) =>
 {
@@ -154,7 +119,6 @@ const getUsersTickets = async (req: Request, res: Response) =>
         res.status(500).json({ message: `Error fetching tickets for user ${userId}.`});
     }
 }
-*/
 
 export 
 {
@@ -162,5 +126,6 @@ export
     getSingleTicket, 
     createTicket, 
     deleteTicket, 
-    updateTicket
+    updateTicket,
+    getUsersTickets,
 }

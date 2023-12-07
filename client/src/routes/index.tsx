@@ -1,14 +1,15 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "@/features/dashboard"
-import Login from "@/features/login"
+import { Routes, Route } from "react-router-dom";
+import Home from "@/features/home"
+import Dashboard from "@/features/dashboard";
+import MenuBar from "@/components/menuBar/menuBar";
+import Login from "@/features/login";
 import Signup from "@/features/signup";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
 export default function App() {
-    const { user } = useAuthContext();
-
     return (
-        <>
+        <div className="flex">
+            <MenuBar />
             <div className="flex-grow">
                 <Routes>
                     <Route path="/home" element={<Navigate to="/" />} />
@@ -17,6 +18,6 @@ export default function App() {
                     <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
                 </Routes>
             </div>
-        </>
+        </div>
     );
 }

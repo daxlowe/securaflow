@@ -6,8 +6,6 @@ import MenuBar from "@/components/menuBar/menuBar";
 import { MainNav } from '@/components/navbar/main-nav';
 import './assets/css/dashboard.css'
 import { Task } from './types';
-import { useAuthContext } from '@/hooks/useAuthContext';
-import { User } from '@/types';
 
 
 async function getData(user: User) {
@@ -16,13 +14,11 @@ async function getData(user: User) {
 
 export default function Dashboard() {
   const [data, setData] = useState<Task[]>([]);
-  const { user } = useAuthContext(); 
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getData(user);
-
+        const result = await getData();
         setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);

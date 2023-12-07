@@ -42,6 +42,21 @@ export function DataTableRowActions<TData>({
   // Now you can safely use the data
   const task = originalData;
 
+  const handleViewClick = () => {
+    console.log("View clicked for task:", task);
+    // Add your view logic here
+  };
+
+  const handleEditClick = () => {
+    console.log("Edit clicked for task:", task);
+    // Add your edit logic here
+  };
+
+  const handleDeleteClick = () => {
+    console.log("Delete clicked for task:", task);
+    // Add your delete logic here
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -54,13 +69,13 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>View</DropdownMenuItem>
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleViewClick}>View</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDeleteClick}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
