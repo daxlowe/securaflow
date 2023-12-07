@@ -9,10 +9,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ViewTicket } from "@/components/ViewTicketPopup";
-import { ModifyTicket } from "@/components/ModifyTicketPopup";
-import { CreateTicket } from "@/components/CreateTicketPopup";
-import { Task } from "../types"
+import { Task } from "../types";
+import TicketActionView, { ComponentTypes } from './TicketActionView';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -38,27 +36,12 @@ export function DataTableRowActions<TData>({
 
   // Now you can safely use the data
   const task = originalData;
-  
-  enum ComponentTypes {
-    ViewTicket = 'viewTicket',
-    ModifyTicket = 'modifyTicket',
-    CreateTicket = 'createTicket'
-  }
 
-  type ActiveComponentType = ComponentTypes | null;
+  const [activeComponent, setActiveComponent] = useState<ComponentTypes | null>(null);
   
-    //State to track which component to display
-    const [activeComponent, setActiveComponent] = useState<ActiveComponentType>(null);
-  
-    const handleMenuClick = (componentName: ComponentTypes) => {
-      setActiveComponent(componentName);
-    };
-
-    const components: Record<ComponentTypes, JSX.Element> = {
-      [ComponentTypes.ViewTicket]: <ViewTicket task={task} />,
-      [ComponentTypes.CreateTicket]: <CreateTicket />,
-      [ComponentTypes.ModifyTicket]: <ModifyTicket task={task} />,
-    };
+  const handleMenuClick = (componentName: ComponentTypes) => {
+    setActiveComponent(componentName);
+  };
 
     return (
       <>
@@ -79,7 +62,7 @@ export function DataTableRowActions<TData>({
           <DropdownMenuItem>Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {activeComponent && components[activeComponent]}
+      <TicketActionView activeComponent={activeComponent} task={task} />
       </>
     );
 }
