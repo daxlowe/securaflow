@@ -28,14 +28,13 @@ import {
 import { DataTablePagination } from "../components/data-table-pagination"
 import { DataTableToolbar } from "../components/data-table-toolbar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Task } from "../types"
 
-interface DataTableProps<TData extends Record<string, any>, TValue> {
-    columns: ColumnDef<TData>[]
+interface DataTableProps<TData, TValue> {
+    columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 
-export function DataTable<TData extends Task, TValue>({
+export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
