@@ -70,10 +70,6 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
             type: Number,
             required: true
         },
-        assignees:
-        {
-            type: [{ type: Schema.Types.ObjectId, ref: 'User' }]
-        },
         time_estimate:
         {
             type: Number
