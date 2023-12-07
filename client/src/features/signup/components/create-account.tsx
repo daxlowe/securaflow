@@ -86,7 +86,7 @@ export function CreateAccount({ className, ...props }: UserAuthFormProps) {
                 </p>
 
                 <p className="px-1 text-left text-sm text-muted-foreground">
-                Passwords must be at least 8 characters long and contain at least: One uppercase letter, One lowercase letter, and One symbol
+                Passwords must be at least 8 characters long and contain at least: One uppercase letter, One lowercase letter, One number, and One symbol
                 </p>
             </div>
             <Button disabled={isLoading}>

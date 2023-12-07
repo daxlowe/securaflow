@@ -13,7 +13,7 @@ import { useState } from "react"
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Login({ className, ...props }: UserAuthFormProps) {
-    const { login, isLoading } = useLogin();
+    const { login, isLoading, error } = useLogin();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -28,13 +28,12 @@ export function Login({ className, ...props }: UserAuthFormProps) {
         <form onSubmit={onSubmit}>
             <div className="grid gap-2">
             <div className="grid gap-1">
-                <Label className="sr-only" htmlFor="email">
+                <Label className="sr-only">
                 Email
                 </Label>
                 <Input
                 id="email"
                 placeholder="name@example.com"
-                type="email"
                 autoCapitalize="none"
                 autoComplete="email"
                 autoCorrect="off"
@@ -62,6 +61,7 @@ export function Login({ className, ...props }: UserAuthFormProps) {
                 )}
                 Log In
             </Button>
+            {error && <div className="error">{error}</div>}
             </div>
         </form>
         </div>

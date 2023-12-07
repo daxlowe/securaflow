@@ -50,12 +50,12 @@ const userSchema = new Schema<User, Model<User>>(
 	   const user = await this.findOne({ email });
 
 	   if(!user)
-		   throw Error('Invalid Login Credentials: Email');
+		   throw Error('Invalid Login Credentials');
 
 	   const match = await bcrypt.compare(password, user.password);
 
 	   if(!match)
-		   throw Error('Invalid Login Crendentials: Password');
+		   throw Error('Invalid Login Crendentials');
 
 	   return user;
    }
