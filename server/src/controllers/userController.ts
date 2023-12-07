@@ -18,12 +18,13 @@ const loginUser = async (request: Request, response: Response) =>
     try
     {
         // @ts-ignore
-        const user = await User.login(email, password);
-        
+        const user = await User.login(email, password) as User;
+        const first = user.first;
+        const last = user.last;
         // Create a token
         const token = createToken(user._id);
 
-        response.status(200).json({email, token});
+        response.status(200).json({first, last, email, token});
     }
     catch (error: any)
     {
@@ -44,7 +45,7 @@ const signupUser = async (request: Request, response: Response) =>
         // Create a token
         const token = createToken(user._id);
 
-        response.status(200).json({email, token});
+        response.status(200).json({first_name, last_name, email, token});
     }
     catch (error: any)
     {
@@ -52,6 +53,22 @@ const signupUser = async (request: Request, response: Response) =>
     }
 }
 
+const updateUser = async (request: Request, response: Response) =>
+{
+    console.log(request.body);
+    const id = request.body.user._id;
+    console.log(id);
+    try
+    {
+        // @ts-ignore
+        const user = await User.findByIdAndUpdate(id, request.body);
+        response.status(200).json(user);
+    }
+    catch (error: any)
+    {
+        response.status(400).json({ error: error.message })
+    }
+}
 // Function to add any number of tickets to a user's tickets array
 const addTicketsToUser = async (userId: mongoose.Types.ObjectId, ticketIds: mongoose.Types.ObjectId[]) => {
     try {
@@ -72,9 +89,21 @@ const removeTicketsFromUser = async (userId: mongoose.Types.ObjectId, ticketIds:
     }
 };
 
+// Function to add any number of tickets to a user's tickets array
+const addGroupsToUser = async (userId: mongoose.Types.ObjectId, groupIds: mongoose.Types.ObjectId[]) => {
+    try {
+        await User.findByIdAndUpdate(userId, { $push: { groups: { $each: groupIds } } });
+        return { status: "success" };
+    } catch (error) {
+        return { status: "error", error: error };
+    }
+};
+
 export {
     addTicketsToUser,
     removeTicketsFromUser,
+    addGroupsToUser,
     loginUser,
-    signupUser
+    signupUser,
+    updateUser
 }

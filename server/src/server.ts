@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes';
 import ticketRoutes from './routes/ticketRoutes';
+import groupRoutes from './routes/groupRoutes';
 import * as mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import User from './models/User';
@@ -29,7 +30,8 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 
 app.use('/api/user', userRoutes);
-app.use('/api/tickets', ticketRoutes)
+app.use('/api/tickets', ticketRoutes);
+app.use('/api/groups', groupRoutes);
 
 // Define a route handler for the dashboard
 app.get('/dashboard', (req: Request, res: Response) => {

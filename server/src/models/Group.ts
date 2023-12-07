@@ -8,9 +8,11 @@ interface Permissions
 
 interface Group 
 {
+	_id: Types.ObjectId;
 	name: string;
 	permissions: Permissions;
 	users: Types.Array<Types.ObjectId>;
+	tickets: Types.Array<Types.ObjectId>;
 }
 
 const groupSchema = new Schema<Group, Model<Group>>(
@@ -33,7 +35,16 @@ const groupSchema = new Schema<Group, Model<Group>>(
 				required: true
 			}
 		},
-		users: [{type: Schema.Types.ObjectId, ref: 'User'}]
+		users: 
+		{
+			type: [{type: Schema.Types.ObjectId, ref: 'User'}],
+			required: true
+		}, 
+		tickets:
+		{
+			type: [{type: Schema.Types.ObjectId, ref: 'Ticket'}],
+			required: true
+		}
     }
 );
 

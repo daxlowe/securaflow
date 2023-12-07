@@ -26,6 +26,7 @@
     --input: 240 5.9% 90%;
     --ring: 346.8 77.2% 49.8%;
     --radius: 0.5rem;
+    --error: #e7195a;
   }
  
   .dark {
@@ -51,7 +52,14 @@
   }
 }
 
-
+div.error {
+  padding: 10px;
+  background: #ffefef;
+  border: 1px solid var(--error);
+  color: var(--error);
+  border-radius: 4px;
+  margin: 20px 0;
+}
  
 @layer base {
   * {

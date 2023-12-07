@@ -58,7 +58,8 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
         },
         team:
         {
-            type: String
+            type: String,
+            required: true
         },
         description:
         {

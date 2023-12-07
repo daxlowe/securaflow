@@ -1,14 +1,20 @@
 import mongoose, { mongo } from 'mongoose';
 import { Request, Response } from 'express';
 import Ticket from '../models/Ticket';
+import Group from '../models/Group';
+import User from '../models/User';
 import { addTicketsToUser, removeTicketsFromUser } from './userController';
+import { Types } from 'mongoose';
+import { addTicketsToGroup } from './groupController';
+import { group } from 'console';
 
 // GET all tickets
 const getAllTickets = async (req: Request, res: Response) =>
 {
     const user_id = req.body.user._id;
-    console.log(user_id);
-    const tickets = await Ticket.find({assignees: [user_id]});
+    const groupDocument = await User.findById(user_id).select("groups");
+    const groups = groupDocument?.groups as Types.Array<Types.ObjectId>;
+    const tickets = await Ticket.find({team: { $in: [...groups] }});
     res.status(200).json(tickets);
 }
 
@@ -31,9 +37,11 @@ const getSingleTicket = async (req: Request, res: Response) =>
 // POST a new ticket 
 const createTicket = async (req: Request, res: Response) =>
 {
-    const { title, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
+    const { title, team, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
     const { name, cve_id, priority } = vulnerability;
     
+    const group_id = team as Types.ObjectId;
+
     let emptyFields = [];
 
     if(!title)
@@ -69,13 +77,19 @@ const createTicket = async (req: Request, res: Response) =>
     try
     {
         const user_id = req.body.user_id;
-	    const ticket: Ticket = await Ticket.create({ title, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
+	    const ticket: Ticket = await Ticket.create({ title, team, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
         
         // Add the new ticket to each assignee's array of tickets
         if (ticket.assignees && ticket.assignees.length > 0) {
-            await Promise.all(
-                ticket.assignees.map(assigneeId => addTicketsToUser(user_id, [ticket._id]))
-            );
+            await Promise.all([
+                ticket.assignees.map(assigneeId => addTicketsToUser(user_id, [ticket._id])),
+                addTicketsToGroup(group_id, [ticket._id])
+            ]);
+        }
+
+        if(ticket.team)
+        {
+            await Promise.all([addTicketsToGroup(group_id, [ticket._id])]);
         }
 
         res.status(200).json(ticket);
@@ -141,20 +155,16 @@ const updateTicket = async (req: Request, res: Response) =>
     }
 }
 
-/*
-// GET user's tickets
-const getUsersTickets = async (req: Request, res: Response) =>
-{
-    const userId = req.params.userId;
+// Function to add any number of tickets to a user's tickets array
+const setTicketTeam = async (groupId: mongoose.Types.ObjectId, ticketIds: mongoose.Types.ObjectId[]) => {
     try {
-        const tickets = await Ticket.find({ assignees: userId }).exec();
-
-        res.status(200).json(tickets);
+        const tickets = await Ticket.updateMany(ticketIds, { team: groupId } );
+        console.log(tickets);
+        return { status: "success" };
     } catch (error) {
-        res.status(500).json({ message: `Error fetching tickets for user ${userId}.`});
+        return { status: "error", error: error };
     }
-}
-*/
+};
 
 export 
 {
@@ -162,5 +172,6 @@ export
     getSingleTicket, 
     createTicket, 
     deleteTicket, 
-    updateTicket
+    updateTicket, 
+    setTicketTeam
 }
