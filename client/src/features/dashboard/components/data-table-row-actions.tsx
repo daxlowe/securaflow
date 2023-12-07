@@ -28,8 +28,8 @@ export function DataTableRowActions<TData>({
     !originalData.id ||
     !originalData.title ||
     !originalData.status ||
-    !ticket.vulnerability ||
-    !ticket.vulnerability.priority
+    !ticket?.vulnerability ||
+    !ticket?.vulnerability.priority
   ) {
     // Handle validation error
     console.error("Invalid Ticket data:", originalData);
