@@ -1,5 +1,5 @@
 import { User } from "@/types";
-import { Ticket } from "@/components/Ticket";
+import { Ticket } from "@/types";
 export const getTickets = async (user: User) => {
     try {
         const response = await fetch('http://localhost:3000/api/tickets/', 
@@ -12,7 +12,7 @@ export const getTickets = async (user: User) => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data: typeof Ticket[] = await response.json();
+        const data: Ticket[] = await response.json();
 
         return data;
     } catch (error) {
