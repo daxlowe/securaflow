@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { labels } from "../data/data";
-import { Ticket } from "@/types";
+import { Task } from "@/features/dashboard/types/index"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -24,15 +24,15 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const originalData = row.original as Ticket;
-
+  const originalData = row.original as Task;
+  const ticket = originalData.ticket;
   // Manual validation
   if (
-    !originalData._id ||
+    !originalData.id ||
     !originalData.title ||
-    !originalData.current_status ||
-    !originalData.vulnerability ||
-    !originalData.vulnerability.priority
+    !originalData.status ||
+    !ticket.vulnerability ||
+    !ticket.vulnerability.priority
   ) {
     // Handle validation error
     console.error("Invalid Ticket data:", originalData);

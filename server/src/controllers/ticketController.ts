@@ -6,7 +6,7 @@ import { addTicketsToUser, removeTicketsFromUser } from './userController';
 // GET all tickets
 const getAllTickets = async (req: Request, res: Response) =>
 {
-    const user_id = req.body.user_id;
+    const user_id = req.body.user._id;
     console.log(user_id);
     const tickets = await Ticket.find({assignees: [user_id]});
     res.status(200).json(tickets);
