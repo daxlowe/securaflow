@@ -5,11 +5,14 @@ import
     getSingleTicket,
     createTicket, 
     deleteTicket,
-    updateTicket,
-    getUsersTickets,
+    updateTicket
 } from '../controllers/ticketController';
 
+import { requireAuth } from '../middleware/requireAuth';
+
 const router = express.Router();
+
+router.use(requireAuth);
 
 // GET all tickets with user
 router.get('/', getAllTickets);
@@ -26,8 +29,6 @@ router.delete('/:id', deleteTicket);
 // PATCH a ticket
 router.patch('/:id', updateTicket);
 
-// GET all tickets associated with user
-router.get('/user/:userId', getUsersTickets);
 
 // Other user routes (POST, PUT, DELETE, etc.)
 
