@@ -1,4 +1,6 @@
 import React from 'react';
+import { useLogout } from '@/hooks/useLogout';
+import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { NavLink } from 'react-router-dom';
 import {
@@ -7,8 +9,16 @@ import {
     NavigationMenuLink,
     navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu"; // Adjust the import path as per your project setup
+//import * as logo from '@/assets/images/securaflow-logo.png';
 
 const MenuBar: React.FC = () => {
+    const { logout } = useLogout();
+
+    const handleClick = () =>
+    {
+        logout()
+    }
+
     return (
         <div className="flex flex-col justify-between h-screen p-4">
             <div className="list-none">
@@ -37,6 +47,13 @@ const MenuBar: React.FC = () => {
                 </NavigationMenu>
             </div>
             <div>
+                <Button
+                    onClick={handleClick}
+                    variant="ghost"
+                >
+                    Logout
+                </Button>
+                
                 <ModeToggle />
             </div>
         </div>
