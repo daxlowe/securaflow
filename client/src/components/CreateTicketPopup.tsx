@@ -17,13 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-  
-  export function CreateTicket() {
-    return (
-      <>
-      <Card className="ticket">
+
+export function CreateTicket() {
+  return (
+    <>
+      <Card className="ticket h-[80vh]">
         <CardHeader>
-          <CardTitle>Create Ticket</CardTitle> 
+          <CardTitle>Create Ticket</CardTitle>
         </CardHeader>
         <form>
           <CardContent>
@@ -70,12 +70,12 @@ import {
             </Select>
             <Label htmlFor="comments">Comments</Label>
             <Textarea id="comments" placeholder="Write any comments here" />
-            </CardContent>
-            <CardFooter>
-              <Button type="submit">Create</Button>
-            </CardFooter>
+          </CardContent>
+          <CardFooter>
+            <Button type="submit">Create</Button>
+          </CardFooter>
         </form>
       </Card>
-      </>
-    )
-  }
+    </>
+  )
+}

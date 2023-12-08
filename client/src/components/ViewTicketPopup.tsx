@@ -20,32 +20,32 @@ interface ViewTicketProps {
   task: Task | null;
 }
 
-export function ViewTicket({task} : ViewTicketProps) {
+export function ViewTicket({ task }: ViewTicketProps) {
   const renderDifficulty = () => {
-    if(task?.ticket.difficulty.toString() == "1") {
+    if (task?.ticket.difficulty.toString() == "1") {
       return "Low"
-    } else if(task?.ticket.difficulty.toString() == "2") {
+    } else if (task?.ticket.difficulty.toString() == "2") {
       return "Medium"
-    } else if(task?.ticket.difficulty.toString() == "3") {
+    } else if (task?.ticket.difficulty.toString() == "3") {
       return "High"
     } else {
       return "Critical"
     }
   };
 
-    return (
-      <div className="viewTicket">
-      <Card className="ticket">
-      <CardHeader>
-        <CardTitle>{task?.ticket.title}</CardTitle> 
-      </CardHeader>
-      <CardContent>
+  return (
+    <div className="viewTicket">
+      <Card className="ticket h-[80vh]">
+        <CardHeader>
+          <CardTitle>{task?.ticket.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
           <Label htmlFor="title">Title</Label>
           <Input type="text" id="title" value={task?.ticket.title} disabled />
           <Label htmlFor="team">Team</Label>
           <Select name="team" disabled>
             <SelectTrigger>
-              <SelectValue placeholder={task?.ticket.team ?? "No Team Currently Assigned" } />
+              <SelectValue placeholder={task?.ticket.team ?? "No Team Currently Assigned"} />
             </SelectTrigger>
             <SelectContent defaultValue={task?.ticket.team ?? "soc"}>
               <SelectItem value="engineering">Engineering</SelectItem>
@@ -55,7 +55,7 @@ export function ViewTicket({task} : ViewTicketProps) {
             </SelectContent>
           </Select>
           <Label htmlFor="description">Description</Label>
-          <Input type="text" id="description" value={task?.ticket.description} disabled/>
+          <Input type="text" id="description" value={task?.ticket.description} disabled />
           <Label htmlFor="difficulty">Difficulty</Label>
           <Input type="text" id="difficulty" value={renderDifficulty()} disabled />
           <Label htmlFor="assignees">Assignees</Label>
@@ -77,8 +77,8 @@ export function ViewTicket({task} : ViewTicketProps) {
           </Select>
           <Label htmlFor="comments">Comments</Label>
           <Textarea id="comments" value={task?.ticket.comments ?? "No comments"} disabled />
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
     </div>
-    )
-  }
+  )
+}
