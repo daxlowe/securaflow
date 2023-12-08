@@ -27,11 +27,6 @@ import {
 import { DataTablePagination } from "../components/data-table-pagination"
 import { DataTableToolbar } from "../components/data-table-toolbar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Task } from "../types"
-import { ViewTicket } from "@/components/ViewTicketPopup"
-import { useState } from "react"
-import { CreateTicket } from "@/components/CreateTicketPopup"
-import { ModifyTicket } from "@/components/ModifyTicketPopup"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -72,37 +67,10 @@ export function DataTable<TData, TValue>({
         getFacetedUniqueValues: getFacetedUniqueValues(),
     })
 
-    enum ComponentTypes {
-        ViewTicket = 'viewTicket',
-        ModifyTicket = 'modifyTicket',
-        CreateTicket = 'createTicket'
-      }
-    
-    type ActiveComponentType = ComponentTypes | null;
     type VisibilityState = {
         [key: string]: boolean;
     };
       
-        //State to track which component to display
-        const [activeComponent, setActiveComponent] = useState<ActiveComponentType>(null);
-        const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-        const [visibleRowId, setVisibleRowId] = useState<string | null>(null);
-
-        const handleMenuClick = (componentName: ComponentTypes, task:Task) => {
-          setActiveComponent(componentName);
-          setSelectedTask(task);
-        };
-    
-        const components: Record<ComponentTypes, JSX.Element> = {
-          [ComponentTypes.ViewTicket]: <ViewTicket task={selectedTask} />,
-          [ComponentTypes.CreateTicket]: <CreateTicket />,
-          [ComponentTypes.ModifyTicket]: <ModifyTicket task={selectedTask} />,
-        };
-
-        const toggleVisibility = (rowId:string) => {
-            setVisibleRowId(prevRowId => prevRowId === rowId ? null : rowId);
-        };
-
     return (
         <div className="space-y-4">
             <DataTableToolbar table={table} />
@@ -133,25 +101,6 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    onClick={() => {const originalData = row.original as Task;
-                                        const ticket = originalData.ticket;
-                                        // Manual validation
-                                        if (
-                                          !originalData.id ||
-                                          !originalData.title ||
-                                          !originalData.status ||
-                                          !ticket?.vulnerability ||
-                                          !ticket?.vulnerability.priority
-                                        ) {
-                                          // Handle validation error
-                                          console.error("Invalid Ticket data:", originalData);
-                                          return null; // or return an error component
-                                        }
-                                      
-                                        // Now you can safely use the data
-                                        const task = originalData;
-                                    handleMenuClick(ComponentTypes.ViewTicket, task);
-                                    toggleVisibility(row.id)}}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className="p-0">
@@ -216,7 +165,6 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <DataTablePagination table={table} />
-            {visibleRowId && activeComponent && components[activeComponent]}
         </div>
     )
 }
