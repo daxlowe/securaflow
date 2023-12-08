@@ -13,6 +13,17 @@ import { ViewTicket } from "@/components/ViewTicketPopup";
 import { ModifyTicket } from "@/components/ModifyTicketPopup";
 import { CreateTicket } from "@/components/CreateTicketPopup";
 import { Task } from "../types"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -38,30 +49,9 @@ export function DataTableRowActions<TData>({
 
   // Now you can safely use the data
   const task = originalData;
-  
-  enum ComponentTypes {
-    ViewTicket = 'viewTicket',
-    ModifyTicket = 'modifyTicket',
-    CreateTicket = 'createTicket'
-  }
 
-  type ActiveComponentType = ComponentTypes | null;
-  
-    //State to track which component to display
-    const [activeComponent, setActiveComponent] = useState<ActiveComponentType>(null);
-  
-    const handleMenuClick = (componentName: ComponentTypes) => {
-      setActiveComponent(componentName);
-    };
-
-    const components: Record<ComponentTypes, JSX.Element> = {
-      [ComponentTypes.ViewTicket]: <ViewTicket task={task} />,
-      [ComponentTypes.CreateTicket]: <CreateTicket />,
-      [ComponentTypes.ModifyTicket]: <ModifyTicket task={task} />,
-    };
-
-    return (
-      <>
+  return (
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -73,13 +63,39 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={() => handleMenuClick(ComponentTypes.ViewTicket)}>View</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleMenuClick(ComponentTypes.ModifyTicket)}>Edit</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleMenuClick(ComponentTypes.CreateTicket)}>Create</DropdownMenuItem>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className="w-[100%]">View</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent><ViewTicket task={task} />
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Continue</AlertDialogAction>
+              </AlertDialogFooter></AlertDialogContent>
+          </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className="w-[100%]">Edit</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent><ModifyTicket task={task} />
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Continue</AlertDialogAction>
+              </AlertDialogFooter></AlertDialogContent>
+          </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className="w-[100%]">Create</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent><CreateTicket />
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Continue</AlertDialogAction>
+              </AlertDialogFooter></AlertDialogContent>
+          </AlertDialog>
           <DropdownMenuItem>Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {activeComponent && components[activeComponent]}
-      </>
-    );
+    </>
+  );
 }
