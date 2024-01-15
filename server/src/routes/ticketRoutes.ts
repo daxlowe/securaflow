@@ -17,7 +17,7 @@ router.use(requireAuth);
 const createTicketValidationRules = () => {
     return [
         body('title').notEmpty().withMessage('Title is required'),
-        body('team').optional().withMessage('Team is required'),
+        body('team').optional(),
         body('description').notEmpty().withMessage('Description is required'),
         body('difficulty').notEmpty().withMessage('Difficulty is required'),
         body('assignees').isArray().withMessage('Assignees must be an array'),
