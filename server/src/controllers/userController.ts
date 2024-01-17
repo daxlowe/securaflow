@@ -99,11 +99,26 @@ const addGroupsToUser = async (userId: mongoose.Types.ObjectId, groupIds: mongoo
     }
 };
 
+const getUserData = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(id))
+        return res.status(404).json({error: "No such user"});
+    
+    const user = await User.findById(id).select("_id first_name last_name email");
+
+    if(!user)
+        return res.status(404).json({error: "No such user"});
+
+    res.status(200).json(user);
+};
+
 export {
     addTicketsToUser,
     removeTicketsFromUser,
     addGroupsToUser,
     loginUser,
     signupUser,
-    updateUser
+    updateUser,
+    getUserData,
 }
