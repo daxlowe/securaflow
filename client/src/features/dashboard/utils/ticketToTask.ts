@@ -4,17 +4,16 @@ import { Ticket } from "@/types";
 import { User } from '@/types/'
 
 export async function getTicketsAsTasks(user: User) {
-    //@ts-expect-error Not sure why 
     const tickets: Ticket[] = await getTickets(user);
 
     const tasks: Task[] = tickets.map(ticket => {
         const task: Task = {
             id: ticket._id,
             title: ticket.title,
-            team: ticket.team,
+            team: ticket.team?.name,
             priority: ticket.vulnerability.priority, // Use optional chaining to avoid potential null/undefined error
             status: ticket.current_status,
-            assignee: ticket.assignees,
+            assignee: ticket.assignees?.map(assignee => assignee.first_name + ' ' + assignee.last_name),
             ticket: ticket,
         };
 

@@ -5,15 +5,14 @@ import
 {
     loginUser, 
     signupUser,
-    updateUser
+    updateUser,
+    getUserData,
 } from '../controllers/userController';
 
 const router = express.Router();
 
 // Example route for getting user data
-router.get('/users/:id', (req: Request, res: Response) => {
-    // Logic here, e.g., fetching user data
-});
+router.get('/users/:id', getUserData);
 
 router.post('/login', loginUser)
 

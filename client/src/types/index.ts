@@ -4,7 +4,7 @@ export type Ticket = {
     team?: Array<string>;
     description: string;
     difficulty: number;
-    assignees?: Array<string>;
+    assignees?: Array<User>;
     time_estimate?: number;
     current_status: string;
     status_updates?: Array<Status>;
@@ -30,6 +30,8 @@ export type Vulnerability = {
 
 export type User =
 {
+    _id: string;
     email: string, 
-    token: string
+    first_name: string,
+    last_name: string,
 }
