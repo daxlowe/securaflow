@@ -17,15 +17,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { createTicket } from "@/utils/createTicket"
 
 export function CreateTicket() {
+
+  const handleSubmit = async (e : any) => {
+    e.preventDefault();
+    
+    try {
+        const ticketResponse = await createTicket(FormData);
+        console.log('Ticket created:', ticketResponse);
+        // Handle success (e.g., clear form, show success message, etc.)
+    } catch (error) {
+        // Handle errors (e.g., show error message)
+        console.error('Error creating ticket:', error);
+    }
+  };
+
   return (
     <>
       <Card className="ticket h-[80vh]">
         <CardHeader>
           <CardTitle>Create Ticket</CardTitle>
         </CardHeader>
-        <form>
+        <form onSubmit={handleSubmit}>
           <CardContent>
             <Label htmlFor="title">Title</Label>
             <Input type="text" id="title" placeholder="Title of vulnerability" />
