@@ -18,25 +18,77 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { modifyTicket } from "@/utils/modifyTicket"
+import { useEffect, useState } from "react"
 
 interface ModifyTicketProps {
   task: Task | null;
 }
 
 export function ModifyTicket({ task }: ModifyTicketProps) {
+  //Initial state for form fields
+  const [formFields, setFormFields] = useState({
+    title: '',
+    team: '',
+    description: '',
+    difficulty: '1',
+    assignees: '',
+    timeEstimate: '',
+    currentStatus: '',
+    comments: '',
+  });
+
+  // Populate form fields when the component mounts or task changes
+  useEffect(() => {
+    if (task) {
+      setFormFields({
+        title: task.ticket.title || '',
+        team: task.ticket.team?.toString() || "(Optional) Select a team",
+        description: task.ticket.description || '',
+        difficulty: task.ticket.difficulty.toString() || '1',
+        assignees: task.ticket.assignees?.toString() || '',
+        timeEstimate: task.ticket.time_estimate?.toString() || "Time Estimate (Hours)",
+        currentStatus: task.ticket.current_status || '',
+        comments: task.ticket.comments || "Write any comments here",
+      });
+    }
+  }, [task]);
+
+    // Handle form field changes
+    const handleChange = (e : any) => {
+      const { id, value } = e.target;
+      setFormFields({
+        ...formFields,
+        [id]: value,
+      });
+    };
+
+  const handleSubmit = async (e : any) => {
+    e.preventDefault();
+    
+    try {
+        const ticketResponse = await modifyTicket(formFields, task?.ticket._id || "No ID");
+        console.log('Ticket modified:', ticketResponse);
+        // Handle success (e.g., clear form, show success message, etc.)
+    } catch (error) {
+        // Handle errors (e.g., show error message)
+        console.error('Error modifying ticket:', error);
+    }
+  };
+
   return (
     <>
       <Card className="ticket h-[80vh]">
         <CardHeader>
           <CardTitle>Modify Ticket</CardTitle>
         </CardHeader>
-        <form>
+        <form onSubmit={handleSubmit}>
           <CardContent>
             <Label htmlFor="title">Title</Label>
-            <Input type="text" id="title" value={task?.ticket.title} />
+            <Input type="text" id="title" value={formFields.title} onChange={handleChange} />
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder={task?.ticket.team ?? "(Optional) Select a team"} />
+                <SelectValue placeholder={formFields.team} onChange={handleChange}/>
               </SelectTrigger>
               <SelectContent defaultValue={task?.ticket.team ?? "soc"}>
                 <SelectItem value="engineering">Engineering</SelectItem>
@@ -46,26 +98,26 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
               </SelectContent>
             </Select>
             <Label htmlFor="description">Description</Label>
-            <Input type="text" id="description" value={task?.ticket.description} />
-            <RadioGroup defaultValue={task?.ticket.difficulty.toString()}>
-              <RadioGroupItem value="1" id="low" />
+            <Input type="text" id="description" value={formFields.description} onChange={handleChange} />
+            <RadioGroup defaultValue={formFields.difficulty} onChange={handleChange}>
               <Label htmlFor="low">Low</Label>
-              <RadioGroupItem value="2" id="medium" />
+              <RadioGroupItem value="1" id="low" />
               <Label htmlFor="medium">Medium</Label>
-              <RadioGroupItem value="3" id="high" />
+              <RadioGroupItem value="2" id="medium" />
               <Label htmlFor="high">High</Label>
-              <RadioGroupItem value="4" id="critical" />
+              <RadioGroupItem value="3" id="high" />
               <Label htmlFor="critical">Critical</Label>
+              <RadioGroupItem value="4" id="critical" />
             </RadioGroup>
             <Label htmlFor="assignees">Assignees</Label>
-            <Input type="text" id="assignees" value={task?.ticket.assignees ?? ""} />
+            <Input type="text" id="assignees" value={formFields.assignees} onChange={handleChange} />
             <Label htmlFor="timeEstimate">Time Estimate</Label>
-            <Input type="number" id="timeEstimate" value={task?.ticket.time_estimate ?? "Time Estimate (Hours)"} />
+            <Input type="number" id="timeEstimate" value={formFields.timeEstimate} onChange={handleChange} />
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder={task?.ticket.current_status} />
+                <SelectValue placeholder={formFields.currentStatus} onChange={handleChange} />
               </SelectTrigger>
-              <SelectContent defaultValue={task?.ticket.current_status}>
+              <SelectContent defaultValue={formFields.currentStatus}>
                 <SelectItem value="backlog">Backlog</SelectItem>
                 <SelectItem value="assigned">Assigned</SelectItem>
                 <SelectItem value="in-progress">In Progress</SelectItem>
@@ -74,7 +126,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
               </SelectContent>
             </Select>
             <Label htmlFor="comments">Comments</Label>
-            <Textarea id="comments" value={task?.ticket.comments ?? "Write any comments here"} />
+            <Textarea id="comments" value={formFields.comments} onChange={handleChange} />
           </CardContent>
           <CardFooter>
             <Button type="submit">Modify</Button>

@@ -3,7 +3,7 @@ import { Ticket } from "@/types";
 export type Task = {
     id?: string;
     title: string;
-    team?: string;
+    team?: Array<string>;
     priority: string;
     status: string;
     assignee?: Array<string>;

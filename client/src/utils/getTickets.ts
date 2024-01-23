@@ -1,12 +1,18 @@
 import { User } from "@/types";
 import { Ticket } from "@/types";
-export const getTickets = async (user: User) => {
+export const getTickets = async () => {
     try {
+        const storedData = localStorage.getItem('user')
+        let authToken = ''
+        if(storedData) {
+            const authData = JSON.parse(storedData)
+            authToken = authData.token
+        }
         const response = await fetch('http://localhost:3000/api/tickets/', 
         {
             headers: 
             {
-                'Authorization': `Bearer ${user.token}`
+                'Authorization': `Bearer ${authToken}`
             }
         });
         if (!response.ok) {
