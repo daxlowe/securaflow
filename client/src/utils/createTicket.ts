@@ -6,6 +6,7 @@ export const createTicket = async (ticketData : any) => {
         const authData = JSON.parse(storedData)
         authToken = authData.token
     }
+    console.log(ticketData)
     const options = {
         method: 'POST',
         headers: {

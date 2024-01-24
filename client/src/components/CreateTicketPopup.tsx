@@ -9,7 +9,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   Select,
   SelectContent,
@@ -21,11 +20,19 @@ import { createTicket } from "@/utils/createTicket"
 
 export function CreateTicket() {
 
-  const handleSubmit = async (e : any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    
+
+    // Retrieve the form element
+    const form = document.querySelector('form[name="ticket-form"]') as HTMLFormElement;
+
+    // Create a new FormData instance with the form
+    const formData = new FormData(form);
+    console.log(formData)
+
     try {
-        const ticketResponse = await createTicket(FormData);
+        // Pass formData to the createTicket function
+        const ticketResponse = await createTicket(formData);
         console.log('Ticket created:', ticketResponse);
         // Handle success (e.g., clear form, show success message, etc.)
     } catch (error) {
@@ -40,11 +47,12 @@ export function CreateTicket() {
         <CardHeader>
           <CardTitle>Create Ticket</CardTitle>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form name="ticket-form" onSubmit={handleSubmit}>
           <CardContent>
             <Label htmlFor="title">Title</Label>
-            <Input type="text" id="title" placeholder="Title of vulnerability" />
-            <Select>
+            <Input type="text" name="title" required={true} placeholder="Title of vulnerability" />
+            <Label htmlFor="team">Team</Label>
+            <Select name="team" required={false}>
               <SelectTrigger>
                 <SelectValue placeholder="(Optional) Select a team" />
               </SelectTrigger>
@@ -56,22 +64,39 @@ export function CreateTicket() {
               </SelectContent>
             </Select>
             <Label htmlFor="description">Description</Label>
-            <Input type="text" id="description" placeholder="Description of vulnerability" />
-            <RadioGroup defaultValue="1">
-              <RadioGroupItem value="1" id="low" />
-              <Label htmlFor="low">Low</Label>
-              <RadioGroupItem value="2" id="medium" />
-              <Label htmlFor="medium">Medium</Label>
-              <RadioGroupItem value="3" id="high" />
-              <Label htmlFor="high">High</Label>
-              <RadioGroupItem value="4" id="critical" />
-              <Label htmlFor="critical">Critical</Label>
-            </RadioGroup>
+            <Input type="text" name="description" required={true} placeholder="Description of vulnerability" />
+            <Label htmlFor="difficulty">Difficulty</Label>
+            <Select name="difficulty" required={true}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a difficulty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
+            <Label htmlFor="name">Vulnerability Name</Label>
+            <Input type="text" name="name" required={true} placeholder="Name of vulnerability"/>
+            <Label htmlFor="cve_id">CVE</Label>
+            <Input type="text" name="cve_id" required={true} placeholder="CVE ID" />
+            <Label htmlFor="priority">Priority</Label>
+            <Select name="priority" required={true}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
+              </SelectContent>
+            </Select>
             <Label htmlFor="assignees">Assignees</Label>
-            <Input type="text" id="assignees" placeholder="(Optional) Assign to employee(s)" />
+            <Input type="text" name="assignees" required={false} placeholder="(Optional) Assign to employee(s)" />
             <Label htmlFor="timeEstimate">Time Estimate</Label>
-            <Input type="number" id="timeEstimate" placeholder="Time Estimate (Hours)" />
-            <Select>
+            <Input type="number" name="timeEstimate" required={true} placeholder="Time Estimate (Hours)" />
+            <Select name="current_status" required={true}>
               <SelectTrigger>
                 <SelectValue placeholder="Current Status" />
               </SelectTrigger>
@@ -84,7 +109,7 @@ export function CreateTicket() {
               </SelectContent>
             </Select>
             <Label htmlFor="comments">Comments</Label>
-            <Textarea id="comments" placeholder="Write any comments here" />
+            <Textarea name="comments" required={true} placeholder="Write any comments here" />
           </CardContent>
           <CardFooter>
             <Button type="submit">Create</Button>

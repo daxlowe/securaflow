@@ -1,14 +1,10 @@
 import mongoose, { mongo } from 'mongoose';
 import { Request, Response } from 'express';
 import Ticket from '../models/Ticket';
-import Group from '../models/Group';
 import User from '../models/User';
 import { addTicketsToUser, removeTicketsFromUser } from './userController';
 import { Types } from 'mongoose';
 import { addTicketsToGroup } from './groupController';
-import { group } from 'console';
-import { getUserData } from './userController';
-import { getGroupData } from './groupController';
 
 // GET all tickets
 const getAllTickets = async (req: Request, res: Response) => {
@@ -49,8 +45,9 @@ const getSingleTicket = async (req: Request, res: Response) =>
 // POST a new ticket 
 const createTicket = async (req: Request, res: Response) =>
 {
-    const { title, team, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
-    const { name, cve_id, priority } = vulnerability;
+    // console.log(req.body)
+    const { title, team, description, difficulty, assignees, time_estimate, current_status, status_updates, name, cve_id, priority, comments } = req.body;
+    const vulnerability = {name, cve_id, priority};
     
     const group_id = team as Types.ObjectId;
 
@@ -70,9 +67,6 @@ const createTicket = async (req: Request, res: Response) =>
 
     if(!current_status)
         emptyFields.push('Current Status');
-
-    if(!vulnerability)
-        emptyFields.push('Vulnerability required');
 
     if(!name)
         emptyFields.push('Vulnerability Name');

@@ -70,7 +70,6 @@ export function DataTableRowActions<TData>({
             <AlertDialogContent><ViewTicket task={task} />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
               </AlertDialogFooter></AlertDialogContent>
           </AlertDialog>
           <AlertDialog>
@@ -80,7 +79,6 @@ export function DataTableRowActions<TData>({
             <AlertDialogContent><ModifyTicket task={task} />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
               </AlertDialogFooter></AlertDialogContent>
           </AlertDialog>
           <AlertDialog>
@@ -90,7 +88,6 @@ export function DataTableRowActions<TData>({
             <AlertDialogContent><CreateTicket />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
               </AlertDialogFooter></AlertDialogContent>
           </AlertDialog>
           <DropdownMenuItem>Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
