@@ -34,4 +34,13 @@ export type User =
     email: string, 
     first_name: string,
     last_name: string,
+    groups: Array<Group>;
+}
+
+export type Group =
+{
+    _id: string;
+    name: string;
+    users: Array<User>;
+    tickets: Array<Ticket>;
 }
