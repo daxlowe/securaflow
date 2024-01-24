@@ -7,6 +7,7 @@ import { addTicketsToUser, removeTicketsFromUser } from './userController';
 import { Types } from 'mongoose';
 import { addTicketsToGroup } from './groupController';
 import { group } from 'console';
+import { validationResult } from 'express-validator';
 import { getUserData } from './userController';
 import { getGroupData } from './groupController';
 
@@ -49,57 +50,29 @@ const getSingleTicket = async (req: Request, res: Response) =>
 // POST a new ticket 
 const createTicket = async (req: Request, res: Response) =>
 {
+    // Validation errors from express-validator middleware
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { title, team, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments } = req.body;
-    const { name, cve_id, priority } = vulnerability;
+    const { name, cve_id, priority } = vulnerability || {};
     
     const group_id = team as Types.ObjectId;
 
-    let emptyFields = [];
-
-    if(!title)
-        emptyFields.push('Title');
-
-    if(!description)
-        emptyFields.push('Description');
-
-    if(!difficulty)
-        emptyFields.push('Difficulty');
-
-    if(!assignees)
-        emptyFields.push('Assignees');
-
-    if(!current_status)
-        emptyFields.push('Current Status');
-
-    if(!vulnerability)
-        emptyFields.push('Vulnerability required');
-
-    if(!name)
-        emptyFields.push('Vulnerability Name');
-
-    if(!cve_id)
-        emptyFields.push('CVE ID');
-
-    if(!priority)
-        emptyFields.push('Priority');
-
-    if(emptyFields.length > 0)
-        return res.status(400).json({ error: `Missing required fields: ${emptyFields}`, emptyFields});
-
     try
     {
-        const user_id = req.body.user_id;
 	    const ticket: Ticket = await Ticket.create({ title, team, description, difficulty, assignees, time_estimate, current_status, status_updates, vulnerability, comments });
         
         // Add the new ticket to each assignee's array of tickets
         if (ticket.assignees && ticket.assignees.length > 0) {
             await Promise.all([
-                ticket.assignees.map(assigneeId => addTicketsToUser(user_id, [ticket._id])),
-                addTicketsToGroup(group_id, [ticket._id])
+                ticket.assignees.map(assigneeId => addTicketsToUser(assigneeId, [ticket._id])),
             ]);
         }
 
-        if(ticket.team)
+        if (ticket.team)
         {
             await Promise.all([addTicketsToGroup(group_id, [ticket._id])]);
         }
