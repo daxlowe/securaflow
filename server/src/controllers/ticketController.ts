@@ -20,8 +20,6 @@ const getAllTickets = async (req: Request, res: Response) => {
         // Populate 'team' field with the corresponding 'Group' data
         const tickets = await Ticket.find({ team: { $in: groups } }).populate('team').populate('assignees', '_id first_name last_name email');
 
-        console.log(tickets);
-
         res.status(200).json(tickets);
     } catch (error) {
         console.error(error);
