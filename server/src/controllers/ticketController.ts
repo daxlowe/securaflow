@@ -8,16 +8,28 @@ import { Types } from 'mongoose';
 import { addTicketsToGroup } from './groupController';
 import { group } from 'console';
 import { validationResult } from 'express-validator';
+import { getUserData } from './userController';
+import { getGroupData } from './groupController';
 
 // GET all tickets
-const getAllTickets = async (req: Request, res: Response) =>
-{
-    const user_id = req.body.user._id;
-    const groupDocument = await User.findById(user_id).select("groups");
-    const groups = groupDocument?.groups as Types.Array<Types.ObjectId>;
-    const tickets = await Ticket.find({team: { $in: [...groups] }});
-    res.status(200).json(tickets);
+const getAllTickets = async (req: Request, res: Response) => {
+    try {
+        const user_id = req.body.user._id;
+        const groupDocument = await User.findById(user_id).select("groups");
+        const groups = groupDocument?.groups as Types.Array<Types.ObjectId>;
+        
+        // Populate 'team' field with the corresponding 'Group' data
+        const tickets = await Ticket.find({ team: { $in: groups } }).populate('team').populate('assignees', '_id first_name last_name email');
+
+        console.log(tickets);
+
+        res.status(200).json(tickets);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
+
 
 // GET a single ticket
 const getSingleTicket = async (req: Request, res: Response) =>

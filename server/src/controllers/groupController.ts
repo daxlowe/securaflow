@@ -94,8 +94,23 @@ const addTicketsToGroup = async (groupId: mongoose.Types.ObjectId, ticketIds: mo
     }
 }
 
+const getGroupData = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(id))
+        return res.status(404).json({error: "No such group"});
+    
+    const group = await Group.findById(id);
+
+    if(!group)
+        return res.status(404).json({error: "No such group"});
+
+    res.status(200).json(group);
+};
+
 export
 {
     createGroup,
-    addTicketsToGroup
+    addTicketsToGroup,
+    getGroupData,
 }

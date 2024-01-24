@@ -19,7 +19,7 @@ interface Vulnerability {
 interface Ticket {
     _id: Types.ObjectId;
     title: string;
-    team: string;
+    team: Types.ObjectId;
     description: string;
     difficulty: number;
     assignees: Types.Array<Types.ObjectId>;
@@ -58,7 +58,8 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
         },
         team:
         {
-            type: String,
+            type: Schema.Types.ObjectId, 
+            ref: 'Group',
             required: true
         },
         description:
