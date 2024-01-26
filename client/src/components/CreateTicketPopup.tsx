@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -43,7 +43,7 @@ export function CreateTicket() {
 
   return (
     <>
-      <Card className="ticket h-[80vh]">
+      <div className="ticket h-[80vh] rounded-lg border bg-card text-card-foreground shadow-sm">
         <CardHeader>
           <CardTitle>Create Ticket</CardTitle>
         </CardHeader>
@@ -115,7 +115,7 @@ export function CreateTicket() {
             <Button type="submit">Create</Button>
           </CardFooter>
         </form>
-      </Card>
+      </div>
     </>
-  )
+  );
 }

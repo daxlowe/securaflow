@@ -16,8 +16,6 @@ const getAllTickets = async (req: Request, res: Response) => {
         // Populate 'team' field with the corresponding 'Group' data
         const tickets = await Ticket.find({ team: { $in: groups } }).populate('team').populate('assignees', '_id first_name last_name email');
 
-        console.log(tickets);
-
         res.status(200).json(tickets);
     } catch (error) {
         console.error(error);
@@ -88,12 +86,11 @@ const createTicket = async (req: Request, res: Response) =>
         // Add the new ticket to each assignee's array of tickets
         if (ticket.assignees && ticket.assignees.length > 0) {
             await Promise.all([
-                ticket.assignees.map(assigneeId => addTicketsToUser(user_id, [ticket._id])),
-                addTicketsToGroup(group_id, [ticket._id])
+                ticket.assignees.map(assigneeId => addTicketsToUser(assigneeId, [ticket._id])),
             ]);
         }
 
-        if(ticket.team)
+        if (ticket.team)
         {
             await Promise.all([addTicketsToGroup(group_id, [ticket._id])]);
         }
