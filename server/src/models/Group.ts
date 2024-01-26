@@ -12,7 +12,6 @@ interface Group
 	name: string;
 	permissions: Permissions;
 	users: Types.Array<Types.ObjectId>;
-	tickets: Types.Array<Types.ObjectId>;
 }
 
 const groupSchema = new Schema<Group, Model<Group>>(
@@ -38,11 +37,6 @@ const groupSchema = new Schema<Group, Model<Group>>(
 		users: 
 		{
 			type: [{type: Schema.Types.ObjectId, ref: 'User'}],
-			required: true
-		}, 
-		tickets:
-		{
-			type: [{type: Schema.Types.ObjectId, ref: 'Ticket'}],
 			required: true
 		}
     }

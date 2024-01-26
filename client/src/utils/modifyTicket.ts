@@ -9,7 +9,7 @@ export const modifyTicket = (ticket: Ticket) => {
         body: JSON.stringify(ticket)
     };
     fetch(`http://localhost:3000/api/tickets/${ticket._id}`, options).then(response => {
-        if(!response.ok) {
+    if(!response.ok) {
             window.alert(`The following error occured when trying to modify this ticket: ${response.statusText}`)
         }
         }).catch(error => console.error(error))
