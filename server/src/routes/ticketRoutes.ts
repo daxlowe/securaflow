@@ -20,7 +20,7 @@ const createTicketValidationRules = () => {
         body('team').optional(),
         body('description').notEmpty().withMessage('Description is required'),
         body('difficulty').notEmpty().withMessage('Difficulty is required'),
-        body('assignees').isArray().withMessage('Assignees must be an array'),
+        body('assignees').optional(),
         body('time_estimate').optional().isNumeric().withMessage('Time estimate must be a number'),
         body('current_status').notEmpty().withMessage('Current Status is required'),
         body('status_updates').optional().isArray().withMessage('Status updates must be an array'),
