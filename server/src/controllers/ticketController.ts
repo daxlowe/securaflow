@@ -62,6 +62,7 @@ const getSingleTicket = async (req: Request, res: Response) => {
 // POST a new ticket
 const createTicket = async (req: Request, res: Response) => {
   // Validation errors from express-validator middleware
+  console.log(req.body)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -76,10 +77,12 @@ const createTicket = async (req: Request, res: Response) => {
     time_estimate,
     current_status,
     status_updates,
-    vulnerability,
+    name,
+    cve_id,
+    priority,
     comments,
   } = req.body;
-  const { name, cve_id, priority } = vulnerability || {};
+  const vulnerability = { name, cve_id, priority };
 
   const group_id = team as Types.ObjectId;
 
