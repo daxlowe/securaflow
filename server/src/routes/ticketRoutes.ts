@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import 
 {
-    getAllTickets,
+    getAllPossibleTickets,
+    getAllAssignedTickets,
     getSingleTicket,
     createTicket, 
     deleteTicket,
@@ -32,8 +33,11 @@ const createTicketValidationRules = () => {
     ];
 }
 
-// GET all tickets with user
-router.get('/', getAllTickets);
+// GET all tickets from user's groups
+router.get('/', getAllPossibleTickets);
+
+// GET all tickets assigned to user
+router.get('/assigned', getAllAssignedTickets);
 
 // GET a single ticket
 router.get('/:id', getSingleTicket);
