@@ -17,10 +17,8 @@ export const requireAuth = async (request: Request, response: Response, next: Ne
     try
     {
         const _id = jwt.verify(token, process.env.SECRET as Secret) as {_id: string};
-
-        request.body.user = await User.findOne({ _id }).select('_id');
+        request.body.user = _id._id;
         next();
-
     }
     catch (error)
     {

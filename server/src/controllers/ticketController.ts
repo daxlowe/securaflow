@@ -14,7 +14,7 @@ import { getGroupData } from "./groupController";
 // GET all tickets from user's groups
 const getAllPossibleTickets = async (req: Request, res: Response) => {
   try {
-    const user_id = req.query.user_id;
+    const user_id = req.body.user;
 
     const groups = await Group.find({ users: user_id }).select("_id");
     const groupIds = groups.map((group) => group._id);
@@ -32,7 +32,7 @@ const getAllPossibleTickets = async (req: Request, res: Response) => {
 // GET all tickets assigned to user
 const getAllAssignedTickets = async (req: Request, res: Response) => {
   try {
-    const user_id = req.body.user._id;
+    const user_id = req.body.user;
 
     const tickets = await Ticket.find({ assignees: user_id })
       .populate("team")
