@@ -1,3 +1,15 @@
+export type Group = {
+    _id?: string
+    name: string
+    permissions: Permissions
+    users: Array<User>
+}
+
+export type Permissions = {
+    read: boolean
+    write: boolean
+}
+
 export type Ticket = {
     _id?: string
     title: string;

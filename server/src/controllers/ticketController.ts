@@ -5,6 +5,7 @@ import User from '../models/User';
 import { addTicketsToUser, removeTicketsFromUser } from './userController';
 import { Types } from 'mongoose';
 import { addTicketsToGroup } from './groupController';
+import Group from '../models/Group';
 
 // GET all tickets from user's groups
 const getAllPossibleTickets = async (req: Request, res: Response) => {

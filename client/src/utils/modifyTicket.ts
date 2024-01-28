@@ -13,7 +13,7 @@ export const modifyTicket = async (ticketData : any, ticketID : string) => {
         },
         body: JSON.stringify(ticketData)
     };
-    fetch(`http://localhost:3000/api/tickets/${ticket._id}`, options).then(response => {
+    fetch(`http://localhost:3000/api/tickets/${ticketID}`, options).then(response => {
     if(!response.ok) {
             window.alert(`The following error occured when trying to modify this ticket: ${response.statusText}`)
         }
