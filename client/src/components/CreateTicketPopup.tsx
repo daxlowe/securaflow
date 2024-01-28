@@ -93,8 +93,8 @@ export function CreateTicket() {
             </Select>
             <Label htmlFor="assignees">Assignees</Label>
             <Input type="text" name="assignees" required={false} placeholder="(Optional) Assign to employee(s)" />
-            <Label htmlFor="timeEstimate">Time Estimate</Label>
-            <Input type="number" name="timeEstimate" required={true} placeholder="Time Estimate (Hours)" />
+            <Label htmlFor="time_estimate">Time Estimate</Label>
+            <Input type="number" name="time_estimate" placeholder="(Optional) Time Estimate (Hours)" />
             <Select name="current_status" required={true}>
               <SelectTrigger>
                 <SelectValue placeholder="Current Status" />
