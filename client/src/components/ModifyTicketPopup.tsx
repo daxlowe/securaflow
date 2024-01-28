@@ -43,7 +43,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
     if (task) {
       setFormFields({
         title: task.ticket.title || '',
-        team: task.ticket.team?.toString() || "(Optional) Select a team",
+        team: task.ticket.team?.toString() || "Select a team",
         description: task.ticket.description || '',
         difficulty: task.ticket.difficulty.toString() || '1',
         assignees: task.ticket.assignees?.toString() || '',
@@ -85,18 +85,9 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <Label htmlFor="title">Title</Label>
-            <Input type="text" id="title" value={formFields.title} onChange={handleChange} />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder={formFields.team} onChange={handleChange}/>
-              </SelectTrigger>
-              <SelectContent defaultValue={task?.ticket.team ?? "soc"}>
-                <SelectItem value="engineering">Engineering</SelectItem>
-                <SelectItem value="soc">SOC</SelectItem>
-                <SelectItem value="it">IT</SelectItem>
-                <SelectItem value="appsec">AppSec</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input type="text" name="title" value={formFields.title} onChange={handleChange} />
+            <Label htmlFor="team">Team</Label>
+            <Input type="text" name="team" value={formFields.team} onChange={handleChange}/>
             <Label htmlFor="description">Description</Label>
             <Input type="text" id="description" value={formFields.description} onChange={handleChange} />
             <RadioGroup defaultValue={formFields.difficulty} onChange={handleChange}>

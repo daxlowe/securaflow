@@ -51,17 +51,7 @@ export function CreateTicket() {
             <Label htmlFor="title">Title</Label>
             <Input type="text" name="title" required={true} placeholder="Title of vulnerability" />
             <Label htmlFor="team">Team</Label>
-            <Select name="team" required={false}>
-              <SelectTrigger>
-                <SelectValue placeholder="(Optional) Select a team" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="engineering">Engineering</SelectItem>
-                <SelectItem value="soc">SOC</SelectItem>
-                <SelectItem value="it">IT</SelectItem>
-                <SelectItem value="appsec">AppSec</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input type="text" name="team" required={true} placeholder="Enter teams to assign ticket to."/>
             <Label htmlFor="description">Description</Label>
             <Input type="text" name="description" required={true} placeholder="Description of vulnerability" />
             <Label htmlFor="difficulty">Difficulty</Label>
