@@ -1,14 +1,19 @@
-import { Ticket } from "@/types";
-
-export const modifyTicket = (ticket: Ticket) => {
+export const modifyTicket = async (ticketData : any, ticketID : string) => {
+    const storedData = localStorage.getItem('user')
+    let authToken = ''
+    if(storedData) {
+        const authData = JSON.parse(storedData)
+        authToken = authData.token
+    }
     const options = {
         method: "PATCH",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
         },
-        body: JSON.stringify(ticket)
+        body: JSON.stringify(ticketData)
     };
-    fetch(`http://localhost:3000/api/ticket/${ticket._id}`, options).then(response => {
+    fetch(`http://localhost:3000/api/ticket/${ticketID}`, options).then(response => {
     if(!response.ok) {
             window.alert(`The following error occured when trying to modify this ticket: ${response.statusText}`)
         }

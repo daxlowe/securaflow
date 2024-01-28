@@ -1,12 +1,19 @@
-import { Ticket } from "@/types";
+export const createTicket = async (ticketData : FormData) => {
+    const storedData = localStorage.getItem('user')
+    let authToken = ''
+    if(storedData) {
+        const authData = JSON.parse(storedData)
+        authToken = authData.token
+    }
+    console.log(ticketData)
 
-export const createTicket = (ticket: Ticket) => {
     const options = {
-        method: "POST",
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
         },
-        body: JSON.stringify(ticket)
+        body: ticketData,
     };
     fetch(`http://localhost:3000/api/ticket/`, options).then(response => {
         if(!response.ok) {

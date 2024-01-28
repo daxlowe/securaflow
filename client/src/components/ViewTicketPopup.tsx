@@ -59,7 +59,7 @@ export function ViewTicket({ task }: ViewTicketProps) {
           <Label htmlFor="difficulty">Difficulty</Label>
           <Input type="text" id="difficulty" value={renderDifficulty()} disabled />
           <Label htmlFor="assignees">Assignees</Label>
-          <Input type="text" id="assignees" value={task?.ticket.assignees ?? "No Assignees"} disabled />
+          <Input type="text" id="assignees" value={task?.ticket.assignees?.toString() ?? "No Assignees"} disabled />
           <Label htmlFor="timeEstimate">Time Estimate</Label>
           <Input type="number" id="timeEstimate" value={task?.ticket.time_estimate ?? "No Time Estimate"} disabled />
           <Label htmlFor="status">Status</Label>
