@@ -15,14 +15,10 @@ export const createTicket = async (ticketData : FormData) => {
         },
         body: ticketData,
     };
-
-    const response = await fetch('http://localhost:3000/api/tickets', options);
-
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-};
-
-                                                                                              
+    fetch(`http://localhost:3000/api/ticket/`, options).then(response => {
+        if(!response.ok) {
+            window.alert(`The following error occured when trying to create a ticket: ${response.statusText}`)
+        }
+        }).catch(error => console.error(error))
+}
+                                                                                                            

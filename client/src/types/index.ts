@@ -13,7 +13,7 @@ export type Permissions = {
 export type Ticket = {
     _id?: string
     title: string;
-    team: Array<Group>;
+    team?: Array<Group>;
     description: string;
     difficulty: number;
     assignees?: Array<User>;
@@ -25,20 +25,20 @@ export type Ticket = {
 }
 
 export type Status = {
-    _id: string;
-    body: string;
-    date_started: Date;
-    date_ended: Date;
-}
+  _id: string;
+  body: string;
+  date_started: Date;
+  date_ended: Date;
+};
 
 export type Vulnerability = {
-    _id: string;
-    name: string;
-    description: string;
-    cve_id: string;
-    priority: string;
-    imported_from?: string;
-}
+  _id: string;
+  name: string;
+  description: string;
+  cve_id: string;
+  priority: string;
+  imported_from?: string;
+};
 
 export type User =
 {
