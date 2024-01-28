@@ -30,8 +30,8 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 
 app.use('/api/user', userRoutes);
-app.use('/api/tickets', ticketRoutes);
-app.use('/api/groups', groupRoutes);
+app.use('/api/ticket', ticketRoutes);
+app.use('/api/group', groupRoutes);
 
 // Define a route handler for the dashboard
 app.get('/dashboard', (req: Request, res: Response) => {
