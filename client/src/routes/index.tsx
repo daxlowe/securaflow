@@ -28,8 +28,7 @@ export default function App() {
           />
           <Route
             path="/organization"
-            // element={user ? <Organization /> : <Navigate to="/login" />}
-            element={<Organization />}
+            element={user ? <Organization /> : <Navigate to="/login" />}
           />
           <Route path="/settings/profile" element={<AccountSettings />} />
           <Route path="/settings/account" element={<AccountSettings />} />
