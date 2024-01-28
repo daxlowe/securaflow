@@ -19,7 +19,7 @@ interface Vulnerability {
 interface Ticket {
     _id: Types.ObjectId;
     title: string;
-    team: Types.ObjectId;
+    team: Types.Array<Types.ObjectId>;
     description: string;
     difficulty: number;
     assignees: Types.Array<Types.ObjectId>;
@@ -27,7 +27,8 @@ interface Ticket {
     current_status: string;
     status_updates?: Types.Array<Status>;
     comments?: string;
-    vulnerability: Vulnerability
+    vulnerability: Vulnerability;
+    created_by: string;
 }
 
 const statusSchema = new Schema<Status, Model<Status>>(
@@ -58,8 +59,7 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
         },
         team:
         {
-            type: Schema.Types.ObjectId, 
-            ref: 'Group',
+            type: [{ type: Schema.Types.ObjectId, ref: 'Group' }],
             required: true
         },
         description:
@@ -75,7 +75,8 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
         assignees: 
         {
             type: [{ type: Schema.Types.ObjectId, ref: 'User' }], 
-            required: true
+            required: true,
+            default: [],
         },
         time_estimate:
         {
@@ -115,6 +116,11 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>(
         comments:
         {
             type: [String]
+        }, 
+        created_by:
+        {
+            type: String,
+            required: true
         }
     }
 );

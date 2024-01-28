@@ -6,15 +6,33 @@ import { addTicketsToUser, removeTicketsFromUser } from './userController';
 import { Types } from 'mongoose';
 import { addTicketsToGroup } from './groupController';
 
-// GET all tickets
-const getAllTickets = async (req: Request, res: Response) => {
+// GET all tickets from user's groups
+const getAllPossibleTickets = async (req: Request, res: Response) => {
+    try {
+        const user_id = req.body.user_id;
+
+        const groups = await Group.find({ users: user_id }).select('_id');
+        const groupIds = groups.map((group) => group._id);
+
+        const tickets = await Ticket.find({ team: { $in: groupIds } })
+            .populate('team')
+            .populate('assignees', '_id, first_name last_name email');
+
+        res.status(200).json(tickets);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error ' });
+    }
+}
+
+// GET all tickets assigned to user
+const getAllAssignedTickets = async (req: Request, res: Response) => {
     try {
         const user_id = req.body.user._id;
-        const groupDocument = await User.findById(user_id).select("groups");
-        const groups = groupDocument?.groups as Types.Array<Types.ObjectId>;
-        
-        // Populate 'team' field with the corresponding 'Group' data
-        const tickets = await Ticket.find({ team: { $in: groups } }).populate('team').populate('assignees', '_id first_name last_name email');
+
+        const tickets = await Ticket.find({ assignees: user_id })
+            .populate('team')
+            .populate('assignees', '_id first_name last_name email');
 
         res.status(200).json(tickets);
     } catch (error) {
@@ -22,7 +40,6 @@ const getAllTickets = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
 
 // GET a single ticket
 const getSingleTicket = async (req: Request, res: Response) =>
@@ -171,7 +188,8 @@ const setTicketTeam = async (groupId: mongoose.Types.ObjectId, ticketIds: mongoo
 
 export 
 {
-    getAllTickets,
+    getAllPossibleTickets,
+    getAllAssignedTickets,
     getSingleTicket, 
     createTicket, 
     deleteTicket, 
