@@ -8,7 +8,7 @@ export const createTicket = (ticket: Ticket) => {
         },
         body: JSON.stringify(ticket)
     };
-    fetch(`http://localhost:3000/api/tickets/`, options).then(response => {
+    fetch(`http://localhost:3000/api/ticket/`, options).then(response => {
         if(!response.ok) {
             window.alert(`The following error occured when trying to create a ticket: ${response.statusText}`)
         }

@@ -1,17 +1,16 @@
 import MenuBar from '@/components/menuBar/menuBar';
 import { useAuthContext } from '@/hooks/useAuthContext';
-import { GroupMember } from './types';
 import { useEffect, useState } from 'react';
-import { User } from '@/types';
-import { getGroupMembers } from './utils/getGroupMembers';
+import { User, Group } from '@/types';
+import { getGroups } from './utils/getGroups';
 
-async function getData(user: User): Promise<GroupMember[]> {
-  return await getGroupMembers(user);
+async function getData(user: User): Promise<Group[]> {
+  return await getGroups(user);
 }
 
 export default function Organization() {
   const { user } = useAuthContext();
-  const [data, setData] = useState<GroupMember[]>([]);
+  const [data, setData] = useState<Group[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,10 +27,10 @@ export default function Organization() {
   }, []); // Empty dependency array to run the effect once on component mount
 
   let listItems = [];
-  for (const groupMember of data) {
+  for (const group of data) {
     listItems.push(
       <li>
-        User: {groupMember.user.first_name} {groupMember.user.last_name} shares these groups with you: {JSON.stringify(groupMember.sharedGroups)}
+        {JSON.stringify(group)}
       </li>
     )
   }

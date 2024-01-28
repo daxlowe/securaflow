@@ -1,6 +1,14 @@
 import { User, Group } from "@/types";
 
-export const getUsers = async (groups: Array<Group>): Promise<Array<User>> => {
+export const getAllTeammates = async (user: User): Promise<Array<User>> => {
+  let groups: Array<Group>;
+  try {
+    const groupsResponse = await fetch(`http://localhost:3000/api/user/${user._id}/groups`);
+    groups = await groupsResponse.json();
+  } catch(error) {
+    console.error(error);
+    return [];
+  }
   
   let users: Array<User> = [];
   for (const group of groups) {
@@ -23,7 +31,6 @@ export const getUsers = async (groups: Array<Group>): Promise<Array<User>> => {
             email: user.email,
             first_name: user.first_name,
             last_name: user.last_name,
-            groups: user.groups,
           });
         }
       }

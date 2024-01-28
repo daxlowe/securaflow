@@ -4,6 +4,7 @@ import Ticket from "../models/Ticket";
 import User from "../models/User";
 import jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
+import Group from "../models/Group";
 dotenv.config();
 
 const createToken = (_id: string) => {
@@ -113,6 +114,27 @@ const getUserData = async (req: Request, res: Response) => {
   res.status(200).json(user);
 };
 
+const getUserGroups = async (req: Request, res: Response) => {
+  const { id: user_id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(user_id))
+    return res.status(404).json({ error: "No such user" });
+
+  try {
+    const groups = await Group.find({
+      users: user_id
+    }).populate("users");
+
+    if (!groups.length)
+      return res.status(200).json([]);
+
+    res.status(200).json(groups);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 export {
   addTicketsToUser,
   removeTicketsFromUser,
@@ -121,4 +143,5 @@ export {
   signupUser,
   updateUser,
   getUserData,
+  getUserGroups,
 };

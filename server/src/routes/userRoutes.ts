@@ -7,12 +7,13 @@ import
     signupUser,
     updateUser,
     getUserData,
+    getUserGroups,
 } from '../controllers/userController';
 
 const router = express.Router();
 
 // Example route for getting user data
-router.get('/users/:id', getUserData);
+router.get('/:id', getUserData);
 
 router.post('/login', loginUser)
 
@@ -21,6 +22,8 @@ router.post('/signup', signupUser);
 router.use(requireAuth);
 
 router.patch('/', updateUser);
+
+router.get('/:id/groups', getUserGroups);
 
 // Other user routes (POST, PUT, DELETE, etc.)
 
