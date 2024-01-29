@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -33,9 +32,12 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
     team: "",
     description: "",
     difficulty: "1",
+    name: "",
+    cve_id: "",
+    priority: "",
     assignees: "",
-    timeEstimate: "",
-    currentStatus: "",
+    time_estimate: "",
+    current_status: "",
     comments: "",
   });
 
@@ -47,10 +49,13 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
         team: task.ticket.team?.toString() || "Select a team",
         description: task.ticket.description || "",
         difficulty: task.ticket.difficulty.toString() || "1",
+        name: task.ticket.vulnerability.name,
+        cve_id: task.ticket.vulnerability.cve_id,
+        priority: task.ticket.vulnerability.priority,
         assignees: task.ticket.assignees?.toString() || "",
-        timeEstimate:
+        time_estimate:
           task.ticket.time_estimate?.toString() || "Time Estimate (Hours)",
-        currentStatus: task.ticket.current_status || "",
+        current_status: task.ticket.current_status || "",
         comments: task.ticket.comments || "Write any comments here",
       });
     }
@@ -95,6 +100,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                 type="text"
                 name="title"
                 value={formFields.title}
+                required={true}
                 onChange={handleChange}
               />
               <Label htmlFor="team">Team</Label>
@@ -107,45 +113,68 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
               <Label htmlFor="description">Description</Label>
               <Input
                 type="text"
-                id="description"
+                name="description"
                 value={formFields.description}
+                required={true}
                 onChange={handleChange}
               />
-              <RadioGroup
-                defaultValue={formFields.difficulty}
-                onChange={handleChange}
-              >
-                <Label htmlFor="low">Low</Label>
-                <RadioGroupItem value="1" id="low" />
-                <Label htmlFor="medium">Medium</Label>
-                <RadioGroupItem value="2" id="medium" />
-                <Label htmlFor="high">High</Label>
-                <RadioGroupItem value="3" id="high" />
-                <Label htmlFor="critical">Critical</Label>
-                <RadioGroupItem value="4" id="critical" />
-              </RadioGroup>
+              <Label htmlFor="difficulty">Difficulty</Label>
+              <Select name="difficulty" required={true} defaultValue={formFields.difficulty}>
+                <SelectTrigger onChange={handleChange}>
+                  <SelectValue defaultValue={formFields.difficulty} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="hard">Hard</SelectItem>
+                </SelectContent>
+              </Select>
+              <Label htmlFor="name">Vulnerability Name</Label>
+              <Input
+                type="text"
+                name="name"
+                required={true}
+                defaultValue={formFields.name}
+              />
+              <Label htmlFor="cve_id">CVE</Label>
+              <Input
+                type="text"
+                name="cve_id"
+                required={true}
+                defaultValue={formFields.cve_id}
+              />
+              <Label htmlFor="priority">Priority</Label>
+              <Select name="priority" required={true}>
+                <SelectTrigger>
+                  <SelectValue defaultValue={formFields.priority} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="critical">Critical</SelectItem>
+                </SelectContent>
+              </Select>
               <Label htmlFor="assignees">Assignees</Label>
               <Input
                 type="text"
-                id="assignees"
+                name="assignees"
                 value={formFields.assignees}
                 onChange={handleChange}
               />
-              <Label htmlFor="timeEstimate">Time Estimate</Label>
+              <Label htmlFor="time_estimate">Time Estimate</Label>
               <Input
                 type="number"
-                id="timeEstimate"
-                value={formFields.timeEstimate}
+                name="time_estimate"
+                value={formFields.time_estimate}
                 onChange={handleChange}
               />
-              <Select>
-                <SelectTrigger>
-                  <SelectValue
-                    placeholder={formFields.currentStatus}
-                    onChange={handleChange}
-                  />
+              <Label htmlFor="current_status">Current Status</Label>
+              <Select name="current_status" required={true} defaultValue={formFields.current_status}>
+                <SelectTrigger onChange={handleChange} defaultValue={formFields.current_status}>
+                  <SelectValue defaultValue={formFields.current_status}/>
                 </SelectTrigger>
-                <SelectContent defaultValue={formFields.currentStatus}>
+                <SelectContent defaultValue={formFields.current_status}>
                   <SelectItem value="backlog">Backlog</SelectItem>
                   <SelectItem value="assigned">Assigned</SelectItem>
                   <SelectItem value="in-progress">In Progress</SelectItem>
