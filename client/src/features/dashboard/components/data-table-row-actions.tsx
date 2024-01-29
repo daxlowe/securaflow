@@ -24,6 +24,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -63,32 +65,29 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+          <Dialog>
+            <DialogTrigger asChild>
               <Button variant="ghost" className="w-[100%]">
                 View
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
+            </DialogTrigger>
+            <DialogContent>
               <ViewTicket task={task} />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
               </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+            </DialogContent>
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
               <Button variant="ghost" className="w-[100%]">
                 Edit
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
+            </DialogTrigger>
+            <DialogContent>
               <ModifyTicket task={task} />
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+            </DialogContent>
+          </Dialog>
           <DropdownMenuItem>
             Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
           </DropdownMenuItem>
