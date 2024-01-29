@@ -12,7 +12,7 @@ import {
 import { ViewTicket } from "@/components/ViewTicketPopup";
 import { ModifyTicket } from "@/components/ModifyTicketPopup";
 import { CreateTicket } from "@/components/CreateTicketPopup";
-import { Task } from "../types"
+import { Task } from "../types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -65,32 +65,33 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost" className="w-[100%]">View</Button>
+              <Button variant="ghost" className="w-[100%]">
+                View
+              </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent><ViewTicket task={task} />
+            <AlertDialogContent>
+              <ViewTicket task={task} />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </AlertDialogFooter></AlertDialogContent>
+              </AlertDialogFooter>
+            </AlertDialogContent>
           </AlertDialog>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost" className="w-[100%]">Edit</Button>
+              <Button variant="ghost" className="w-[100%]">
+                Edit
+              </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent><ModifyTicket task={task} />
+            <AlertDialogContent>
+              <ModifyTicket task={task} />
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </AlertDialogFooter></AlertDialogContent>
+              </AlertDialogFooter>
+            </AlertDialogContent>
           </AlertDialog>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" className="w-[100%]">Create</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent><CreateTicket />
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </AlertDialogFooter></AlertDialogContent>
-          </AlertDialog>
-          <DropdownMenuItem>Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut></DropdownMenuItem>
+          <DropdownMenuItem>
+            Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
