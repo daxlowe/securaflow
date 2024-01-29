@@ -1,14 +1,6 @@
 import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon, Calendar } from "lucide-react";
 import {
   Form,
   FormField,
@@ -30,10 +22,10 @@ export function CreateTicket({ form, onSubmit }: any) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="name"
+            name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input placeholder="Your name" {...field} />
                 </FormControl>
@@ -47,35 +39,16 @@ export function CreateTicket({ form, onSubmit }: any) {
           />
           <FormField
             control={form.control}
-            name="dob"
+            name="description"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date of birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" onSelect={field.onChange} />
-                  </PopoverContent>
-                </Popover>
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="Description" {...field} />
+                </FormControl>
                 <FormDescription>
-                  Your date of birth is used to calculate your age.
+                  This is the name that will be displayed on your profile and in
+                  emails.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

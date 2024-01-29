@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type Group = {
   _id?: string;
   name: string;
@@ -48,20 +50,35 @@ export type User = {
   token: string;
 };
 
-import { z } from "zod";
-
 const ticketSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "Name must be at least 2 characters.",
+  title: z.string().min(2).max(30),
+  team: z.array(z.string()).optional().default([]),
+  description: z.string().optional().default(""),
+  difficulty: z.number().optional().default(1),
+  assignees: z.array(z.string()).optional().default([]),
+  time_estimate: z.number().optional().nullable().default(null),
+  status_updates: z
+    .array(
+      z.object({
+        body: z.string().optional(),
+        date_started: z.date().optional(),
+        date_ended: z.date().optional(),
+      })
+    )
+    .optional()
+    .default([]),
+  vulnerability: z
+    .object({
+      name: z.string().optional(),
+      cve_id: z.string().optional(),
+      priority: z.string().optional(),
+      imported_from: z.string().optional(),
     })
-    .max(30, {
-      message: "Name must not be longer than 30 characters.",
-    }),
-  dob: z.date({
-    required_error: "A date of birth is required.",
-  }),
+    .optional()
+    .nullable()
+    .default(null),
+  comments: z.array(z.string()).optional().default([]),
+  created_by: z.string().optional().nullable().default(null),
 });
 
 export { ticketSchema };
