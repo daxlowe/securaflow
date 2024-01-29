@@ -63,8 +63,8 @@ export function CreateTicket() {
               <Input
                 type="text"
                 name="team"
-                required={true}
-                placeholder="Enter teams to assign ticket to."
+                required={false}
+                placeholder="(Optional) Enter teams to assign ticket to."
               />
               <Label htmlFor="description">Description</Label>
               <Input
@@ -121,6 +121,7 @@ export function CreateTicket() {
               <Input
                 type="number"
                 name="time_estimate"
+                required={false}
                 placeholder="(Optional) Time Estimate (Hours)"
               />
               <Select name="current_status" required={true}>
@@ -138,7 +139,7 @@ export function CreateTicket() {
               <Label htmlFor="comments">Comments</Label>
               <Textarea
                 name="comments"
-                required={true}
+                required={false}
                 placeholder="Write any comments here"
               />
             </CardContent>
