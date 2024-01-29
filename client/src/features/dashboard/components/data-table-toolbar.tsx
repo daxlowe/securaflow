@@ -1,5 +1,3 @@
-"use client";
-
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
@@ -9,19 +7,51 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 import { priorities, statuses } from "../data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { Plus } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Calendar } from "@/components/ui/calendar";
+
 import { CreateTicket } from "@/components/CreateTicketPopup";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import { format } from "date-fns";
+import { Plus } from "lucide-react";
+import { ticketSchema } from "@/types";
+
+const ticketFormSchema = ticketSchema;
+
+type TicketFormValues = z.infer<typeof ticketFormSchema>;
+
+// This can come from your database or API.
+const defaultValues: Partial<TicketFormValues> = {
+  name: "Your name",
+  dob: new Date("2023-01-23"),
+};
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -30,6 +60,21 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
+  const form = useForm<TicketFormValues>({
+    resolver: zodResolver(ticketFormSchema),
+    defaultValues,
+  });
+
+  function onSubmit(data: TicketFormValues) {
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -68,9 +113,8 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
+      <Dialog>
+        <DialogTrigger asChild>
           <Button
             variant="outline"
             size="sm"
@@ -79,14 +123,11 @@ export function DataTableToolbar<TData>({
             <Plus className="mr-2 h-4 w-4" />
             Create
           </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <CreateTicket />
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogTrigger>
+        <DialogContent>
+          <CreateTicket form={form} onSubmit={onSubmit} />
+        </DialogContent>
+      </Dialog>
       <DataTableViewOptions table={table} />
     </div>
   );
