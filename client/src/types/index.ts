@@ -53,7 +53,7 @@ export type User = {
 const ticketSchema = z.object({
   title: z.string().min(2).max(30),
   team: z.array(z.string()).optional().default([]),
-  description: z.string().optional().default(""),
+  description: z.string().optional().nullable().default(null),
   difficulty: z.number().optional().default(1),
   assignees: z.array(z.string()).optional().default([]),
   time_estimate: z.number().optional().nullable().default(null),
@@ -66,17 +66,21 @@ const ticketSchema = z.object({
       })
     )
     .optional()
-    .default([]),
+    .default([{ body: "open" }]),
   vulnerability: z
     .object({
-      name: z.string().optional(),
-      cve_id: z.string().optional(),
+      name: z.string().optional().nullable(),
+      cve_id: z.string().optional().nullable(),
       priority: z.string().optional(),
-      imported_from: z.string().optional(),
+      imported_from: z.string().optional().nullable(),
     })
     .optional()
-    .nullable()
-    .default(null),
+    .default({
+      name: null,
+      cve_id: null,
+      priority: "low",
+      imported_from: null,
+    }),
   comments: z.array(z.string()).optional().default([]),
   created_by: z.string().optional().nullable().default(null),
 });
