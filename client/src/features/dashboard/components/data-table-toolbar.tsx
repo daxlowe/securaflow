@@ -41,17 +41,12 @@ import {
 } from "@radix-ui/react-popover";
 import { format } from "date-fns";
 import { Plus } from "lucide-react";
-import { ticketSchema } from "@/types";
+import { Ticket, ticketSchema } from "@/types";
+import { createTicket } from "@/utils/createTicket";
 
 const ticketFormSchema = ticketSchema;
 
 type TicketFormValues = z.infer<typeof ticketFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<TicketFormValues> = {
-  name: "Your name",
-  dob: new Date("2023-01-23"),
-};
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -62,10 +57,10 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
-    defaultValues,
   });
 
   function onSubmit(data: TicketFormValues) {
+    createTicket(data);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -75,6 +70,7 @@ export function DataTableToolbar<TData>({
       ),
     });
   }
+
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
