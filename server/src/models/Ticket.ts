@@ -27,7 +27,7 @@ interface Ticket {
   status_updates?: Types.Array<Status>;
   comments?: string;
   vulnerability: Vulnerability;
-  created_by: string;
+  created_by: Types.ObjectId;
 }
 
 const statusSchema = new Schema<Status, Model<Status>>({
@@ -55,7 +55,6 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   },
   description: {
     type: String,
-    required: true,
   },
   difficulty: {
     type: Number,
@@ -75,11 +74,9 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   vulnerability: {
     name: {
       type: String,
-      required: true,
     },
     cve_id: {
       type: String,
-      required: true,
     },
     priority: {
       type: String,
@@ -93,8 +90,8 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
     type: [String],
   },
   created_by: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 
