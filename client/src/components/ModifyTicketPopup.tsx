@@ -66,16 +66,38 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
   const { user } = useAuthContext()
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const ticketData = {
+        title: String(values.title),
+        team: values.team?.map(t => String(t)) || [],
+        description: String(values.description),
+        difficulty: Number(values.difficulty),
+        assignees: values.assignees?.map(a => String(a)) || [],
+        time_estimate: Number(values.time_estimate),
+        comments: [String(values.comments)],
+      }
+
+      const data = {
+        ticketData,
+        cve_id: String(values.cve_id),
+        current_status: String(values.current_status),
+      }
+
       const ticketResponse = await modifyTicket(
-        values,
+        data,
         task?.ticket._id || "No ID",
         user,
       );
-      console.log("Ticket modified:", ticketResponse);
+
+      if (ticketResponse) {
+        console.log("Ticket modified:", ticketResponse);
+      } else {
+        // handle error
+      }
       // Handle success (e.g., clear form, show success message, etc.)
     } catch (error) {
       // Handle errors (e.g., show error message)
       console.error("Error modifying ticket:", error);
+      window.alert(`The following error occured when trying to modify ticket: ${JSON.stringify(error)}`);
     }
   };
 
@@ -83,13 +105,13 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: task?.title,
-      team: task?.ticket.team?.map(group => group.name) || Array(""), 
+      team: task?.ticket.team?.map(group => group._id) || Array(""), 
       description: task?.ticket.description || "",
       difficulty: task?.ticket.difficulty || 1,
       name: task?.ticket.vulnerability.name,
       cve_id: task?.ticket.vulnerability.cve_id,
       priority: task?.ticket.vulnerability.priority,
-      assignees: task?.ticket.assignees?.map(user => user.email) || Array(""),
+      assignees: task?.ticket.assignees?.map(user => user._id) || Array(""),
       time_estimate: task?.ticket.time_estimate || 1,
       current_status: task?.status,
       comments: task?.ticket.comments?.toString() || ""
