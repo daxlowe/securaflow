@@ -48,11 +48,18 @@ const signupUser = async (request: Request, response: Response) => {
 
 const updateUser = async (request: Request, response: Response) => {
   console.log(request.body);
-  const id = request.body.user._id;
+  const id = request.body.user;
   console.log(id);
   try {
-    // @ts-ignore
-    const user = await User.findByIdAndUpdate(id, request.body);
+    const password = await User.validatePassword(request.body.password);
+    const data = 
+    {
+      first_name: request.body.first_name,
+      last_name: request.body.last_name,
+      email: request.body.email,
+      password: password
+    }
+    const user = await User.findByIdAndUpdate(id, data);
     response.status(200).json(user);
   } catch (error: any) {
     response.status(400).json({ error: error.message });
@@ -74,17 +81,17 @@ const addGroupsToUser = async (
   }
 };
 
-const getUserData = async (req: Request, res: Response) => {
-  const { id } = req.params;
-
+const getUserData = async (request: Request, response: Response) => {
+  
+  const id = request.body.user;
   if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({ error: "No such user" });
+    return response.status(404).json({ error: "No such user" });
 
   const user = await User.findById(id).select("_id first_name last_name email");
 
-  if (!user) return res.status(404).json({ error: "No such user" });
+  if (!user) return response.status(404).json({ error: "No such user" });
 
-  res.status(200).json(user);
+  response.status(200).json(user);
 };
 
 const getUserGroups = async (req: Request, res: Response) => {

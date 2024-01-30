@@ -12,14 +12,13 @@ import
 
 const router = express.Router();
 
-// Example route for getting user data
-router.get('/:id', getUserData);
-
 router.post('/login', loginUser)
 
 router.post('/signup', signupUser);
 
 router.use(requireAuth);
+
+router.get('/', getUserData);
 
 router.patch('/', updateUser);
 

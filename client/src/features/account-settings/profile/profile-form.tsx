@@ -13,6 +13,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { modifyUser } from "@/utils/modifyUser";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { getUserData } from "@/utils/getUserData";
+import { User } from "@/types/";
+import { da, de } from "date-fns/locale";
 
 const profileFormSchema = z.object({
   name: z
@@ -42,24 +47,25 @@ const profileFormSchema = z.object({
     }),
 });
 
+
+
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 // This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  name: "Sam",
-  username: "sambenn25",
-  email: "sambenn25@gmail.com",
-  password: "unsalted password",
-};
+
 
 export function ProfileForm() {
+  const { user } = useAuthContext();
+  const defaultValues: Partial<ProfileFormValues> = getInitialData() as Partial<ProfileFormValues>;
+  console.log("Default Values", defaultValues);
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
     mode: "onChange",
   });
 
-  function onSubmit(data: ProfileFormValues) {
+ 
+  async function onSubmit(data: ProfileFormValues) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -68,8 +74,25 @@ export function ProfileForm() {
         </pre>
       ),
     });
+    
+    modifyUser(data, user);
   }
 
+  async function getInitialData() : Promise<Partial<ProfileFormValues>>
+  {
+    const data: User = await getUserData(user);
+    console.log(data);
+    const initialValues: Partial<ProfileFormValues> = 
+    {
+      name: data.first_name + data.last_name,
+      username: "unused",
+      email: data.email,
+      password: "temp"
+    }
+    
+    return initialValues;
+  }
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
