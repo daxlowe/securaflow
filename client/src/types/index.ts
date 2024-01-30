@@ -52,33 +52,23 @@ export type User = {
 
 const ticketSchema = z.object({
   title: z.string().min(2).max(30),
-  team: z.array(z.string()).default([]),
+  team: z.array(z.string()).default(["65712e165fc8178ec0758361"]),
   description: z.string().nullable().default(null),
-  difficulty: z.number().default(1),
-  assignees: z.array(z.string()).default([]),
+  difficulty: z.string().default("1"),
+  assignees: z
+    .array(z.string())
+    .default(["6570be68cd37537339c30126", "657253481b314aa5a1dbb04c"]),
   time_estimate: z.number().nullable().default(null),
-  status_updates: z
-    .array(
-      z.object({
-        body: z.string(),
-        date_started: z.date(),
-        date_ended: z.date().nullable(),
-      })
-    )
-    .default([{ body: "open", date_started: new Date(), date_ended: null }]),
-  vulnerability: z
-    .object({
-      name: z.string().nullable(),
-      cve_id: z.string().nullable(),
-      priority: z.string(),
-      imported_from: z.string().nullable(),
-    })
-    .default({
-      name: null,
-      cve_id: null,
-      priority: "low",
-      imported_from: null,
-    }),
+
+  status_body: z.string().default("Open"),
+  status_date_started: z.date().default(new Date()),
+  status_date_ended: z.date().nullable().default(null),
+
+  vuln_name: z.string().nullable().default(null),
+  vuln_cve_id: z.string().nullable().default(null),
+  vuln_priority: z.string().default("Low"),
+  vuln_imported_from: z.string().nullable().default(null),
+
   comments: z.array(z.string()).default([]),
   created_by: z.string().nullable().default(null),
 });

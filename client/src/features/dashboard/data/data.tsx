@@ -7,7 +7,7 @@ import {
   PlusCircledIcon,
   StopwatchIcon,
   ExclamationTriangleIcon,
-} from "@radix-ui/react-icons"
+} from "@radix-ui/react-icons";
 
 export const labels = [
   {
@@ -22,7 +22,7 @@ export const labels = [
     value: "documentation",
     label: "Documentation",
   },
-]
+];
 
 export const statuses = [
   {
@@ -41,11 +41,16 @@ export const statuses = [
     icon: CircleIcon,
   },
   {
+    value: "open",
+    label: "Open",
+    icon: CircleIcon,
+  },
+  {
     value: "Closed",
     label: "Closed",
     icon: CheckCircledIcon,
   },
-]
+];
 
 export const priorities = [
   {
@@ -68,4 +73,9 @@ export const priorities = [
     value: "Low",
     icon: ArrowDownIcon,
   },
-]
+  {
+    label: "Low",
+    value: "low",
+    icon: ArrowDownIcon,
+  },
+];

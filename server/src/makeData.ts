@@ -67,7 +67,7 @@ const createDummyData = async (numTickets: number) => {
           ]),
         },
         comments: [faker.lorem.sentence(), faker.lorem.sentence()],
-        created_by: "some_user_id",
+        created_by: "656fdc30c520c1e6536d0931",
       }))
     );
 

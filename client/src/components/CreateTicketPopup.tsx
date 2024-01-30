@@ -10,8 +10,15 @@ import {
   FormDescription,
   FormMessage,
 } from "./ui/form";
-import { DialogHeader, DialogTitle } from "./ui/dialog";
+import { DialogClose, DialogHeader, DialogTitle } from "./ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 export function CreateTicket({ form, onSubmit }: any) {
   return (
@@ -21,7 +28,7 @@ export function CreateTicket({ form, onSubmit }: any) {
       </DialogHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <ScrollArea className="max-h-[75vh]">
+          <ScrollArea className="h-[75vh] px-[20px]">
             <FormField
               control={form.control}
               name="title"
@@ -29,12 +36,21 @@ export function CreateTicket({ form, onSubmit }: any) {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your name" {...field} />
+                    <Input {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is the name that will be displayed on your profile and
-                    in emails.
-                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="team"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -46,18 +62,136 @@ export function CreateTicket({ form, onSubmit }: any) {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Description" {...field} />
+                    <Input {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is the name that will be displayed on your profile and
-                    in emails.
-                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="difficulty"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Difficulty</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue="1">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue="1" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="1">Low</SelectItem>
+                      <SelectItem value="2">Medium</SelectItem>
+                      <SelectItem value="3">Hard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="vuln_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vulnerability Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="vuln_cve_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CVE ID</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="vuln_priority"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Priority</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue="Low">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue="Low" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Low">Low</SelectItem>
+                      <SelectItem value="Medium">Medium</SelectItem>
+                      <SelectItem value="High">High</SelectItem>
+                      <SelectItem value="Critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="assignees"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assignees</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status_body"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Status</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue="Open">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Open">Open</SelectItem>
+                      <SelectItem value="Assigned">Assigned</SelectItem>
+                      <SelectItem value="In Progress">In Progress</SelectItem>
+                      <SelectItem value="Closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="comments"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Comments</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </ScrollArea>
-          <Button type="submit">Create</Button>
+          <DialogClose asChild>
+            <Button type="submit">Create</Button>
+          </DialogClose>
         </form>
       </Form>
     </>
