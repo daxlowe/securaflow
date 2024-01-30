@@ -1,15 +1,11 @@
-export const modifyTicket = async (ticketData : any, ticketID : string) => {
-    const storedData = localStorage.getItem('user')
-    let authToken = ''
-    if(storedData) {
-        const authData = JSON.parse(storedData)
-        authToken = authData.token
-    }
+import { User } from "@/types";
+
+export const modifyTicket = async (ticketData : any, ticketID : string, user : User) => {
     const options = {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
+            'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify(ticketData)
     };

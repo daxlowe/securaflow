@@ -25,6 +25,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { DialogHeader, DialogTitle } from "./ui/dialog";
+import { AuthContext } from "@/context/AuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -34,7 +36,7 @@ const formSchema = z.object({
   description: z.string().min(1, {
     message: "Description is required"
   }),
-  difficulty: z.number().min(1, {
+  difficulty: z.coerce.number().min(1, {
     message: "Difficulty is on a scale of 1-3"
   }).max(3, {
     message: "Difficulty is on a scale of 1-3"
@@ -61,55 +63,13 @@ interface ModifyTicketProps {
 }
 
 export function ModifyTicket({ task }: ModifyTicketProps) {
-  // //Initial state for form fields
-  // const [formFields, setFormFields] = useState({
-  //   title: "",
-  //   team: "",
-  //   description: "",
-  //   difficulty: "1",
-  //   name: "",
-  //   cve_id: "",
-  //   priority: "",
-  //   assignees: "",
-  //   time_estimate: "",
-  //   current_status: "",
-  //   comments: "",
-  // });
-
-  // // Populate form fields when the component mounts or task changes
-  // useEffect(() => {
-  //   if (task) {
-  //     setFormFields({
-  //       title: task.ticket.title || "",
-  //       team: task.ticket.team?.toString() || "Select a team",
-  //       description: task.ticket.description || "",
-  //       difficulty: task.ticket.difficulty.toString() || "1",
-  //       name: task.ticket.vulnerability.name,
-  //       cve_id: task.ticket.vulnerability.cve_id,
-  //       priority: task.ticket.vulnerability.priority,
-  //       assignees: task.ticket.assignees?.toString() || "",
-  //       time_estimate:
-  //         task.ticket.time_estimate?.toString() || "Time Estimate (Hours)",
-  //       current_status: task.ticket.current_status || "",
-  //       comments: task.ticket.comments || "Write any comments here",
-  //     });
-  //   }
-  // }, [task]);
-
-  // // Handle form field changes
-  // const handleChange = (e: any) => {
-  //   const { id, value } = e.target;
-  //   setFormFields({
-  //     ...formFields,
-  //     [id]: value,
-  //   });
-  // };
-
+  const { user } = useAuthContext()
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const ticketResponse = await modifyTicket(
         values,
-        task?.ticket._id || "No ID"
+        task?.ticket._id || "No ID",
+        user,
       );
       console.log("Ticket modified:", ticketResponse);
       // Handle success (e.g., clear form, show success message, etc.)
@@ -123,14 +83,16 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: task?.title,
-      team: Array(""), 
-      description: task?.ticket.description,
+      team: task?.ticket.team?.map(group => group.name) || Array(""), 
+      description: task?.ticket.description || "",
       difficulty: task?.ticket.difficulty || 1,
       name: task?.ticket.vulnerability.name,
       cve_id: task?.ticket.vulnerability.cve_id,
       priority: task?.ticket.vulnerability.priority,
-      assignees: Array(""),
-      comments: task?.ticket.comments
+      assignees: task?.ticket.assignees?.map(user => user.email) || Array(""),
+      time_estimate: task?.ticket.time_estimate || 1,
+      current_status: task?.status,
+      comments: task?.ticket.comments?.toString() || ""
     }
   })
 
@@ -149,7 +111,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input defaultValue={field.value} {...field} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -162,7 +124,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>Team</FormLabel>
                       <FormControl>
-                        <Input defaultValue={field.value} {...field} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -175,7 +137,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Textarea {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,18 +149,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Difficulty</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue defaultValue={field.value}/>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="1">Low</SelectItem>
-                          <SelectItem value="2">Medium</SelectItem>
-                          <SelectItem value="3">Hard</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        <Input type="number" {...field}/>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -210,7 +161,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>Vulnerability Name</FormLabel>
                       <FormControl>
-                        <Input defaultValue={field.value} {...field} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -223,7 +174,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>CVE ID</FormLabel>
                       <FormControl>
-                        <Input defaultValue={field.value} {...field} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -234,11 +185,11 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                   name="priority"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Difficulty</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormLabel>Priority</FormLabel>
+                      <Select onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue defaultValue={field.value}/>
+                            <SelectValue placeholder={field.value}/>
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -259,7 +210,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>Assignees</FormLabel>
                       <FormControl>
-                        <Input defaultValue={field.value} {...field} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -271,10 +222,10 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Current Status</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue defaultValue={field.value}/>
+                            <SelectValue placeholder={field.value}/>
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -296,7 +247,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
                     <FormItem>
                       <FormLabel>Comments</FormLabel>
                       <FormControl>
-                        <Input defaultValue={field.value} {...field} />
+                        <Textarea defaultValue={field.value} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
