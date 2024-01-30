@@ -13,19 +13,7 @@ import { ViewTicket } from "@/components/ViewTicketPopup";
 import { ModifyTicket } from "@/components/ModifyTicketPopup";
 import { CreateTicket } from "@/components/CreateTicketPopup";
 import { Task } from "../types";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DeleteTicket } from "@/components/DeleteTicketPopup";
 
 interface DataTableRowActionsProps<TData> {
