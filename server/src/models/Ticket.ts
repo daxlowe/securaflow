@@ -37,12 +37,11 @@ const statusSchema = new Schema<Status, Model<Status>>({
   },
   date_started: {
     type: Date,
-    required: true,
   },
   date_ended: {
     type: Date,
   },
-});
+}, { timestamps: true, _id: false });
 
 const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   title: {

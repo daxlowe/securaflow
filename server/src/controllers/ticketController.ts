@@ -1,15 +1,7 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import { Request, Response } from "express";
 import Ticket from "../models/Ticket";
 import Group from "../models/Group";
-import User from "../models/User";
-import { addTicketsToUser, removeTicketsFromUser } from "./userController";
-import { Types } from "mongoose";
-import { addTicketsToGroup } from "./groupController";
-import { group } from "console";
-import { validationResult } from "express-validator";
-import { getUserData } from "./userController";
-import { getGroupData } from "./groupController";
 
 // GET all tickets from user's groups
 const getAllPossibleTickets = async (req: Request, res: Response) => {
@@ -98,45 +90,46 @@ const deleteTicket = async (req: Request, res: Response) => {
 
 // UPDATE a ticket
 const updateTicket = async (req: Request, res: Response) => {
-  const { ticketId } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(ticketId))
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).json({ error: "No such ticket" });
 
+  console.log(req.body);
+  let data;
   try {
-    // Fetch the current ticket to get the existing list of assignees
-    const currentTicket: Ticket | null = await Ticket.findById(ticketId);
+    data = req.body;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+  const { ticketData, cve_id, current_status } = data;
+  const status_update = {
+    body: current_status,
+  };
+  // Not currently updating cve_id on tickets. Need NVD integration
 
+  try {
     // Perform the tickt update
+    console.log(JSON.stringify(status_update));
     const modifiedTicket: Ticket | null = await Ticket.findByIdAndUpdate(
-      ticketId,
-      req.body,
+      id,
+      { 
+        $set: {
+          assignees: ticketData.assignees,
+          comments: ticketData.comments,
+          description: ticketData.description,
+          difficulty: ticketData.difficulty,
+          team: ticketData.team,
+          time_estimate: ticketData.time_estimate,
+          title: ticketData.title,
+        },
+        $push: { status_updates: status_update },
+      },
       { new: true }
     );
     if (!modifiedTicket) {
       return res.status(404).json({ error: "No such ticket" });
     }
-
-    // Compare assignees and update users if necessary
-    const newAssignees: mongoose.Types.ObjectId[] =
-      modifiedTicket.assignees || [];
-    const oldAssignees: mongoose.Types.ObjectId[] =
-      currentTicket?.assignees || [];
-
-    const assigneesAdded: mongoose.Types.ObjectId[] = newAssignees.filter(
-      (assignee) => !oldAssignees.includes(assignee)
-    );
-    const assigneesRemoved: mongoose.Types.ObjectId[] = oldAssignees.filter(
-      (assignee) => !newAssignees.includes(assignee)
-    );
-
-    await Promise.all([
-      ...assigneesAdded.map((assigneeId) =>
-        addTicketsToUser(assigneeId, [modifiedTicket._id])
-      ),
-      ...assigneesRemoved.map((assigneeId) =>
-        removeTicketsFromUser(assigneeId, [modifiedTicket._id])
-      ),
-    ]);
 
     res.status(200).json(modifiedTicket);
   } catch (error) {
@@ -144,7 +137,7 @@ const updateTicket = async (req: Request, res: Response) => {
       res.status(500).json({ error: error.message });
     } else {
       res.status(500).json({
-        error: `An unknown error occurred while attempting to update ticket: ${ticketId}`,
+        error: `An unknown error occurred while attempting to update ticket: ${id}`,
       });
     }
   }

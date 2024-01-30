@@ -58,33 +58,6 @@ const updateUser = async (request: Request, response: Response) => {
     response.status(400).json({ error: error.message });
   }
 };
-// Function to add any number of tickets to a user's tickets array
-const addTicketsToUser = async (
-  userId: mongoose.Types.ObjectId,
-  ticketIds: mongoose.Types.ObjectId[]
-) => {
-  try {
-    await User.findByIdAndUpdate(userId, {
-      $push: { tickets: { $each: ticketIds } },
-    });
-    return { status: "success" };
-  } catch (error) {
-    return { status: "error", error: error };
-  }
-};
-
-// Function to remove any number of tickets from a user's tickets array
-const removeTicketsFromUser = async (
-  userId: mongoose.Types.ObjectId,
-  ticketIds: mongoose.Types.ObjectId[]
-) => {
-  try {
-    await User.findByIdAndUpdate(userId, { $pullAll: { tickets: ticketIds } });
-    return { status: "success" };
-  } catch (error) {
-    return { status: "error", error: error };
-  }
-};
 
 // Function to add any number of tickets to a user's tickets array
 const addGroupsToUser = async (
@@ -136,8 +109,6 @@ const getUserGroups = async (req: Request, res: Response) => {
 }
 
 export {
-  addTicketsToUser,
-  removeTicketsFromUser,
   addGroupsToUser,
   loginUser,
   signupUser,
