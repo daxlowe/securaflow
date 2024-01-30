@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { DeleteTicket } from "@/components/DeleteTicketPopup";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -73,9 +74,6 @@ export function DataTableRowActions<TData>({
             </DialogTrigger>
             <DialogContent>
               <ViewTicket task={task} />
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </AlertDialogFooter>
             </DialogContent>
           </Dialog>
           <Dialog>
@@ -88,9 +86,16 @@ export function DataTableRowActions<TData>({
               <ModifyTicket task={task} />
             </DialogContent>
           </Dialog>
-          <DropdownMenuItem>
-            Delete<DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" className="w-[100%]">
+                Delete
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DeleteTicket ticket_id={task.ticket._id || ""} />
+            </DialogContent>
+          </Dialog>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
