@@ -111,7 +111,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
   return (
     <>
         <DialogHeader>
-          <DialogTitle>Create Ticket</DialogTitle>
+          <DialogTitle>Modify Ticket</DialogTitle>
         </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

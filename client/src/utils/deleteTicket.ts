@@ -1,4 +1,4 @@
-import { Ticket, User } from "@/types";
+import { User } from "@/types";
 
 export const deleteTicket = async (ticket_id : string, user : User) => {
     const options = {
