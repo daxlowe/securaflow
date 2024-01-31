@@ -15,6 +15,7 @@ import { priorities, statuses } from "../data/data";
 import { Task } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { getOverlappingDaysInIntervals } from "date-fns";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -88,10 +89,13 @@ export const columns: ColumnDef<Task>[] = [
       </div>
     ),
     cell: ({ row }) => {
+      const teams: string[] | string = row.getValue("team");
+      const teamString = Array.isArray(teams) ? teams.join(", ") : teams;
+
       return (
         <ScrollArea>
           <div className="flex space-x-2 h-[50px] w-[80px] items-center px-2 whitespace-nowrap">
-            {row.getValue("team")}
+            {teamString}
             <ScrollBar orientation="horizontal" />{" "}
           </div>
         </ScrollArea>
@@ -173,18 +177,31 @@ export const columns: ColumnDef<Task>[] = [
       </div>
     ),
     cell: ({ row }) => {
+      const assignee: string[] = row.getValue("assignee");
+
+      function getInitials(name: string) {
+        return name
+          .toUpperCase()
+          .split(/\s+/) // Split by spaces
+          .map((word) => word[0]) // Get the first letter of each word
+          .join(""); // Join the letters back together
+      }
+
+      console.log(row);
       return (
         <ScrollArea>
           <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
-            <HoverCard>
-              <HoverCardTrigger>
-                <Avatar className="h-[35px] w-[35px]">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </HoverCardTrigger>
-              <HoverCardContent>{row.getValue("assignee")}</HoverCardContent>
-            </HoverCard>
+            {assignee.map((assigneeName) => (
+              <HoverCard>
+                <HoverCardTrigger>
+                  <Avatar className="h-[35px] w-[35px]">
+                    <AvatarImage src="https://githu" />
+                    <AvatarFallback>{getInitials(assigneeName)}</AvatarFallback>
+                  </Avatar>
+                </HoverCardTrigger>
+                <HoverCardContent>{assigneeName}</HoverCardContent>
+              </HoverCard>
+            ))}
             <ScrollBar orientation="horizontal" />{" "}
           </div>
         </ScrollArea>
