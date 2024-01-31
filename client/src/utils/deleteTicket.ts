@@ -1,17 +1,21 @@
-import { Ticket } from "@/types";
+import { User } from "@/types";
 
-export const deleteTicket = (ticket: Ticket) => {
+export const deleteTicket = async (ticket_id : string, user : User) => {
     const options = {
         method: "DELETE",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
         },
-        body: JSON.stringify(ticket)
     };
-    fetch(`http://localhost:3000/api/tickets/${ticket._id}`, options).then(response => {
-        if(!response.ok) {
-            window.alert(`The following error occured when trying to delete this ticket: ${response.statusText}`)
-        }
-    }).catch(error => console.error(error))
+    fetch(`http://localhost:3000/api/ticket/${ticket_id}`, options)
+        .then((response) => {
+            if (!response.ok) {
+                window.alert(
+                `The following error occured when trying to create a ticket: ${response.statusText}`
+                );
+            }
+        })
+        .catch((error) => console.error(error));
 }
                                                                                                             

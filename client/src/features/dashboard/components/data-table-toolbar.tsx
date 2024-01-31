@@ -1,23 +1,69 @@
-"use client"
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 
-import { Cross2Icon } from "@radix-ui/react-icons"
-import { Table } from "@tanstack/react-table"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTableViewOptions } from "./data-table-view-options";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DataTableViewOptions } from "./data-table-view-options"
+import { priorities, statuses } from "../data/data";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Calendar } from "@/components/ui/calendar";
 
-import { priorities, statuses } from "../data/data"
-import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+import { CreateTicket } from "@/components/CreateTicketPopup";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import { format } from "date-fns";
+import { Plus } from "lucide-react";
+import { Ticket, ticketSchema } from "@/types";
+import { createTicket } from "@/utils/createTicket";
+
+const ticketFormSchema = ticketSchema;
+
+type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
+  const form = useForm<TicketFormValues>({
+    resolver: zodResolver(ticketFormSchema),
+  });
+
+  function onSubmit(data: TicketFormValues) {
+    createTicket(data);
+  }
+
+  const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
     <div className="flex items-center justify-between">
@@ -55,7 +101,22 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto hidden h-8 lg:flex mr-2"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Create
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <CreateTicket form={form} onSubmit={onSubmit} />
+        </DialogContent>
+      </Dialog>
       <DataTableViewOptions table={table} />
     </div>
-  )
+  );
 }

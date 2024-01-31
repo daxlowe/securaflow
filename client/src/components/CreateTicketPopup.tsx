@@ -1,81 +1,199 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+
+import { Input } from "@/components/ui/input";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from "./ui/form";
+import { DialogClose, DialogHeader, DialogTitle } from "./ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "./ui/select";
 
-export function CreateTicket() {
+export function CreateTicket({ form, onSubmit }: any) {
   return (
     <>
-      <Card className="ticket h-[80vh]">
-        <CardHeader>
-          <CardTitle>Create Ticket</CardTitle>
-        </CardHeader>
-        <form>
-          <CardContent>
-            <Label htmlFor="title">Title</Label>
-            <Input type="text" id="title" placeholder="Title of vulnerability" />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="(Optional) Select a team" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="engineering">Engineering</SelectItem>
-                <SelectItem value="soc">SOC</SelectItem>
-                <SelectItem value="it">IT</SelectItem>
-                <SelectItem value="appsec">AppSec</SelectItem>
-              </SelectContent>
-            </Select>
-            <Label htmlFor="description">Description</Label>
-            <Input type="text" id="description" placeholder="Description of vulnerability" />
-            <RadioGroup defaultValue="1">
-              <RadioGroupItem value="1" id="low" />
-              <Label htmlFor="low">Low</Label>
-              <RadioGroupItem value="2" id="medium" />
-              <Label htmlFor="medium">Medium</Label>
-              <RadioGroupItem value="3" id="high" />
-              <Label htmlFor="high">High</Label>
-              <RadioGroupItem value="4" id="critical" />
-              <Label htmlFor="critical">Critical</Label>
-            </RadioGroup>
-            <Label htmlFor="assignees">Assignees</Label>
-            <Input type="text" id="assignees" placeholder="(Optional) Assign to employee(s)" />
-            <Label htmlFor="timeEstimate">Time Estimate</Label>
-            <Input type="number" id="timeEstimate" placeholder="Time Estimate (Hours)" />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Current Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="backlog">Backlog</SelectItem>
-                <SelectItem value="assigned">Assigned</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="code-review">Code Review</SelectItem>
-                <SelectItem value="complete">Complete</SelectItem>
-              </SelectContent>
-            </Select>
-            <Label htmlFor="comments">Comments</Label>
-            <Textarea id="comments" placeholder="Write any comments here" />
-          </CardContent>
-          <CardFooter>
+      <DialogHeader>
+        <DialogTitle>Create Ticket</DialogTitle>
+      </DialogHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <ScrollArea className="h-[75vh] px-[20px]">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="team"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="difficulty"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Difficulty</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue="1">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue="1" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="1">Low</SelectItem>
+                      <SelectItem value="2">Medium</SelectItem>
+                      <SelectItem value="3">Hard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="vuln_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vulnerability Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="vuln_cve_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CVE ID</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="vuln_priority"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Priority</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue="Low">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue="Low" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Low">Low</SelectItem>
+                      <SelectItem value="Medium">Medium</SelectItem>
+                      <SelectItem value="High">High</SelectItem>
+                      <SelectItem value="Critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="assignees"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assignees</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status_body"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Status</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue="Open">
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Open">Open</SelectItem>
+                      <SelectItem value="Assigned">Assigned</SelectItem>
+                      <SelectItem value="In Progress">In Progress</SelectItem>
+                      <SelectItem value="Closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="comments"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Comments</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </ScrollArea>
+          <DialogClose asChild>
             <Button type="submit">Create</Button>
-          </CardFooter>
+          </DialogClose>
         </form>
-      </Card>
+      </Form>
     </>
-  )
+  );
 }

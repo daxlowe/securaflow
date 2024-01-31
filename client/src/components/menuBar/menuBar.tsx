@@ -6,7 +6,7 @@ import {
     NavigationMenuItem,
     NavigationMenuLink,
     navigationMenuTriggerStyle
-} from "@/components/ui/navigation-menu"; // Adjust the import path as per your project setup
+} from "@/components/ui/navigation-menu";
 
 const MenuBar: React.FC = () => {
 
@@ -18,6 +18,13 @@ const MenuBar: React.FC = () => {
                         <NavLink to="/">
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 Dashboard
+                            </NavigationMenuLink>
+                        </NavLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem className="mb-1">
+                        <NavLink to="/organization">
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                Organization
                             </NavigationMenuLink>
                         </NavLink>
                     </NavigationMenuItem>

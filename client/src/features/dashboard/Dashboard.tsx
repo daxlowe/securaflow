@@ -23,7 +23,6 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const result = await getData(user);
-
         setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);
