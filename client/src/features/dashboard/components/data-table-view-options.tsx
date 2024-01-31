@@ -1,25 +1,26 @@
-"use client"
+"use client";
 
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import { MixerHorizontalIcon } from "@radix-ui/react-icons"
-import { Table } from "@tanstack/react-table"
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
+  console.log(table);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,15 +52,15 @@ export function DataTableViewOptions<TData>({
               >
                 {translateIdToHeader(column.id)}
               </DropdownMenuCheckboxItem>
-            )
+            );
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 function translateIdToHeader(id: string): string {
-  if (id == 'current_status') return 'status';
-  if (id == 'vulnerability_priority') return 'priority';
+  if (id == "current_status") return "status";
+  if (id == "vulnerability_priority") return "priority";
   return id;
 }

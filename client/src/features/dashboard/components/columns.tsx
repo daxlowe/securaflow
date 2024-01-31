@@ -15,7 +15,6 @@ import { priorities, statuses } from "../data/data";
 import { Task } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
-import { getOverlappingDaysInIntervals } from "date-fns";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -50,12 +49,12 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "id",
     header: ({ column }) => (
       <div className="px-2">
-        <DataTableColumnHeader column={column} title="Ticket" />
+        <DataTableColumnHeader column={column} title="ID" />
       </div>
     ),
     cell: ({ row }) => (
       <ScrollArea>
-        <div className="flex w-[80px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
+        <div className="flex space-x-2 h-[50px] w-[80px] items-center px-2 whitespace-nowrap">
           {row.getValue("id")}
           <ScrollBar orientation="horizontal" />
         </div>
@@ -73,7 +72,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       return (
         <ScrollArea>
-          <div className="flex min-w-[200px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
+          <div className="flex space-x-2 h-[50px] min-w-[200px] items-center px-2 whitespace-nowrap">
             {row.getValue("title")}
             <ScrollBar orientation="horizontal" />
           </div>
@@ -94,7 +93,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <ScrollArea>
-          <div className="flex space-x-2 h-[50px] w-[80px] items-center px-2 whitespace-nowrap">
+          <div className="flex space-x-2 h-[50px]items-center px-2 whitespace-nowrap">
             {teamString}
             <ScrollBar orientation="horizontal" />{" "}
           </div>
@@ -125,7 +124,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <ScrollArea>
-          <div className="flex w-[109px] h-[50px] items-center px-2 whitespace-nowrap">
+          <div className="flex h-[50px] items-center px-2 whitespace-nowrap">
             {status.icon && (
               <status.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}
@@ -159,7 +158,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <ScrollArea>
-          <div className="flex w-[96px] h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
+          <div className="flex h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
             {priority.icon && (
               <priority.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}
@@ -191,10 +190,9 @@ export const columns: ColumnDef<Task>[] = [
           .join(""); // Join the letters back together
       }
 
-      console.log(row);
       return (
         <ScrollArea>
-          <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
+          <div className="flex max-w-[80px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
             {assignee.map((assigneeName) => (
               <HoverCard>
                 <HoverCardTrigger>
