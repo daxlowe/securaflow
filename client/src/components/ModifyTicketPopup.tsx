@@ -53,7 +53,7 @@ interface ModifyTicketProps {
 }
 
 export function ModifyTicket({ task }: ModifyTicketProps) {
-  const { user } = useAuthContext()
+  const { user } = useAuthContext();
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const ticketData = {
