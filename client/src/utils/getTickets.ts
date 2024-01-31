@@ -4,7 +4,7 @@ import { Ticket } from "@/types";
 export const getTickets = async (user: User) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/ticket?user_id=${user._id}`,
+      `http://localhost:3000/api/ticket`,
       {
         method: "GET",
         headers: {
