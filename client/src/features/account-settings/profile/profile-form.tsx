@@ -17,7 +17,6 @@ import { modifyUser } from "@/utils/modifyUser";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { getUserData } from "@/utils/getUserData";
 import { User } from "@/types/";
-import { da, de } from "date-fns/locale";
 
 const profileFormSchema = z.object({
   name: z
