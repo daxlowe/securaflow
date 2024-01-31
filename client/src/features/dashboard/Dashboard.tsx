@@ -8,27 +8,20 @@ import { Task } from "./types";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { User } from "@/types";
 import Navbar from "@/components/navbar/navbar";
+import { useQuery } from "@tanstack/react-query";
 
 async function getData(user: User) {
   return getTicketsAsTasks(user);
 }
 
 export default function Dashboard() {
-  const [data, setData] = useState<Task[]>([]);
   const { user } = useAuthContext();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getData(user);
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []); // Empty dependency array to run the effect once on component mount
+  const { isPending, error, data } = useQuery({
+    queryKey: ["taskData"],
+    queryFn: () => getData(user),
+    refetchInterval: 2000,
+  });
 
   return (
     <>
@@ -37,7 +30,11 @@ export default function Dashboard() {
         <MenuBar />
         <div className="container mx-auto py-4">
           <h2 className="text-3xl font-bold tracking-tight pb-4">Dashboard</h2>
-          <DataTable columns={columns} data={data} />
+          {isPending ? (
+            <DataTable columns={columns} data={[]} />
+          ) : (
+            <DataTable columns={columns} data={data} />
+          )}
         </div>
       </div>
     </>
