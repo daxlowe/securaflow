@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
-import { columns } from './components/columns';
-import { DataTable } from './components/data-table';
-import { getTicketsAsTasks } from './utils/ticketToTask';
+import { useEffect, useState } from "react";
+import { columns } from "./components/columns";
+import { DataTable } from "./components/data-table";
+import { getTicketsAsTasks } from "./utils/ticketToTask";
 import MenuBar from "@/components/menuBar/menuBar";
-import { MainNav } from '@/components/navbar/main-nav';
-import './assets/css/dashboard.css'
-import { Task } from './types';
-import { useAuthContext } from '@/hooks/useAuthContext';
-import { User } from '@/types';
-import { UserNav } from '@/components/navbar/user-nav';
-import { Search } from '@/components/navbar/search';
+import "./assets/css/dashboard.css";
+import { Task } from "./types";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { User } from "@/types";
+import Navbar from "@/components/navbar/navbar";
 
 async function getData(user: User) {
   return getTicketsAsTasks(user);
@@ -25,7 +23,7 @@ export default function Dashboard() {
         const result = await getData(user);
         setData(result);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -34,17 +32,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="hidden flex-col md:flex">
-        <div className="border-b">
-          <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" />
-            <div className="ml-auto flex items-center space-x-4">
-              <Search />
-              <UserNav />
-            </div>
-          </div>
-        </div>
-      </div>
+      <Navbar />
       <div className="flex">
         <MenuBar />
         <div className="container mx-auto py-4">
