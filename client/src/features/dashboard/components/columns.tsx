@@ -158,7 +158,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <ScrollArea>
-          <div className="flex h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
+          <div className="flex h-[50px] items-center px-2 whitespace-nowrap">
             {priority.icon && (
               <priority.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}

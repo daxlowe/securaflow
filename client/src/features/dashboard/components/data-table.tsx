@@ -76,7 +76,7 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <ScrollArea>
+    <>
       <div className="space-y-4">
         <DataTableToolbar table={table} />
         <div className="rounded-md border min-w-[575px] bg-card">
@@ -175,7 +175,6 @@ export function DataTable<TData, TValue>({
         <DataTablePagination table={table} />
       </div>
       <div className="h-[20px]"></div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </>
   );
 }
