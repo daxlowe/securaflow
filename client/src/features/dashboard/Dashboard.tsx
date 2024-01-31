@@ -9,6 +9,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { User } from "@/types";
 import Navbar from "@/components/navbar/navbar";
 import { useQuery } from "@tanstack/react-query";
+import { SidebarNav } from "@/components/menuBar/sidebar-nav";
 
 async function getData(user: User) {
   return getTicketsAsTasks(user);
@@ -16,6 +17,17 @@ async function getData(user: User) {
 
 export default function Dashboard() {
   const { user } = useAuthContext();
+
+  const sidebarNavItems = [
+    {
+      title: "Dashboard",
+      href: "/",
+    },
+    {
+      title: "Organization",
+      href: "/organization",
+    },
+  ];
 
   const { isPending, error, data } = useQuery({
     queryKey: ["taskData"],
@@ -26,15 +38,19 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="flex">
-        <MenuBar />
-        <div className="container mx-auto py-4">
-          <h2 className="text-3xl font-bold tracking-tight pb-4">Dashboard</h2>
-          {isPending ? (
-            <DataTable columns={columns} data={[]} />
-          ) : (
-            <DataTable columns={columns} data={data} />
-          )}
+      <div className="hidden space-y-6 p-3 pb-16 md:block mr-10">
+        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <aside className="lg:w-1/10">
+            <SidebarNav items={sidebarNavItems} />
+          </aside>
+
+          <div className="flex-1 lg:max-w">
+            {isPending ? (
+              <DataTable columns={columns} data={[]} />
+            ) : (
+              <DataTable columns={columns} data={data} />
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -21,7 +21,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <div className="px-4 h-[50px] items-center flex">
+      <div className="px-4 items-center flex">
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -121,11 +121,13 @@ export const columns: ColumnDef<Task>[] = [
         return null;
       }
 
+      const iconColor = status.color || "text-muted-foreground";
+
       return (
         <ScrollArea>
           <div className="flex w-[109px] h-[50px] items-center px-2 whitespace-nowrap">
             {status.icon && (
-              <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+              <status.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}
             <span>{status.label}</span>
             <ScrollBar orientation="horizontal" />{" "}
@@ -153,11 +155,13 @@ export const columns: ColumnDef<Task>[] = [
         return null;
       }
 
+      const iconColor = priority.color || "text-muted-foreground";
+
       return (
         <ScrollArea>
           <div className="flex w-[96px] h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
             {priority.icon && (
-              <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+              <priority.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}
             <span>{priority.label}</span>
             <ScrollBar orientation="horizontal" />{" "}
