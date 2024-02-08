@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { DialogClose, DialogHeader, DialogTitle } from "./ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -54,11 +55,12 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
       </DialogHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <ScrollArea className="h-[75vh] px-[20px]">
+          <ScrollArea className="h-[75vh]">
             {[
               { name: "title", label: "Title" },
-              { name: "team", label: "Team" },
               { name: "description", label: "Description" },
+              { name: "team", label: "Team" },
+              { name: "assignees", label: "Assignees" },
               {
                 name: "difficulty",
                 label: "Difficulty",
@@ -71,20 +73,19 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                 label: "Priority",
                 options: selectOptionsPriority,
               },
-              { name: "assignees", label: "Assignees" },
               {
                 name: "status_body",
                 label: "Current Status",
                 options: selectOptionsStatus,
               },
-              { name: "comments", label: "Comments" },
+              { name: "comments", label: "Comment" },
             ].map(({ name, label, options }) => (
               <FormField
                 key={name}
                 control={form.control}
                 name={name as TicketFormKey}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mx-5">
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
                       {options ? (
@@ -117,6 +118,7 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                         />
                       )}
                     </FormControl>
+                    <FormDescription></FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
