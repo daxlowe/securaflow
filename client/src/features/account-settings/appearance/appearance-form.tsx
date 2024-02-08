@@ -13,8 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "@/components/ui/use-toast";
-import React from "react";
 import { useTheme } from "@/assets/theme/theme-provider";
 
 const appearanceFormSchema = z.object({
