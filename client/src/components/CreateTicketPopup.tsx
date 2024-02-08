@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -30,9 +29,23 @@ interface CreateTicketProps {
 type TicketFormKey = keyof TicketFormValues;
 
 export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
-  const selectOptionsDifficulty = ["Low", "Medium", "Hard"];
-  const selectOptionsPriority = ["Low", "Medium", "High", "Critical"];
-  const selectOptionsStatus = ["Open", "Assigned", "In Progress", "Closed"];
+  const selectOptionsDifficulty = [
+    { label: "Low", value: "1" },
+    { label: "Medium", value: "2" },
+    { label: "Hard", value: "3" },
+  ];
+  const selectOptionsPriority = [
+    { label: "Low", value: "Low" },
+    { label: "Medium", value: "Medium" },
+    { label: "High", value: "High" },
+    { label: "Critical", value: "Critical" },
+  ];
+  const selectOptionsStatus = [
+    { label: "Open", value: "Open" },
+    { label: "Assigned", value: "Assigned" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Closed", value: "Closed" },
+  ];
 
   return (
     <>
@@ -77,15 +90,18 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                       {options ? (
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={options[0]}
+                          defaultValue={options[0].value}
                         >
                           <SelectTrigger>
-                            <SelectValue defaultValue={options[0]} />
+                            <SelectValue defaultValue={options[0].value} />
                           </SelectTrigger>
                           <SelectContent>
                             {options.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
+                              <SelectItem
+                                key={option.label}
+                                value={option.value}
+                              >
+                                {option.label}
                               </SelectItem>
                             ))}
                           </SelectContent>
