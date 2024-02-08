@@ -1,5 +1,4 @@
 import React from "react";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import { NavLink } from "react-router-dom";
 import {
   NavigationMenu,

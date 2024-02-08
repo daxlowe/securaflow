@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
 import { getTicketsAsTasks } from "./utils/ticketToTask";
-import MenuBar from "@/components/menuBar/menuBar";
 import "./assets/css/dashboard.css";
-import { Task } from "./types";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { User } from "@/types";
 import Navbar from "@/components/navbar/navbar";
 import { useQuery } from "@tanstack/react-query";
 import { SidebarNav } from "@/components/menuBar/sidebar-nav";
+import { Task } from "./types";
 
 async function getData(user: User) {
   return getTicketsAsTasks(user);
@@ -29,7 +27,7 @@ export default function Dashboard() {
     },
   ];
 
-  const { isPending, error, data } = useQuery({
+  const { isPending, data } = useQuery<Task[]>({
     queryKey: ["taskData"],
     queryFn: () => getData(user),
     refetchInterval: 2000,
@@ -48,7 +46,7 @@ export default function Dashboard() {
             {isPending ? (
               <DataTable columns={columns} data={[]} />
             ) : (
-              <DataTable columns={columns} data={data} />
+              <DataTable columns={columns} data={data as any} />
             )}
           </div>
         </div>

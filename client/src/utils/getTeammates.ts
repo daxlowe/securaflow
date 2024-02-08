@@ -10,7 +10,7 @@ export const getAllTeammates = async (user: User): Promise<Array<User>> => {
     return [];
   }
   
-  let users: Array<User> = [];
+  const users: Array<User> = [];
   for (const group of groups) {
     try {
       const response = await fetch(`http://localhost:3000/api/group/${group._id}`);

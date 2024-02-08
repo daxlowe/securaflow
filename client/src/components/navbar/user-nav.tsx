@@ -11,7 +11,7 @@ import {
 import { useLogout } from "@/hooks/useLogout";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import * as pfpPlaceholder from "@/assets/images/pfp-placeholder.jpg";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export function UserNav() {
   const { logout } = useLogout();
@@ -31,10 +31,6 @@ export function UserNav() {
   console.log(user);
   const handleLogout = () => {
     logout();
-  };
-
-  const handleSettings = () => {
-    return <Navigate to="/settings/profile" />;
   };
 
   return (

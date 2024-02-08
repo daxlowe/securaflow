@@ -26,7 +26,7 @@ export default function Organization() {
     fetchData();
   }, []); // Empty dependency array to run the effect once on component mount
 
-  let listItems = [];
+  const listItems = [];
   for (const group of data) {
     listItems.push(
       <li>

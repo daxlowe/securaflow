@@ -1,54 +1,25 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { Plus } from "lucide-react";
 import { Table } from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
-
-import { priorities, statuses } from "../data/data";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { Calendar } from "@/components/ui/calendar";
-
-import { CreateTicket } from "@/components/CreateTicketPopup";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
-import { format } from "date-fns";
-import { Plus } from "lucide-react";
-import { Ticket, ticketSchema } from "@/types";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { DataTableViewOptions } from "./data-table-view-options";
+import { CreateTicket } from "@/components/CreateTicketPopup";
+
+import { priorities, statuses } from "../data/data";
+import { ticketSchema } from "@/types";
 import { createTicket } from "@/utils/createTicket";
 
-const ticketFormSchema = ticketSchema;
+export const ticketFormSchema = ticketSchema;
+export type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
-type TicketFormValues = z.infer<typeof ticketFormSchema>;
-
-interface DataTableToolbarProps<TData> {
+export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 

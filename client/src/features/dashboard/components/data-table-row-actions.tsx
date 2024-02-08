@@ -1,17 +1,13 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ViewTicket } from "@/components/ViewTicketPopup";
 import { ModifyTicket } from "@/components/ModifyTicketPopup";
-import { CreateTicket } from "@/components/CreateTicketPopup";
 import { Task } from "../types";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DeleteTicket } from "@/components/DeleteTicketPopup";

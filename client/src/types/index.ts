@@ -47,7 +47,7 @@ export type User = {
   email: string;
   first_name: string;
   last_name: string;
-  token: string;
+  token?: string;
 };
 
 const ticketSchema = z.object({
@@ -69,8 +69,31 @@ const ticketSchema = z.object({
   vuln_priority: z.string().default("Low"),
   vuln_imported_from: z.string().nullable().default(null),
 
-  comments: z.array(z.string()).default([]),
+  comments: z.string().default(""),
   created_by: z.string().nullable().default(null),
 });
 
 export { ticketSchema };
+
+type TicketFormValues = {
+  title: string;
+  team: string[] | null;
+  description: string | null;
+  difficulty: string;
+  assignees: string[] | null;
+  time_estimate: number | null;
+
+  status_body: string;
+  status_date_started: Date;
+  status_date_ended: Date | null;
+
+  vuln_name: string | null;
+  vuln_cve_id: string | null;
+  vuln_priority: string;
+  vuln_imported_from: string | null;
+
+  comments: string;
+  created_by: string | null;
+};
+
+export type { TicketFormValues };

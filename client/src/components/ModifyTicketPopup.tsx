@@ -89,7 +89,7 @@ export function ModifyTicket({ task }: ModifyTicketProps) {
       console.error("Error modifying ticket:", error);
       window.alert(`The following error occured when trying to modify ticket: ${JSON.stringify(error)}`);
     }
-  };
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -2,14 +2,10 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "@/assets/css/global.css";
-import { ThemeProvider } from "@/assets/theme/theme-provider";
+import { ThemeProvider } from "@/assets/theme";
 import { AuthContextProvider } from "./context/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import App from "./routes";
 
