@@ -50,14 +50,14 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   },
   team: {
     type: [{ type: Schema.Types.ObjectId, ref: "Group" }],
-    required: true,
+    required: false,
   },
   description: {
     type: String,
   },
   difficulty: {
     type: Number,
-    required: true,
+    required: false,
   },
   assignees: {
     type: [{ type: Schema.Types.ObjectId, ref: "User" }],
@@ -79,7 +79,7 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
     },
     priority: {
       type: String,
-      required: true,
+      required: false,
     },
     imported_from: {
       type: String,
