@@ -30,7 +30,6 @@ export default function Dashboard() {
   const { isPending, data } = useQuery<Task[]>({
     queryKey: ["taskData"],
     queryFn: () => getData(user),
-    refetchInterval: 2000,
   });
 
   return (
