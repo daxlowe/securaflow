@@ -10,6 +10,8 @@ import Ticket from './models/Ticket';
 import Group from './models/Group';
 import { group } from 'console';
 import path from 'path';
+import connect from './utils/connect';
+import log from './utils/logger'
 
 dotenv.config()
 
@@ -41,12 +43,15 @@ app.get('/dashboard', (req: Request, res: Response) => {
 
 // Start the server
 
-mongoose.connect(DB_CONN_STRING)
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Connected to DB. Server is running on port ${PORT}`);
-        });
-    })
-    .catch((error) => {
-        console.log(error);
+try
+{
+    app.listen(PORT, () => {
+        log.info(`Server is running at http://localhost:${PORT}`);
+
+        connect();
     });
+}
+catch (error: any)
+{
+    log.error(error);
+}
