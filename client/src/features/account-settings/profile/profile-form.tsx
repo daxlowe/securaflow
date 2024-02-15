@@ -17,6 +17,7 @@ import { modifyUser } from "@/utils/modifyUser";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { getUserData } from "@/utils/getUserData";
 import { User } from "@/types/";
+import { useEffect, useState } from "react";
 
 const profileFormSchema = z.object({
   name: z
@@ -27,14 +28,6 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "Name must not be longer than 30 characters.",
     }),
-  username: z
-    .string()
-    .min(2, {
-      message: "Username must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Username must not be longer than 30 characters.",
-    }),
   email: z.string().email(),
   password: z
     .string()
@@ -43,27 +36,41 @@ const profileFormSchema = z.object({
     })
     .max(30, {
       message: "Password must not be longer than 30 characters.",
-    }),
+    })
+    .optional(),
 });
-
-
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-// This can come from your database or API.
-
-
 export function ProfileForm() {
   const { user } = useAuthContext();
-  const defaultValues: Partial<ProfileFormValues> = getInitialData() as Partial<ProfileFormValues>;
-  console.log("Default Values", defaultValues);
+
+  const [defaultValues, setDefaultValues] = useState<
+    Partial<ProfileFormValues>
+  >({ name: "", email: "", password: "" });
+
+  useEffect(() => {
+    async function fetchData() {
+      const data: User = await getUserData(user);
+      console.log(data);
+      const initialValues: Partial<ProfileFormValues> = {
+        name: data.first_name + " " + data.last_name,
+        email: data.email,
+        password: "", // set to an empty string or some default value
+      };
+
+      setDefaultValues(initialValues);
+    }
+
+    fetchData();
+  }, [user]);
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
     mode: "onChange",
   });
 
- 
   async function onSubmit(data: ProfileFormValues) {
     toast({
       title: "You submitted the following values:",
@@ -73,25 +80,10 @@ export function ProfileForm() {
         </pre>
       ),
     });
-    
+
     modifyUser(data, user);
   }
 
-  async function getInitialData() : Promise<Partial<ProfileFormValues>>
-  {
-    const data: User = await getUserData(user);
-    console.log(data);
-    const initialValues: Partial<ProfileFormValues> = 
-    {
-      name: data.first_name + data.last_name,
-      username: "unused",
-      email: data.email,
-      password: "temp"
-    }
-    
-    return initialValues;
-  }
-  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -107,23 +99,6 @@ export function ProfileForm() {
               <FormDescription>
                 This is the name that will be displayed on your profile and in
                 emails.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder={defaultValues.username} {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
               </FormDescription>
               <FormMessage />
             </FormItem>
