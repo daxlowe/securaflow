@@ -1,11 +1,5 @@
 
-image: node:20
-
-# This folder is cached between builds
-# https://docs.gitlab.com/ee/ci/yaml/index.html#cache
-cache:
-  paths:
-    - node_modules/
+image: node:latest
 
 stages:
   - build
@@ -13,7 +7,7 @@ stages:
 
 frontend:
   stage: build
-  image: node:120
+  image: node:latest
   script:
     - cd frontend
     - npm install
