@@ -1,0 +1,33 @@
+
+image: node:20
+
+# This folder is cached between builds
+# https://docs.gitlab.com/ee/ci/yaml/index.html#cache
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - deploy
+
+frontend:
+  stage: build
+  image: node:120
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+
+deploy_frontend:
+  stage: deploy
+  script:
+    - mkdir -p frontend-dist
+    - cp -R frontend/dist/ frontend-dist/
+    - cd frontend-dist
+    - git init
+    - git config user.name "GitLab CI"
+    - git config user.email "gitlab-ci@example.com"
+    - git add .
+    - git commit -m "Add build artifacts"
+    - git push --force --set-upstream origin frontend-dist
