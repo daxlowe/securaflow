@@ -41,7 +41,14 @@ export const createTicket = async (ticketData: TicketFormValues) => {
     data.vulnerability = vulnerability;
     data.status_updates = [status];
 
-    console.log(data);
+    if (data.assignees.length == 0) {
+      toast({
+        title: "Error",
+        description: "A team must be assigned",
+      });
+      return;
+    }
+
     toast({
       title: "You submitted the following values:",
       description: JSON.stringify(data),

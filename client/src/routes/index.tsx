@@ -43,6 +43,10 @@ export default function App() {
             path="/settings/appearance"
             element={user ? <AccountSettings /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/settings/teams"
+            element={user ? <AccountSettings /> : <Navigate to="/login" />}
+          />
         </Routes>
       </div>
     </>

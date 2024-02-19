@@ -75,7 +75,10 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
             const [open, setOpen] = useState(false);
             const [value, setValue] = useState(permissions[0].title);
             return (
-              <div className="flex items-center justify-between space-x-4">
+              <div
+                className="flex items-center justify-between space-x-4"
+                key={user._id}
+              >
                 <div className="flex items-center space-x-4">
                   <Avatar>
                     <AvatarImage src="/avatars/01.png" />

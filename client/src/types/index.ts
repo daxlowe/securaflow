@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export type Group = {
-  _id?: string;
+  _id: string;
   name: string;
   permissions: Permissions;
   users: Array<User>;
@@ -52,12 +52,10 @@ export type User = {
 
 const ticketSchema = z.object({
   title: z.string().min(2).max(30),
-  team: z.array(z.string()).default(["65712e165fc8178ec0758361"]),
+  team: z.array(z.string()).default([]),
   description: z.string().nullable().default(null),
   difficulty: z.string().default("1"),
-  assignees: z
-    .array(z.string())
-    .default(["6570be68cd37537339c30126", "657253481b314aa5a1dbb04c"]),
+  assignees: z.array(z.string()).default([]),
   time_estimate: z.number().nullable().default(null),
 
   status_body: z.string().default("Open"),
