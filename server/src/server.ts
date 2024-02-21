@@ -3,8 +3,9 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes';
 import ticketRoutes from './routes/ticketRoutes';
 import groupRoutes from './routes/groupRoutes';
+import sessionRoutes from './routes/sessionRoutes';
 import * as mongoose from 'mongoose';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import User from './models/User';
 import Ticket from './models/Ticket';
 import Group from './models/Group';
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use('/api/user', userRoutes);
 app.use('/api/ticket', ticketRoutes);
 app.use('/api/group', groupRoutes);
+app.use('/api/session', sessionRoutes);
 
 // Define a route handler for the dashboard
 app.get('/dashboard', (req: Request, res: Response) => {

@@ -1,6 +1,8 @@
 import express, { Request, Response, Router } from 'express';
 import { requireAuth } from '../middleware/requireAuth';
 // Import other necessary modules, like controllers or middleware
+import { validate } from '../middleware/validateResource';
+import { createUserSchema } from '../schema/userSchema';
 import 
 {
     loginUser, 
@@ -14,7 +16,7 @@ const router = express.Router();
 
 router.post('/login', loginUser)
 
-router.post('/signup', signupUser);
+router.post('/signup', validate(createUserSchema), signupUser);
 
 router.use(requireAuth);
 

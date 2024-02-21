@@ -5,6 +5,9 @@ import User from "../models/User";
 import jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
 import Group from "../models/Group";
+import { createUserDB } from "../services/userServices";
+import { CreateUserInput } from "../schema/userSchema";
+import { omit } from 'lodash';
 dotenv.config();
 
 const createToken = (_id: string) => {
@@ -30,19 +33,15 @@ const loginUser = async (request: Request, response: Response) => {
 };
 
 // Signup user
-const signupUser = async (request: Request, response: Response) => {
-  const { first_name, last_name, email, password } = request.body;
+const createUser = async (request: Request<{},{},CreateUserInput["body"]>,
+ response: Response) => {
 
   try {
     // @ts-ignore
-    const user = await User.signup(first_name, last_name, email, password);
-    console.log(user);
-    // Create a token
-    const token = createToken(user._id);
-
-    response.status(200).json({ first_name, last_name, email, token });
+    const user = await createUserDB(request.body);
+    response.status(200).send(user);
   } catch (error: any) {
-    response.status(400).json({ error: error.message });
+    response.status(409).json({ error: error.message });
   }
 };
 
@@ -118,7 +117,7 @@ const getUserGroups = async (req: Request, res: Response) => {
 export {
   addGroupsToUser,
   loginUser,
-  signupUser,
+  createUser as signupUser,
   updateUser,
   getUserData,
   getUserGroups,

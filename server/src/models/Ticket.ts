@@ -43,6 +43,34 @@ const statusSchema = new Schema<Status, Model<Status>>({
   },
 }, { timestamps: true, _id: false });
 
+const vulnerabilitySchema = new Schema(
+  {
+    name: 
+    {
+      type: String,
+      required: true
+    },
+    description: 
+    {
+      type: String,
+      required: true
+    },
+    cve_id: 
+    {
+      type: String,
+      required: true
+    },
+    priority: 
+    {
+      type: String,
+      required: true
+    },
+    imported_from: 
+    {
+      type: String
+    }
+  })
+
 const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   title: {
     type: String,
@@ -71,19 +99,7 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
     type: [statusSchema],
   },
   vulnerability: {
-    name: {
-      type: String,
-    },
-    cve_id: {
-      type: String,
-    },
-    priority: {
-      type: String,
-      required: false,
-    },
-    imported_from: {
-      type: String,
-    },
+    type: vulnerabilitySchema,
   },
   comments: {
     type: [String],

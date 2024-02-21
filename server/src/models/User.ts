@@ -1,28 +1,40 @@
-import { Document, Schema, model, Types, Model} from 'mongoose';
+import mongoose, { Document, Schema, model, Types, Model} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import { PassThrough } from 'stream';
 import { check } from 'express-validator';
 //import { IUserDocument } from '../interfaces/IUserDocument';
+import dotenv from 'dotenv';
 
-export interface User 
+dotenv.config();
+
+interface SettingsSchema 
 {
-    _id: Types.ObjectId;
+	dark_mode: 
+	{
+		type: Boolean, 
+		required: true
+	}
+}
+
+export interface UserDocument extends mongoose.Document
+{
+    //_id: Types.ObjectId;
     first_name: string;
     last_name: string;
     email: string;
 	password: string;
-	settings: 
-	{
-		dark_mode: Boolean;
-	}
+	settings: SettingsSchema
+	createdAt: string, 
+	updatedAt: string,
+	comparePassword(candidatePassword: string): Promise<Boolean>
 }
 
-interface UserModel extends Model<User> {
+interface UserModel extends Model<UserDocument> {
 	validatePassword(password: string): string;
   }
 
-const userSchema = new Schema<User, UserModel>(
+const userSchema = new Schema<UserDocument, UserModel>(
     {
 		first_name:
 		{
@@ -37,7 +49,8 @@ const userSchema = new Schema<User, UserModel>(
 		email:
 		{
 			type: String,
-			required: true
+			required: true,
+			unique: true
 		},
 		password: 
 		{
@@ -49,7 +62,10 @@ const userSchema = new Schema<User, UserModel>(
 			type: Boolean, 
 			require: true
 		}
-    }
+    }, 
+	{
+		timestamps: true
+	}
 );
 
 const checkAndHashPassword = async function(password: string) 
@@ -111,5 +127,28 @@ const checkAndHashPassword = async function(password: string)
 		return checkAndHashPassword(password);
    })
    
-const User = model<User, UserModel>('User', userSchema);
+userSchema.pre("save", async function(next)
+{
+	let user = this as UserDocument;
+
+	if(!user.isModified("password"))
+	{
+		return next();
+	}
+	console.log(user.password);
+	const saltRounds = parseInt(process.env.SALT || '');
+	const salt = await bcrypt.genSalt(Number.isInteger(saltRounds) ? saltRounds : 10);
+	const hash = await bcrypt.hashSync(user.password, salt);
+
+	user.password = hash; 
+	return next();
+})
+
+userSchema.methods.comparePassword = async function(candidatePassword: string)
+{
+	const user = this as UserDocument;
+	return await bcrypt.compare(candidatePassword, user.password).catch((error: any) => false);
+}
+
+const User = model<UserDocument, UserModel>('User', userSchema);
 export default User
