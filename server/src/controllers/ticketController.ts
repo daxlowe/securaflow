@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import { Request, Response } from "express";
-import Ticket from "../models/Ticket";
+import Ticket, { TicketDocument } from "../models/Ticket";
 import Group from "../models/Group";
+import { createTicketInput, getTicketInput, updateTicketInput } from "../schema/ticketSchema";
+import { createTicketService, deleteTicketService, findAndUpdateTicket, findTicket } from "../services/ticketServices";
 
 // GET all tickets from user's groups
 const getAllPossibleTickets = async (req: Request, res: Response) => {
@@ -62,7 +64,7 @@ const createTicket = async (req: Request, res: Response) => {
   try {
     req.body.created_by = req.body.user;
     delete req.body.user;
-    const ticket: Ticket = req.body as Ticket;
+    const ticket: TicketDocument = req.body as TicketDocument;
     console.log(ticket);
 
     await Ticket.create(ticket);
@@ -111,7 +113,7 @@ const updateTicket = async (req: Request, res: Response) => {
   try {
     // Perform the tickt update
     console.log(JSON.stringify(status_update));
-    const modifiedTicket: Ticket | null = await Ticket.findByIdAndUpdate(
+    const modifiedTicket: TicketDocument | null = await Ticket.findByIdAndUpdate(
       id,
       { 
         $set: {
@@ -156,6 +158,58 @@ const setTicketTeam = async (
     return { status: "error", error: error };
   }
 };
+
+export async function createTicketHandler(request: Request<{}, {}, createTicketInput["body"]>, response: Response)
+{
+  const user_id = response.locals.user._id;
+
+  const body = request.body;
+
+  const ticket = await createTicketService({...body});
+
+  return response.send(ticket);
+}
+
+export async function updateTicketHandler(request: Request<updateTicketInput["params"]>, response: Response)
+{
+  const ticketID = request.params.ticketID;
+  const update = request.body;
+
+  console.log(ticketID);
+  const ticket = await findTicket({ticketID});
+
+  if(!ticket) return response.send(404);
+
+  const updatedTicket = await findAndUpdateTicket({ticketID}, update, {new: true});
+  return response.send(updatedTicket);
+}
+
+export async function getTicketHandler(request: Request<getTicketInput["params"]>, response: Response)
+{
+  const ticketID = request.params.ticketID;
+  const ticket = await findTicket({ticketID});
+
+  if(!ticket) return response.status(404);
+
+  return response.send(ticket);
+}
+
+export async function deleteTicketHandler(request: Request, response: Response)
+{
+  const ticketID = request.params.ticketId;
+  const ticket = await findTicket({ticketID});
+
+  if(!ticket) return response.status(404);
+
+  await deleteTicketService({ticketID});
+
+  return response.sendStatus(200);
+}
+
+export async function getAllTicketsHandler(request: Request, response: Response)
+{
+
+}
 
 export {
   getAllPossibleTickets,

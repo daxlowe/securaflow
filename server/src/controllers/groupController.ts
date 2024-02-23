@@ -4,7 +4,6 @@ import Ticket from '../models/Ticket';
 import Group from '../models/Group';
 import User from '../models/User';
 import { addGroupsToUser } from './userController';
-import { setTicketTeam } from './ticketController';
 
 // GET all tickets
 const getAllGroups = async (req: Request, res: Response) =>

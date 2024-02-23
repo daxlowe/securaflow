@@ -1,4 +1,4 @@
-import { Schema, model, Types, Model } from "mongoose";
+import { Schema, model, Types, Model, Document } from "mongoose";
 
 interface Status {
   _id: Types.ObjectId;
@@ -16,8 +16,7 @@ interface Vulnerability {
   imported_from?: string;
 }
 
-interface Ticket {
-  _id: Types.ObjectId;
+export interface TicketDocument extends Document {
   title: string;
   team: Types.Array<Types.ObjectId>;
   description: string;
@@ -71,7 +70,7 @@ const vulnerabilitySchema = new Schema(
     }
   })
 
-const ticketSchema = new Schema<Ticket, Model<Ticket>>({
+const ticketSchema = new Schema<TicketDocument>({
   title: {
     type: String,
     required: true,
@@ -110,5 +109,5 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   },
 });
 
-const Ticket = model<Ticket, Model<Ticket>>("Ticket", ticketSchema);
+const Ticket = model<TicketDocument>("Ticket", ticketSchema);
 export default Ticket;

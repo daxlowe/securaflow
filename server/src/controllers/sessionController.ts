@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { validatePassword } from "../services/userServices";
 import { createSession, findSessions, updateSession } from "../services/sessionServices";
 import { signJWT } from "../utils/jwt";
-import jwt, { sign, Secret } from 'jsonwebtoken';
-import { rest } from "lodash";
+import { Secret } from 'jsonwebtoken';
+
 export async function createUserSession(request: Request, response: Response)
 {
     // Validate Users password
@@ -29,8 +29,9 @@ export async function createUserSession(request: Request, response: Response)
        { ...user, session: session._id },
        { expiresIn: refreshExpiration}  
        );
+    const userID = user._id
     // Return access and refresh tokens
-    return response.send({accessToken, refreshToken});
+    return response.send({accessToken, refreshToken, userID});
 }
 
 export async function getUserSessions(request: Request, response: Response)

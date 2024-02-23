@@ -7,7 +7,7 @@ const deserializeUser = async (request: Request, response: Response, next: NextF
 {
     const accessToken = get(request, "headers.authorization", "").replace(/^Bearer\s/, "");
     const refreshToken = get(request, "headers.x-refresh") as string;
-
+    
     if(!accessToken) return next();
 
     const {decoded, expired} = verifyJWT(accessToken);
@@ -24,9 +24,9 @@ const deserializeUser = async (request: Request, response: Response, next: NextF
         {
             response.setHeader('x-access-token', newAccessToken);
         }
-
+        
         const result = verifyJWT(newAccessToken as string);
-
+    
         response.locals.user = result.decoded;
     }
     

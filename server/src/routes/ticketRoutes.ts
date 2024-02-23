@@ -6,14 +6,23 @@ import
     getSingleTicket,
     createTicket, 
     deleteTicket,
-    updateTicket
+    updateTicket,
+    getTicketHandler,
+    deleteTicketHandler,
+    updateTicketHandler,
+    createTicketHandler
 } from '../controllers/ticketController';
 import { body } from 'express-validator';
 import { requireAuth } from '../middleware/requireAuth';
+import deserializeUser from '../middleware/deserializeUser';
+import { createTicketSchema, deleteTicketSchema, getTicketInput, getTicketSchema, updateTicketSchema } from '../schema/ticketSchema';
+import { validate } from '../middleware/validateResource';
+import requireUser from '../middleware/requireUser';
 
 const router = express.Router();
+router.use(deserializeUser);
 
-router.use(requireAuth);
+//router.use(requireAuth);
 
 const createTicketValidationRules = () => {
     return [
@@ -40,16 +49,16 @@ router.get('/', getAllPossibleTickets);
 router.get('/assigned', getAllAssignedTickets);
 
 // GET a single ticket
-router.get('/:id', getSingleTicket);
+router.get('/:id', [requireUser, validate(getTicketSchema)], getTicketHandler);
 
 // CREATE a ticket
-router.post('/', createTicketValidationRules(), createTicket);
+router.post('/', [requireUser, validate(createTicketSchema)], createTicketHandler);
 
 // DELETE a ticket
-router.delete('/:id', deleteTicket);
+router.delete('/:id', [requireUser, validate(deleteTicketSchema)], deleteTicketHandler);
 
 // PATCH a ticket
-router.patch('/:id', updateTicket);
+router.patch('/:id', [requireUser, validate(updateTicketSchema)], updateTicketHandler);
 
 
 // Other user routes (POST, PUT, DELETE, etc.)

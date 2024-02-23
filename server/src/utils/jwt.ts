@@ -1,10 +1,10 @@
 import jwt, { Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import * as fs  from 'fs'
 dotenv.config();
 
 const privateKey = process.env.PRIVATE_KEY as string;
-const publicKey = process.env.PUBLIC_KEY as Secret;
+const publicKey = process.env.PUBLIC_KEY as string;
+
 export function signJWT(object: Object, options?: jwt.SignOptions | undefined)
 {
     return jwt.sign(object, privateKey, {
