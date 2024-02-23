@@ -5,7 +5,7 @@ export const getGroups = async (user: User): Promise<Array<Group>> => {
 
   try {
     const groupsResponse = await fetch(
-      `http://localhost:3000/api/user/groups`,
+      `/api/user/groups`,
       {
         method: "GET",
         headers: {

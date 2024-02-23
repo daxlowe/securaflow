@@ -63,7 +63,7 @@ export const createTicket = async (ticketData: TicketFormValues) => {
       body: JSON.stringify(data),
     };
 
-    const response = await fetch(`http://localhost:3000/api/ticket/`, options);
+    const response = await fetch(`/api/ticket/`, options);
 
     if (!response.ok) {
       const errorMessage = await response.text();
