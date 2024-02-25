@@ -71,7 +71,11 @@ const ticketSchema = z.object({
   created_by: z.string().nullable().default(null),
 });
 
-export { ticketSchema };
+const cveFormSchema = z.object({
+  cve_id: z.string().nullable().default(null),
+});
+
+export { ticketSchema, cveFormSchema };
 
 type TicketFormValues = {
   title: string;
