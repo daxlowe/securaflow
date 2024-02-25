@@ -42,7 +42,7 @@ export const lookupCve = async (cveIdData: CveFormValues): Promise<cveInfo | und
       },
     };
 
-    const response = await fetch(`/api/ticket/cve/${cve_id}`, options);
+    const response = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket/cve/${cve_id}`, options);
 
     if (!response.ok) {
       const errorMessage = await response.text();

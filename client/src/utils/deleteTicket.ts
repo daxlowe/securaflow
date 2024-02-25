@@ -8,7 +8,7 @@ export const deleteTicket = async (ticket_id : string, user : User) => {
             'Authorization': `Bearer ${user.token}`
         },
     };
-    fetch(`/api/ticket/${ticket_id}`, options)
+    fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket/${ticket_id}`, options)
         .then((response) => {
             if (!response.ok) {
                 window.alert(

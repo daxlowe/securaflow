@@ -5,7 +5,7 @@ export const getGroups = async (user: User): Promise<Array<Group>> => {
 
   try {
     const groupsResponse = await fetch(
-      `/api/user/groups`,
+      `${import.meta.env.VITE_SERVER_DOMAIN}/api/user/groups`,
       {
         method: "GET",
         headers: {

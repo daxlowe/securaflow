@@ -60,7 +60,7 @@ export const createTicket = async (ticketData: TicketFormValues) => {
       body: JSON.stringify(data),
     };
 
-    const response = await fetch(`/api/ticket/`, options);
+    const response = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket/`, options);
 
     if (!response.ok) {
       const errorMessage = await response.text();

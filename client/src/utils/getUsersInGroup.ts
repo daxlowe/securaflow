@@ -10,7 +10,7 @@ const getUsersInGroup = async (user: User, groupId: string) => {
   };
 
   const response = await fetch(
-    `/api/group/${groupId}/users`,
+    `${import.meta.env.VITE_SERVER_DOMAIN}/api/group/${groupId}/users`,
     options
   );
   if (!response.ok) {

@@ -4,7 +4,7 @@ import { Ticket } from "@/types";
 export const getTickets = async (user: User) => {
   try {
     const response = await fetch(
-      `/api/ticket`,
+      `${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket`,
       {
         method: "GET",
         headers: {

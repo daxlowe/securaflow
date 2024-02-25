@@ -3,7 +3,7 @@ import { User, Group } from "@/types";
 export const getAllTeammates = async (user: User): Promise<Array<User>> => {
   let groups: Array<Group>;
   try {
-    const groupsResponse = await fetch(`/api/user/${user._id}/groups`);
+    const groupsResponse = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/user/${user._id}/groups`);
     groups = await groupsResponse.json();
   } catch(error) {
     console.error(error);

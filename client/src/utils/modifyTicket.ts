@@ -12,7 +12,7 @@ export const modifyTicket = async (ticketData : any, ticketID : string, user : U
 
     let response;
     try {
-        response = await fetch(`/api/ticket/${ticketID}`, options);
+        response = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket/${ticketID}`, options);
     } catch (error) {
         console.error(error);
         throw error;
