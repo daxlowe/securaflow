@@ -55,30 +55,51 @@ async function getTeamsData(user: User) {
   return getGroups(user);
 }
 
+interface UserWithTeams extends User {
+  teamIds: string[];
+}
+
 async function getAssigneesData(user: User, teams: Group[] | undefined) {
   if (!teams) {
     return [];
   }
 
-  const assigneesPromises = teams.map(async (team) =>
-    getUsersInGroup(user, team._id)
-  );
+  const assigneesPromises = teams.map(async (team) => {
+    const usersInGroup = await getUsersInGroup(user, team._id);
+    return usersInGroup.map((u: UserWithTeams) => ({
+      ...u,
+      teamIds: [team._id, ...(u.teamIds || [])],
+    })) as UserWithTeams[];
+  });
 
   // Wait for all promises to resolve and flatten the array of arrays
   const assignees = await Promise.all(assigneesPromises);
   const flattenedAssignees = assignees.flat();
 
-  // Use Set to get unique users based on their IDs
-  const uniqueAssignees = Array.from(
-    new Set(flattenedAssignees.map((user) => user._id))
+  // Combine users with the same ID and add their teamIds
+  const uniqueAssignees = flattenedAssignees.reduce(
+    (accumulator: any[], user) => {
+      const existingUserIndex = accumulator.findIndex((u) => u.id === user._id);
+      if (existingUserIndex !== -1) {
+        accumulator[existingUserIndex].teamIds = Array.from(
+          new Set(
+            accumulator[existingUserIndex].teamIds.concat(user.teamIds || [])
+          )
+        );
+      } else {
+        accumulator.push({
+          _id: user._id,
+          teamIds: user.teamIds,
+          first_name: user.first_name,
+          last_name: user.last_name,
+        });
+      }
+      return accumulator;
+    },
+    []
   );
 
-  // Map the unique IDs back to the user objects
-  const uniqueUsers = uniqueAssignees.map((userId) =>
-    flattenedAssignees.find((user) => user._id === userId)
-  );
-
-  return uniqueUsers;
+  return uniqueAssignees;
 }
 
 export function TicketForm({
@@ -99,7 +120,7 @@ export function TicketForm({
     queryFn: () => getTeamsData(user),
   });
 
-  const { data: assigneesData } = useQuery<User[]>({
+  const { data: assigneesData } = useQuery<UserWithTeams[]>({
     queryKey: [JSON.stringify(teamsData) + "users"],
     queryFn: () => getAssigneesData(user, teamsData),
     enabled: teamsDataSuccess,
@@ -114,16 +135,6 @@ export function TicketForm({
       setTeams(objects);
     }
   }, [teamsData]);
-
-  useEffect(() => {
-    if (assigneesData) {
-      const objects = assigneesData.map((user: User) => ({
-        label: `${user.first_name} ${user.last_name}`,
-        value: user._id,
-      }));
-      setAssignees(objects);
-    }
-  }, [assigneesData]);
 
   const handleSubmit = async (data: TicketFormValues) => {
     console.log(data);
@@ -149,6 +160,28 @@ export function TicketForm({
   const assigneeField = updatedFormFields.find(
     (field) => field.name === "assignees"
   );
+
+  useEffect(() => {
+    if (selectedTeams.length == 0) {
+      setSelectedAssignees([]);
+    }
+    if (assigneesData) {
+      let assigneesTemp: { label: string; value: string }[] = [];
+      assigneesData.forEach((user: UserWithTeams) => {
+        if (
+          user.teamIds &&
+          user.teamIds.some((team: string) => selectedTeams.includes(team))
+        ) {
+          assigneesTemp.push({
+            label: `${user.first_name} ${user.last_name}`,
+            value: user._id,
+          });
+        }
+      });
+
+      setAssignees(assigneesTemp);
+    }
+  }, [selectedTeams]);
 
   useEffect(() => {
     if (teamField?.previousArray) {
