@@ -21,7 +21,19 @@ import {
 
 import { CveFormValues, TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
-import TicketForm from "./TicketForm";
+import { useQuery } from "@tanstack/react-query";
+import { Group, User } from "@/types";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import getUsersInGroup from "@/utils/getUsersInGroup";
+import { useEffect, useState } from "react";
+import { getGroups } from "@/utils/getGroups";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 interface CreateTicketProps {
   form: UseFormReturn<TicketFormValues>;
@@ -146,38 +158,25 @@ export function CreateTicket({ form, onSubmit, preFillOptions }: CreateTicketPro
     { label: "Closed", value: "Closed" },
   ];
 
-  const formFields = [
-    { name: "title", label: "Title" },
-    { name: "description", label: "Description" },
-    {
-      name: "team",
-      label: "Team",
-      optionsMulti: [],
-    },
-    {
-      name: "assignees",
-      label: "Assignees",
-      optionsMulti: [],
-    },
-    {
-      name: "difficulty",
-      label: "Difficulty",
-      options: selectOptionsDifficulty,
-    },
-    { name: "vuln_name", label: "Vulnerability Name" },
-    { name: "vuln_cve_id", label: "CVE ID" },
-    {
-      name: "vuln_priority",
-      label: "Priority",
-      options: selectOptionsPriority,
-    },
-    {
-      name: "status_body",
-      label: "Current Status",
-      options: selectOptionsStatus,
-    },
-    { name: "comments", label: "Comment" },
-  ];
+  const selectOptionsTeams = teams;
+  const selectOptionsAssignees = assignees;
+
+  // State to manage selected teams
+  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
+  // State to manage selected assignees
+  const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
+
+  const handleSubmit = async (data: TicketFormValues) => {
+    // Include selectedTeams and selectedAssignees in the form data
+    const formDataWithTeamsAndAssignees = {
+      ...data,
+      team: selectedTeams,
+      assignees: selectedAssignees,
+    };
+
+    await onSubmit(formDataWithTeamsAndAssignees);
+  };
+
   return (
     <>
       <DialogHeader>
