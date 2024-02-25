@@ -3,7 +3,7 @@ import { User, Group } from "@/types";
 export const getAllTeammates = async (user: User): Promise<Array<User>> => {
   let groups: Array<Group>;
   try {
-    const groupsResponse = await fetch(`http://localhost:3000/api/user/${user._id}/groups`);
+    const groupsResponse = await fetch(`/api/user/${user._id}/groups`);
     groups = await groupsResponse.json();
   } catch(error) {
     console.error(error);
@@ -13,7 +13,7 @@ export const getAllTeammates = async (user: User): Promise<Array<User>> => {
   const users: Array<User> = [];
   for (const group of groups) {
     try {
-      const response = await fetch(`http://localhost:3000/api/group/${group._id}`);
+      const response = await fetch(`/api/group/${group._id}`);
   
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

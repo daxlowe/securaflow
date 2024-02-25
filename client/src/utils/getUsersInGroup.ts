@@ -10,7 +10,7 @@ const getUsersInGroup = async (user: User, groupId: string) => {
   };
 
   const response = await fetch(
-    `http://localhost:3000/api/group/${groupId}/users`,
+    `/api/group/${groupId}/users`,
     options
   );
   if (!response.ok) {
