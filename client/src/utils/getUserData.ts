@@ -12,7 +12,7 @@ export const getUserData = async (user: User) =>
 
     let response;
     try {
-        response = await fetch(`http://localhost:3000/api/user/`, options);
+        response = await fetch(`/api/user/`, options);
     } catch (error) {
         console.error(error);
         throw error;

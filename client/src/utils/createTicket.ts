@@ -38,7 +38,7 @@ export const createTicket = async (ticketData: TicketFormValues) => {
     data.vulnerability = vulnerability;
     data.status_updates = [status];
 
-    if (data.assignees.length == 0) {
+    if (data.team.length == 0) {
       toast({
         title: "Error",
         description: "A team must be assigned",
@@ -60,7 +60,7 @@ export const createTicket = async (ticketData: TicketFormValues) => {
       body: JSON.stringify(data),
     };
 
-    const response = await fetch(`http://localhost:3000/api/ticket/`, options);
+    const response = await fetch(`/api/ticket/`, options);
 
     if (!response.ok) {
       const errorMessage = await response.text();
