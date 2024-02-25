@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "./ui/select";
 
-import { TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
+import { CveFormValues, TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { Group, User } from "@/types";
@@ -38,9 +38,20 @@ import { ChevronDown } from "lucide-react";
 interface CreateTicketProps {
   form: UseFormReturn<TicketFormValues>;
   onSubmit: SubmitHandler<TicketFormValues>;
+  preFillOptions?: {
+    cveId: string;
+    description: string;
+    baseSeverity: string;
+  };
+}
+
+interface CreateTicketFromCveProps {
+  form: UseFormReturn<CveFormValues>;
+  onSubmit: SubmitHandler<CveFormValues>;
 }
 
 type TicketFormKey = keyof TicketFormValues;
+type CveTicketFormKey = keyof CveFormValues;
 
 async function getTeamsData(user: User) {
   return getGroups(user);
@@ -72,7 +83,7 @@ async function getAssigneesData(user: User, teams: Group[] | undefined) {
   return uniqueUsers;
 }
 
-export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
+export function CreateTicket({ form, onSubmit, preFillOptions }: CreateTicketProps) {
   const { user } = useAuthContext();
   const [teams, setTeams] = useState<{ label: string; value: string }[]>([]);
   const [assignees, setAssignees] = useState<
@@ -109,6 +120,23 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
       setAssignees(objects);
     }
   }, [assigneesData]);
+
+  const toCapitalized = (word: string | undefined) => {
+    if (!word) {
+      return word;
+    }
+
+    const ret = word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase();
+    console.log(ret);
+    return ret;
+  };
+
+  let cveId, description, baseSeverity;
+  if (preFillOptions) {
+    cveId = preFillOptions.cveId;
+    description = preFillOptions.description;
+    baseSeverity = preFillOptions.baseSeverity;
+  }
 
   const selectOptionsDifficulty = [
     { label: "Low", value: "1" },
@@ -159,7 +187,7 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
           <ScrollArea className="h-[75vh]">
             {[
               { name: "title", label: "Title" },
-              { name: "description", label: "Description" },
+              { name: "description", label: "Description", preFill: description },
               { name: "team", label: "Team", optionsMulti: selectOptionsTeams },
               {
                 name: "assignees",
@@ -172,11 +200,15 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                 options: selectOptionsDifficulty,
               },
               { name: "vuln_name", label: "Vulnerability Name" },
-              { name: "vuln_cve_id", label: "CVE ID" },
+              { name: "vuln_cve_id", label: "CVE ID", preFill: cveId },
               {
                 name: "vuln_priority",
                 label: "Priority",
                 options: selectOptionsPriority,
+                preFill: {
+                  label: baseSeverity ? toCapitalized(baseSeverity) : selectOptionsPriority[0].label,
+                  value: baseSeverity ? toCapitalized(baseSeverity) : selectOptionsPriority[0].value,
+                },
               },
               {
                 name: "status_body",
@@ -184,7 +216,7 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                 options: selectOptionsStatus,
               },
               { name: "comments", label: "Comment" },
-            ].map(({ name, label, options, optionsMulti }) => (
+            ].map(({ name, label, options, optionsMulti, preFill }) => (
               <FormField
                 key={name}
                 control={form.control}
@@ -195,11 +227,12 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                     <FormControl>
                       {options ? (
                         <Select
+                          value={preFill?.value}
                           onValueChange={field.onChange}
                           defaultValue={options[0].value}
                         >
                           <SelectTrigger>
-                            <SelectValue defaultValue={options[0].value} />
+                            <SelectValue defaultValue={preFill?.value} />
                           </SelectTrigger>
                           <SelectContent>
                             {options.map((option) => (
@@ -283,6 +316,7 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
                         <Input
                           {...field}
                           value={
+                            preFill ? preFill :
                             field.value instanceof Date
                               ? field.value.toISOString()
                               : field.value ?? ""
@@ -299,6 +333,55 @@ export function CreateTicket({ form, onSubmit }: CreateTicketProps) {
           </ScrollArea>
           <DialogClose asChild>
             <Button type="submit">Create</Button>
+          </DialogClose>
+        </form>
+      </Form>
+    </>
+  );
+}
+
+export function CreateTicketFromCve({ form, onSubmit }: CreateTicketFromCveProps) {
+  const handleSubmit = async (data: CveFormValues) => {
+    await onSubmit(data);
+  };
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>Create Ticket</DialogTitle>
+      </DialogHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <ScrollArea className="h-[75vh]">
+            {[
+              { name: "cve_id", label: "CVE ID" },
+            ].map(({ name, label }) => (
+              <FormField
+                key={name}
+                control={form.control}
+                name={name as CveTicketFormKey}
+                render={({ field }) => (
+                  <FormItem className="mx-5">
+                    <FormLabel>{label}</FormLabel>
+                    <FormControl>
+                      {(
+                        <Input
+                          {...field}
+                          value={
+                            field.value ?? ""
+                          }
+                        />
+                      )}
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
+          </ScrollArea>
+          <DialogClose asChild>
+            <Button type="submit">Look Up</Button>
           </DialogClose>
         </form>
       </Form>
