@@ -1,8 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
-import { ticketSchema } from "@/types";
-import { z } from "zod";
-
-type TicketFormValues = z.infer<typeof ticketSchema>;
+import { TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
 
 export const createTicket = async (ticketData: TicketFormValues) => {
   try {
