@@ -1,6 +1,6 @@
-import { User } from "@/types";
+import { Ticket, User } from "@/types";
 
-export const modifyTicket = async (ticketData : any, ticketID : string, user : User) => {
+export const modifyTicket = async (ticketData : Ticket, user : User) => {
     const options = {
         method: "PATCH",
         headers: {
@@ -12,7 +12,7 @@ export const modifyTicket = async (ticketData : any, ticketID : string, user : U
 
     let response;
     try {
-        response = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket/${ticketID}`, options);
+        response = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/api/ticket/${ticketData._id}`, options);
     } catch (error) {
         console.error(error);
         throw error;

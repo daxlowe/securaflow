@@ -7,7 +7,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { DialogClose, DialogHeader, DialogTitle } from "./ui/dialog";
+import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
@@ -15,13 +15,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,10 +76,12 @@ async function getAssigneesData(user: User, teams: Group[] | undefined) {
   const assignees = await Promise.all(assigneesPromises);
   const flattenedAssignees = assignees.flat();
 
-  // Combine users with the same ID and add their teamIds
+  // Combine users with the same _id and add their teamIds
   const uniqueAssignees = flattenedAssignees.reduce(
     (accumulator: any[], user) => {
-      const existingUserIndex = accumulator.findIndex((u) => u.id === user._id);
+      const existingUserIndex = accumulator.findIndex(
+        (u) => u._id === user._id
+      );
       if (existingUserIndex !== -1) {
         accumulator[existingUserIndex].teamIds = Array.from(
           new Set(
@@ -98,6 +100,7 @@ async function getAssigneesData(user: User, teams: Group[] | undefined) {
     },
     []
   );
+  console.log(uniqueAssignees);
 
   return uniqueAssignees;
 }
@@ -152,9 +155,14 @@ export function TicketForm({
   });
 
   // State to manage selected teams
-  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
+  const [selectedTeams, setSelectedTeams] = useState<string[]>(
+    formFields.find((field) => field.name === "team")?.previousArray || []
+  );
+
   // State to manage selected assignees
-  const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
+  const [selectedAssignees, setSelectedAssignees] = useState<string[]>(
+    formFields.find((field) => field.name === "assignees")?.previousArray || []
+  );
 
   const teamField = updatedFormFields.find((field) => field.name === "team");
   const assigneeField = updatedFormFields.find(
@@ -166,7 +174,7 @@ export function TicketForm({
       setSelectedAssignees([]);
     }
     if (assigneesData) {
-      let assigneesTemp: { label: string; value: string }[] = [];
+      const assigneesTemp: { label: string; value: string }[] = [];
       assigneesData.forEach((user: UserWithTeams) => {
         if (
           user.teamIds &&
@@ -181,7 +189,7 @@ export function TicketForm({
 
       setAssignees(assigneesTemp);
     }
-  }, [selectedTeams]);
+  }, [selectedTeams, assigneesData]);
 
   useEffect(() => {
     if (teamField?.previousArray) {
@@ -213,18 +221,25 @@ export function TicketForm({
                   }
                 }
 
+                if (options && previous) {
+                  register(name as keyof TicketFormValues);
+                  setValue(name as keyof TicketFormValues, previous);
+                }
+
                 return (
                   <FormField
                     key={name}
                     control={form.control}
                     name={name as TicketFormKey}
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem className="mx-5">
                         <FormLabel>{label}</FormLabel>
                         <FormControl>
                           {options ? (
                             <Select
-                              onValueChange={field.onChange}
+                              onValueChange={(value) => {
+                                setValue(name as keyof TicketFormValues, value);
+                              }}
                               defaultValue={previous || options[0].value}
                             >
                               <SelectTrigger>

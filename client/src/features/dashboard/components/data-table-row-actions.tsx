@@ -6,11 +6,11 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ViewTicket } from "@/components/ViewTicketPopup";
-import { ModifyTicket } from "@/components/ModifyTicketPopup";
+import { ViewTicket } from "@/components/TicketPopup/View";
+import { ModifyTicket } from "@/components/TicketPopup/Modify";
 import { Task } from "../types";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { DeleteTicket } from "@/components/DeleteTicketPopup";
+import { DeleteTicket } from "@/components/TicketPopup/Delete";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

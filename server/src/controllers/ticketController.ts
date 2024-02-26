@@ -63,7 +63,6 @@ const createTicket = async (req: Request, res: Response) => {
     req.body.created_by = req.body.user;
     delete req.body.user;
     const ticket: Ticket = req.body as Ticket;
-    console.log(ticket);
 
     await Ticket.create(ticket);
 
@@ -94,26 +93,13 @@ const updateTicket = async (req: Request, res: Response) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).json({ error: "No such ticket" });
 
-  console.log(req.body);
-  let data;
   try {
-    data = req.body;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-  const { ticketData, cve_id, current_status } = data;
-  const status_update = {
-    body: current_status,
-  };
-  // Not currently updating cve_id on tickets. Need NVD integration
+    const ticketData: Ticket = req.body; // Removed unnecessary try-catch block
 
-  try {
-    // Perform the tickt update
-    console.log(JSON.stringify(status_update));
+    // Perform the ticket update
     const modifiedTicket: Ticket | null = await Ticket.findByIdAndUpdate(
       id,
-      { 
+      {
         $set: {
           assignees: ticketData.assignees,
           comments: ticketData.comments,
@@ -122,24 +108,21 @@ const updateTicket = async (req: Request, res: Response) => {
           team: ticketData.team,
           time_estimate: ticketData.time_estimate,
           title: ticketData.title,
+          status_updates: ticketData.status_updates,
+          vulnerability: ticketData.vulnerability
         },
-        $push: { status_updates: status_update },
       },
       { new: true }
     );
+
     if (!modifiedTicket) {
       return res.status(404).json({ error: "No such ticket" });
     }
 
     res.status(200).json(modifiedTicket);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({
-        error: `An unknown error occurred while attempting to update ticket: ${id}`,
-      });
-    }
+  } catch (error: any) {
+    console.log(error); // Log the error for debugging
+    res.status(500).json({ error: error ? error.message : "An unknown error occurred" });
   }
 };
 

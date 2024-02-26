@@ -20,7 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { DialogHeader, DialogTitle } from "./ui/dialog";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required",

@@ -1,5 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
-import { CveFormValues } from "@/features/dashboard/components/data-table-toolbar";
+
 
 export interface cveInfo {
   cveId: string;
@@ -7,7 +7,7 @@ export interface cveInfo {
   baseSeverity: "LOW" | "MEDIUM" | "HIGH";
 }
 
-export const lookupCve = async (cveIdData: CveFormValues): Promise<cveInfo | undefined> => {
+export const lookupCve = async (cveIdData: any): Promise<cveInfo | undefined> => {
   try {
     const storedData = localStorage.getItem("user");
     let authToken = "";
