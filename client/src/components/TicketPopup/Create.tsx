@@ -4,14 +4,23 @@ import { createTicket } from "@/utils/createTicket";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ticketSchema } from "@/types";
+import { Task } from "@/features/dashboard/types";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 const ticketFormSchema = ticketSchema;
 
-function onSubmit(data: TicketFormValues) {
-  createTicket(data);
-}
+export function CreateTicket({
+  refetch,
+}: {
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
+}) {
+  function onSubmit(data: TicketFormValues) {
+    createTicket(data);
+    refetch();
+  }
 
-export function CreateTicket() {
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
   });

@@ -2,12 +2,17 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { deleteTicket } from "@/utils/deleteTicket";
 import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { Task } from "@/features/dashboard/types";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 interface DeleteTicketProps {
   ticket_id: string;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
-export function DeleteTicket({ ticket_id }: DeleteTicketProps) {
+export function DeleteTicket({ ticket_id, refetch }: DeleteTicketProps) {
   const { user } = useAuthContext();
   const onDelete = async (ticket_id: string) => {
     try {
@@ -21,6 +26,7 @@ export function DeleteTicket({ ticket_id }: DeleteTicketProps) {
         )}`
       );
     }
+    refetch();
   };
 
   return (

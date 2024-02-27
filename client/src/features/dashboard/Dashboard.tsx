@@ -27,7 +27,7 @@ export default function Dashboard() {
     },
   ];
 
-  const { isPending, data } = useQuery<Task[]>({
+  const { isPending, data, refetch } = useQuery<Task[]>({
     queryKey: ["taskData"],
     queryFn: () => getData(user),
   });
@@ -43,9 +43,13 @@ export default function Dashboard() {
 
           <div className="flex-1 lg:max-w">
             {isPending ? (
-              <DataTable columns={columns} data={[]} />
+              <DataTable columns={columns} data={[]} refetch={refetch} />
             ) : (
-              <DataTable columns={columns} data={data as any} />
+              <DataTable
+                columns={columns}
+                data={data as any}
+                refetch={refetch}
+              />
             )}
           </div>
         </div>

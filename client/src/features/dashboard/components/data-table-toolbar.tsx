@@ -11,16 +11,22 @@ import { CreateTicket } from "@/components/TicketPopup/Create";
 import { priorities, statuses } from "../data/data";
 import { ticketSchema } from "@/types";
 import { CreateTicketFromCVE } from "@/components/TicketPopup/CreateCVE";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { Task } from "../types";
 
 export const ticketFormSchema = ticketSchema;
 export type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  refetch,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -73,7 +79,7 @@ export function DataTableToolbar<TData>({
         </DialogTrigger>
 
         <DialogContent>
-          <CreateTicket />
+          <CreateTicket refetch={refetch} />
         </DialogContent>
       </Dialog>
       {/* Dialog for "From CVE-ID" */}
@@ -89,7 +95,7 @@ export function DataTableToolbar<TData>({
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <CreateTicketFromCVE />
+          <CreateTicketFromCVE refetch={refetch} />
         </DialogContent>
       </Dialog>
 

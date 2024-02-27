@@ -26,5 +26,5 @@ export async function getTicketsAsTasks(user: User) {
 
     return task;
   });
-  return tasks;
+  return tasks.reverse();
 }

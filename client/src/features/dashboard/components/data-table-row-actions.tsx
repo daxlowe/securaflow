@@ -11,13 +11,18 @@ import { ModifyTicket } from "@/components/TicketPopup/Modify";
 import { Task } from "../types";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DeleteTicket } from "@/components/TicketPopup/Delete";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
 export function DataTableRowActions<TData>({
   row,
+  refetch,
 }: DataTableRowActionsProps<TData>) {
   const originalData = row.original as Task;
   const ticket = originalData.ticket;
@@ -67,7 +72,7 @@ export function DataTableRowActions<TData>({
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <ModifyTicket task={task} />
+              <ModifyTicket task={task} refetch={refetch} />
             </DialogContent>
           </Dialog>
           <Dialog>
@@ -77,7 +82,10 @@ export function DataTableRowActions<TData>({
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <DeleteTicket ticket_id={task.ticket._id || ""} />
+              <DeleteTicket
+                ticket_id={task.ticket._id || ""}
+                refetch={refetch}
+              />
             </DialogContent>
           </Dialog>
         </DropdownMenuContent>

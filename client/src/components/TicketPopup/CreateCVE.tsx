@@ -19,6 +19,8 @@ import { ticketSchema } from "@/types";
 import { TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
 import { createTicket } from "@/utils/createTicket";
 import { capitalize } from "@/utils/capitalize";
+import { Task } from "@/features/dashboard/types";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 const cveFormSchema = z.object({
   cve_id: z.string().regex(/^CVE-\d{4,}-\d+$/i, {
@@ -112,16 +114,24 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
   return false;
 }
 
-function onSubmitTicket(data: TicketFormValues) {
-  createTicket(data);
-}
-
-export function CreateTicketFromCVE() {
+export function CreateTicketFromCVE({
+  refetch,
+}: {
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
+}) {
   const [showTicket, setShowTicket] = useState(false);
   const formCVE = useForm<z.infer<typeof cveFormSchema>>();
   const formTicket = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
   });
+
+  function onSubmitTicket(data: TicketFormValues) {
+    createTicket(data);
+    refetch();
+  }
+
   return showTicket ? (
     <TicketForm
       form={formTicket}

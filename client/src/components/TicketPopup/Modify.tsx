@@ -6,16 +6,24 @@ import { ticketSchema } from "@/types";
 import { modifyTicket } from "@/utils/modifyTicket";
 import { Task } from "@/features/dashboard/types";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 const ticketFormSchema = ticketSchema;
 
-export function ModifyTicket({ task }: { task: Task }) {
+export function ModifyTicket({
+  task,
+  refetch,
+}: {
+  task: Task;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
+}) {
   const ticket = task.ticket;
 
   const { user } = useAuthContext();
 
   function onSubmit(data: TicketFormValues) {
-    console.log(data);
     const modifiedTicket = ticket as any;
     modifiedTicket.assignees = data.assignees;
     modifiedTicket.team = data.team;
@@ -43,11 +51,10 @@ export function ModifyTicket({ task }: { task: Task }) {
     if (data.comments) {
       modifiedTicket.comments.push(data.comments);
     }
-    console.log(modifiedTicket);
     modifyTicket(modifiedTicket, user);
+    refetch();
   }
 
-  console.log(ticket);
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
   });

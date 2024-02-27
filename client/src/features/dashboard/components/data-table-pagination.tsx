@@ -14,16 +14,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrashIcon } from "lucide-react";
+import { Rows, TrashIcon } from "lucide-react";
 import { deleteTicket } from "@/utils/deleteTicket";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { Task } from "../types";
+import { toast } from "@/components/ui/use-toast";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
 export function DataTablePagination<TData>({
   table,
+  refetch,
 }: DataTablePaginationProps<TData>) {
   const { user } = useAuthContext();
   return (
@@ -36,6 +43,15 @@ export function DataTablePagination<TData>({
             onClick={() => {
               table.getSelectedRowModel().rows.map((row: any) => {
                 deleteTicket(row.original.id, user);
+                table.resetRowSelection();
+              });
+              if (refetch) {
+                refetch();
+              }
+              toast({
+                title: "Success",
+                description:
+                  "Successfully deleted selected rows.  Table will update shortly.",
               });
             }}
           >

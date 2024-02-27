@@ -213,12 +213,4 @@ export const columns: ColumnDef<Task>[] = [
       return value.includes(row.getValue(id));
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => (
-      <div className="px-2 h-[50px] items-center flex">
-        <DataTableRowActions row={row} />
-      </div>
-    ),
-  },
 ];

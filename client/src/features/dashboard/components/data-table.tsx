@@ -27,15 +27,22 @@ import {
 import { DataTablePagination } from "../components/data-table-pagination";
 import { DataTableToolbar } from "../components/data-table-toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { Task } from "../types";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  refetch,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -77,7 +84,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="space-y-4">
-        <DataTableToolbar table={table} />
+        <DataTableToolbar table={table} refetch={refetch} />
         <div className="rounded-md border min-w-[575px] bg-card">
           <Table>
             <TableHeader>
@@ -117,6 +124,11 @@ export function DataTable<TData, TValue>({
                         )}
                       </TableCell>
                     ))}
+                    <TableCell className="p-0">
+                      <div className="px-2 h-[50px] items-center flex">
+                        <DataTableRowActions row={row} refetch={refetch} />
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -171,7 +183,7 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table} refetch={refetch} />
       </div>
       <div className="h-[20px]"></div>
     </>
