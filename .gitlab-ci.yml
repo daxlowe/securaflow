@@ -2,9 +2,6 @@ stages:
   - build
   - deploy
 
-EC2_IP_ADDRESS: "$EC2_IP_ADDRESS"
-EC2_KEY_FILE: $EC2_SSH_KEY
-
 build:
   stage: build
   script:
@@ -22,6 +19,6 @@ deploy:
     - dev # Trigger only on merges to the 'main' branch
     - main
   script:
-    - scp -i $EC2_KEY_FILE client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
-    - scp -i $EC2_KEY_FILE server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
-    - ssh -i $EC2_KEY_FILE ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
+    - scp -i $EC2_SSH_KEY client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
+    - scp -i $EC2_SSH_KEY server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
+    - ssh -i $EC2_SSH_KEY ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
