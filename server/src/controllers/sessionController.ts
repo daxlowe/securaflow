@@ -6,6 +6,7 @@ import { Secret } from 'jsonwebtoken';
 
 export async function createUserSession(request: Request, response: Response)
 {
+    console.log("In create session #1");
     // Validate Users password
     const user = await validatePassword(request.body);
     if(!user)
@@ -30,7 +31,20 @@ export async function createUserSession(request: Request, response: Response)
        { expiresIn: refreshExpiration}  
        );
     const userID = user._id
+
     // Return access and refresh tokens
+    response.cookie("accesstoken", accessToken, {
+        maxAge: 900000, // 15 min
+        sameSite: "lax",
+        secure: false,
+    })
+
+    response.cookie("refreshtoken", refreshToken, {
+        maxAge: 3.154e10, // 15 min
+        sameSite: "lax",
+        secure: false,
+    })
+    console.log("In create session #2");
     return response.send({accessToken, refreshToken, userID});
 }
 

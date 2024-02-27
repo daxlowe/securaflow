@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import axios from 'axios';
 
 export const useLogin = () => {
   const [error, setError] = useState(null);
@@ -9,19 +10,27 @@ export const useLogin = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:3000/api/user/login", {
+    const response = await axios.post("http://localhost:3000/api/session/", 
+    JSON.stringify({ email, password }),
+    {
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+    })
+
+   /* const response = await fetch("http://localhost:3000/api/session/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
-    });
+      credentials: "same-origin"
+    });*/
 
-    const data = await response.json();
+    const data = await response.data;
     console.log(data);
-    if (!response.ok) {
+    if (response.status !== 200) {
       setError(data.error);
       setIsLoading(false);
     }
-    if (response.ok) {
+    if (response.status === 200) {
       // Save the user to local storage
       localStorage.setItem("user", JSON.stringify(data));
 

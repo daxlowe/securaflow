@@ -24,7 +24,12 @@ const PORT = process.env.PORT;
 const DB_CONN_STRING: string = `${process.env.DB_CONN}${process.env.DB_NAME}${process.env.DB_OPTIONS}`;
 
 // Use cors middleware
-app.use(cors());
+const corsOptions ={
+    origin:'http://127.0.0.1:5173', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 
 // Serve static files from the 'static' directory
 app.use(express.static(path.join(__dirname, 'static')));

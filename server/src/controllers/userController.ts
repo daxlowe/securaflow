@@ -114,6 +114,11 @@ const getUserGroups = async (req: Request, res: Response) => {
   }
 }
 
+export async function getCurrentlyLoggedInUser(request: Request, response: Response)
+{
+  return response.send(response.locals.user);
+}
+
 export {
   addGroupsToUser,
   loginUser,

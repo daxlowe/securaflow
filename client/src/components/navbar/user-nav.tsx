@@ -28,7 +28,6 @@ export function UserNav() {
 
   const pfp = pfpPlaceholder.default;
 
-  console.log(user);
   const handleLogout = () => {
     logout();
   };
