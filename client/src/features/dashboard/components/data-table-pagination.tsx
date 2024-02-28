@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Rows, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { deleteTicket } from "@/utils/deleteTicket";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
