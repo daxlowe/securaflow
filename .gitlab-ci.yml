@@ -5,12 +5,13 @@ stages:
 build:
   stage: build
   script:
+    - git checkout -b dev origin/dev
     - cd client
-    - PNPM_GIT_SHALLOW_CLONE=false pnpm install
+    - pnpm install
     - pnpm run build
     - cd ..
     - cd server
-    - PNPM_GIT_SHALLOW_CLONE=false pnpm install
+    - pnpm install
     - pnpm run build
 
 deploy:
