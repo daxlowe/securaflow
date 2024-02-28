@@ -5,9 +5,8 @@ stages:
 build:
   stage: build
   script:
-    - git checkout -b dev origin/dev
     - cd client
-    - npm install
+    - pnpm install
     - npm run build
     - cd ..
     - cd server
