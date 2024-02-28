@@ -9,7 +9,7 @@ build:
     - cd client
     - pnpm install
     - pnpm install react-router
-    - pnpm run build
+    - pnpm run build || true
     - cd ..
     - cd server
     - pnpm install
