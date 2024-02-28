@@ -1,38 +1,17 @@
-import { Schema, model, Types, Model} from 'mongoose';
+import mongoose, { Schema, model, Types, Model} from 'mongoose';
 
-interface Permissions
+export interface GroupDocument extends mongoose.Document
 {
-	read: boolean;
-	write: boolean;
-}
-
-interface Group 
-{
-	_id: Types.ObjectId;
 	name: string;
-	permissions: Permissions;
 	users: Types.Array<Types.ObjectId>;
 }
 
-const groupSchema = new Schema<Group, Model<Group>>(
+const groupSchema = new Schema(
     {
 		name:
 		{
 			type: String,
 			required: true
-		},
-		permissions:
-		{
-			read:
-			{
-				type: Boolean,
-				required: true
-			},
-			write:
-			{
-				type: Boolean,
-				required: true
-			}
 		},
 		users: 
 		{
@@ -42,5 +21,5 @@ const groupSchema = new Schema<Group, Model<Group>>(
     }
 );
 
-const Group = model<Group, Model<Group>>('Group', groupSchema);
+const Group = model<GroupDocument>('Group', groupSchema);
 export default Group;

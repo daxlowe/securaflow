@@ -32,7 +32,7 @@ export default function App() {
             element={!user ? <Signup /> : <Navigate to="/" />}
           />
           <Route
-            path="/organization"
+            path="/manage"
             element={user ? <Organization /> : <Navigate to="/login" />}
           />
           <Route

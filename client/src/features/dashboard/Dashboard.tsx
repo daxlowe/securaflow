@@ -22,8 +22,8 @@ export default function Dashboard() {
       href: "/",
     },
     {
-      title: "Organization",
-      href: "/organization",
+      title: "Manage",
+      href: "/manage",
     },
   ];
 

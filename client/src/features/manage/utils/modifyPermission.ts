@@ -23,15 +23,13 @@ export const modifyPermission = async (
       "Changed " +
       capitalize(user.first_name) +
       "'s permission level to " +
-      capitalize(permissions[permission].title) + 
-      user._id,
+      capitalize(permissions[permission].title),
   });
 
   let response;
   try {
-    response = await fetch('http://localhost:3000/api/user')
     response = await fetch(
-      `http://localhost:3000/api/user/${groupId}/modify/${user._id}`,
+      `http://localhost:3000/api/group/${groupId}/modify/${user._id}`,
       options
     );
   } catch (error) {

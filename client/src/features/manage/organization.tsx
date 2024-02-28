@@ -27,9 +27,13 @@ export default function Organization() {
       href: "/",
     },
     {
-      title: "Manage",
-      href: "/manage",
+      title: "Organization",
+      href: "/organization",
     },
+    {
+      title: "Manage",
+      href: "/manage"    
+    }
   ];
 
   if (isPending) {

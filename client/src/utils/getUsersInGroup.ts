@@ -16,8 +16,9 @@ const getUsersInGroup = async (user: User, groupId: string) => {
   if (!response.ok) {
     throw new Error("Error fetching users");
   }
-  console.log(response);
-  return response.json();
+  const data = await response.json();
+  localStorage.setItem("users", JSON.stringify(data));
+  return data;
 };
 
 export default getUsersInGroup;
