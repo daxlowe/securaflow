@@ -7,12 +7,12 @@ build:
   script:
     - git checkout dev
     - cd client
-    - pnpm install
+    - npm install
     - pnpm run build
     - cd ..
     - cd server
-    - pnpm install
-    - pnpm run build
+    - npm install
+    - npm run build
 
 deploy:
   stage: deploy
