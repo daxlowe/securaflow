@@ -6,12 +6,12 @@ build:
   stage: build
   script:
     - cd client
-    - pnpm install
-    - npm run build
+    - PNPM_GIT_SHALLOW_CLONE=false pnpm install
+    - pnpm run build
     - cd ..
     - cd server
-    - npm install
-    - npm run build
+    - PNPM_GIT_SHALLOW_CLONE=false pnpm install
+    - pnpm run build
 
 deploy:
   stage: deploy
