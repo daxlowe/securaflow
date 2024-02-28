@@ -5,5 +5,5 @@ build:
   stage: build and deploy
   script:
     - cd ~/.ssh
-    - ssh -i securaflow_server.pem ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow && git checkout dev && git pull && cd /home/ubuntu/securaflow/server && npm install && npm run build && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install && npm run build && sudo systemctl restart nginx' || true
+    - ssh -i securaflow_server.pem ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow && git checkout dev && git pull && cd /home/ubuntu/securaflow/server && npm install && npm run build && /home/ubuntu/.nvm/versions/node/v20.11.0/bin/pm2 restart all && cd /home/ubuntu/securaflow/client && npm install && npm run build && sudo systemctl restart nginx' || true
     
