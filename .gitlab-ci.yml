@@ -13,7 +13,8 @@ build:
     - cd server
     - pnpm install
     - pnpm run build
-    - scp client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
-    - scp server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
-    - ssh ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
+    - cd ~/.ssh
+    - scp -i securaflow_server.pem client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
+    - scp -i securaflow_server.pem server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
+    - ssh -i securaflow_server.pem ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
     
