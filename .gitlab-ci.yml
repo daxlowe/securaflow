@@ -1,6 +1,12 @@
 stages:
+  - install
   - build
   - deploy
+
+install:
+  stage: install
+  script:
+    - curl -fsSL https://deb.nodesource.com/setup_20.11.1 | sudo -E bash - && sudo apt-get install -y nodejs
 
 build:
   stage: build
