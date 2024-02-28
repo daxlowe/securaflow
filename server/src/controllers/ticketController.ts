@@ -63,7 +63,6 @@ const createTicket = async (req: Request, res: Response) => {
     req.body.created_by = req.body.user;
     delete req.body.user;
     const ticket: Ticket = req.body as Ticket;
-    console.log(ticket);
 
     await Ticket.create(ticket);
 
@@ -94,26 +93,13 @@ const updateTicket = async (req: Request, res: Response) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).json({ error: "No such ticket" });
 
-  console.log(req.body);
-  let data;
   try {
-    data = req.body;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-  const { ticketData, cve_id, current_status } = data;
-  const status_update = {
-    body: current_status,
-  };
-  // Not currently updating cve_id on tickets. Need NVD integration
+    const ticketData: Ticket = req.body; // Removed unnecessary try-catch block
 
-  try {
-    // Perform the tickt update
-    console.log(JSON.stringify(status_update));
+    // Perform the ticket update
     const modifiedTicket: Ticket | null = await Ticket.findByIdAndUpdate(
       id,
-      { 
+      {
         $set: {
           assignees: ticketData.assignees,
           comments: ticketData.comments,
@@ -122,26 +108,37 @@ const updateTicket = async (req: Request, res: Response) => {
           team: ticketData.team,
           time_estimate: ticketData.time_estimate,
           title: ticketData.title,
+          status_updates: ticketData.status_updates,
+          vulnerability: ticketData.vulnerability
         },
-        $push: { status_updates: status_update },
       },
       { new: true }
     );
+
     if (!modifiedTicket) {
       return res.status(404).json({ error: "No such ticket" });
     }
 
     res.status(200).json(modifiedTicket);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({
-        error: `An unknown error occurred while attempting to update ticket: ${id}`,
-      });
-    }
+  } catch (error: any) {
+    console.log(error); // Log the error for debugging
+    res.status(500).json({ error: error ? error.message : "An unknown error occurred" });
   }
 };
+
+const getCveTicketInfo = async (req: Request, res: Response) => {
+  const { cveId } = req.params;
+
+  console.log("cveId passed in: ", cveId);
+  let response = await getCveInfo(cveId);
+
+  if (!response) {
+    res.status(404).json({ error: "Could not find CVE with matching ID" });
+  } else {
+    console.log("returning json: ", JSON.stringify(response));
+    res.status(200).json(response);
+  }
+}
 
 // Function to add any number of tickets to a user's tickets array
 const setTicketTeam = async (
@@ -157,6 +154,51 @@ const setTicketTeam = async (
   }
 };
 
+const getCveInfo = async (
+  cveId: string,
+) => {
+  const url = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${cveId}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': process.env.NVD_API_KEY!,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    // console.log(JSON.stringify(data, null, 2));
+
+    if (data.totalResults === 0) {
+      return undefined;
+    }
+
+    const vuln = data.vulnerabilities[0];
+    const id = vuln.cve.id;
+    const description = vuln.cve.descriptions.find((description: any) => {
+      return description.lang === "en";
+    })?.value;
+    const metrics = vuln.cve.metrics;
+    let baseSeverity;
+    if (metrics && metrics.cvssMetricV31) {
+      baseSeverity = metrics.cvssMetricV31[0]?.cvssData?.baseSeverity;
+    }
+
+    return {
+      cveId: id,
+      description,
+      baseSeverity,
+    };
+  } catch (error) {
+    console.error('Failed to fetch CVE info:', error);
+  }
+}
+
 export {
   getAllPossibleTickets,
   getAllAssignedTickets,
@@ -165,4 +207,5 @@ export {
   deleteTicket,
   updateTicket,
   setTicketTeam,
+  getCveTicketInfo,
 };

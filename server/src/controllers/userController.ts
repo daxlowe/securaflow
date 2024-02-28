@@ -52,13 +52,12 @@ const updateUser = async (request: Request, response: Response) => {
   console.log(id);
   try {
     const password = await User.validatePassword(request.body.password);
-    const data = 
-    {
+    const data = {
       first_name: request.body.first_name,
       last_name: request.body.last_name,
       email: request.body.email,
-      password: password
-    }
+      password: password,
+    };
     const user = await User.findByIdAndUpdate(id, data);
     response.status(200).json(user);
   } catch (error: any) {
@@ -82,7 +81,6 @@ const addGroupsToUser = async (
 };
 
 const getUserData = async (request: Request, response: Response) => {
-  
   const id = request.body.user;
   if (!mongoose.Types.ObjectId.isValid(id))
     return response.status(404).json({ error: "No such user" });
@@ -94,26 +92,25 @@ const getUserData = async (request: Request, response: Response) => {
   response.status(200).json(user);
 };
 
-const getUserGroups = async (req: Request, res: Response) => {
-  const { id: user_id } = req.params;
+const getUserGroups = async (request: Request, res: Response) => {
+  const id = request.body.user;
 
-  if (!mongoose.Types.ObjectId.isValid(user_id))
+  if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).json({ error: "No such user" });
 
   try {
     const groups = await Group.find({
-      users: user_id
+      users: id,
     }).populate("users");
 
-    if (!groups.length)
-      return res.status(200).json([]);
+    if (!groups.length) return res.status(200).json([]);
 
     res.status(200).json(groups);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
 export {
   addGroupsToUser,

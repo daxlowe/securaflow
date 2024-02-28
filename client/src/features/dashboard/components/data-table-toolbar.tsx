@@ -1,68 +1,33 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { Plus } from "lucide-react";
 import { Table } from "@tanstack/react-table";
-
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
-
-import { priorities, statuses } from "../data/data";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { Calendar } from "@/components/ui/calendar";
+import { DataTableViewOptions } from "./data-table-view-options";
+import { CreateTicket } from "@/components/TicketPopup/Create";
+import { priorities, statuses } from "../data/data";
+import { ticketSchema } from "@/types";
+import { CreateTicketFromCVE } from "@/components/TicketPopup/CreateCVE";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { Task } from "../types";
 
-import { CreateTicket } from "@/components/CreateTicketPopup";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@radix-ui/react-popover";
-import { format } from "date-fns";
-import { Plus } from "lucide-react";
-import { Ticket, ticketSchema } from "@/types";
-import { createTicket } from "@/utils/createTicket";
+export const ticketFormSchema = ticketSchema;
+export type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
-const ticketFormSchema = ticketSchema;
-
-type TicketFormValues = z.infer<typeof ticketFormSchema>;
-
-interface DataTableToolbarProps<TData> {
+export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  refetch,
 }: DataTableToolbarProps<TData>) {
-  const form = useForm<TicketFormValues>({
-    resolver: zodResolver(ticketFormSchema),
-  });
-
-  function onSubmit(data: TicketFormValues) {
-    createTicket(data);
-  }
-
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -106,16 +71,34 @@ export function DataTableToolbar<TData>({
           <Button
             variant="outline"
             size="sm"
-            className="ml-auto hidden h-8 lg:flex mr-2"
+            className="ml-auto h-8 lg:flex mr-2"
           >
             <Plus className="mr-2 h-4 w-4" />
             Create
           </Button>
         </DialogTrigger>
+
         <DialogContent>
-          <CreateTicket form={form} onSubmit={onSubmit} />
+          <CreateTicket refetch={refetch} />
         </DialogContent>
       </Dialog>
+      {/* Dialog for "From CVE-ID" */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto h-8 lg:flex mr-2"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Create From CVE-ID
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <CreateTicketFromCVE refetch={refetch} />
+        </DialogContent>
+      </Dialog>
+
       <DataTableViewOptions table={table} />
     </div>
   );

@@ -5,9 +5,14 @@ import Signup from "@/features/signup";
 import Organization from "@/features/organization";
 import AccountSettings from "@/features/account-settings";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import Loading from "@/components/Loading";
 
 export default function App() {
-  const { user } = useAuthContext();
+  const { user, loading } = useAuthContext();
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -30,11 +35,18 @@ export default function App() {
             path="/organization"
             element={user ? <Organization /> : <Navigate to="/login" />}
           />
-          <Route path="/settings/profile" element={<AccountSettings />} />
-          <Route path="/settings/account" element={<AccountSettings />} />
-          <Route path="/settings/appearance" element={<AccountSettings />} />
-          <Route path="/settings/notifications" element={<AccountSettings />} />
-          <Route path="/settings/display" element={<AccountSettings />} />
+          <Route
+            path="/settings/profile"
+            element={user ? <AccountSettings /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/settings/appearance"
+            element={user ? <AccountSettings /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/settings/teams"
+            element={user ? <AccountSettings /> : <Navigate to="/login" />}
+          />
         </Routes>
       </div>
     </>

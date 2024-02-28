@@ -3,30 +3,67 @@ import {
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
-} from "@radix-ui/react-icons"
-import { Table } from "@tanstack/react-table"
+} from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { TrashIcon } from "lucide-react";
+import { deleteTicket } from "@/utils/deleteTicket";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { Task } from "../types";
+import { toast } from "@/components/ui/use-toast";
 
 interface DataTablePaginationProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<Task[], Error>>;
 }
 
 export function DataTablePagination<TData>({
   table,
+  refetch,
 }: DataTablePaginationProps<TData>) {
+  const { user } = useAuthContext();
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+    <div className="flex items-center justify-between px-2 ">
+      <div className="flex-1 text-sm text-muted-foreground flex items-center space-x-2 lg:space-x-4">
+        {table.getIsSomeRowsSelected() ? (
+          <Button
+            variant="outline"
+            className="hidden h-8 w-8 p-0 lg:flex"
+            onClick={() => {
+              table.getSelectedRowModel().rows.map((row: any) => {
+                deleteTicket(row.original.id, user);
+                table.resetRowSelection();
+              });
+              if (refetch) {
+                refetch();
+              }
+              toast({
+                title: "Success",
+                description:
+                  "Successfully deleted selected rows.  Table will update shortly.",
+              });
+            }}
+          >
+            <TrashIcon className="h-4 w-4" />
+          </Button>
+        ) : (
+          <div></div>
+        )}
+        <div className="flex items-center text-sm font-medium">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
@@ -34,7 +71,7 @@ export function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value))
+              table.setPageSize(Number(value));
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -93,5 +130,5 @@ export function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }

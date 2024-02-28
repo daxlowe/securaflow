@@ -24,24 +24,27 @@ interface Ticket {
   difficulty: number;
   assignees: Types.Array<Types.ObjectId>;
   time_estimate?: number;
-  status_updates?: Types.Array<Status>;
+  status_updates: Types.Array<Status>;
   comments?: string;
   vulnerability: Vulnerability;
   created_by: Types.ObjectId;
 }
 
-const statusSchema = new Schema<Status, Model<Status>>({
-  body: {
-    type: String,
-    required: true,
+const statusSchema = new Schema<Status, Model<Status>>(
+  {
+    body: {
+      type: String,
+      required: true,
+    },
+    date_started: {
+      type: Date,
+    },
+    date_ended: {
+      type: Date,
+    },
   },
-  date_started: {
-    type: Date,
-  },
-  date_ended: {
-    type: Date,
-  },
-}, { timestamps: true, _id: false });
+  { timestamps: true, _id: false }
+);
 
 const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   title: {
@@ -50,14 +53,14 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
   },
   team: {
     type: [{ type: Schema.Types.ObjectId, ref: "Group" }],
-    required: true,
+    required: false,
   },
   description: {
     type: String,
   },
   difficulty: {
     type: Number,
-    required: true,
+    required: false,
   },
   assignees: {
     type: [{ type: Schema.Types.ObjectId, ref: "User" }],
@@ -79,7 +82,7 @@ const ticketSchema = new Schema<Ticket, Model<Ticket>>({
     },
     priority: {
       type: String,
-      required: true,
+      required: false,
     },
     imported_from: {
       type: String,

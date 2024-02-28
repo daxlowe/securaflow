@@ -6,7 +6,8 @@ import
     getSingleTicket,
     createTicket, 
     deleteTicket,
-    updateTicket
+    updateTicket,
+    getCveTicketInfo
 } from '../controllers/ticketController';
 import { body } from 'express-validator';
 import { requireAuth } from '../middleware/requireAuth';
@@ -50,6 +51,9 @@ router.delete('/:id', deleteTicket);
 
 // PATCH a ticket
 router.patch('/:id', updateTicket);
+
+// GET info related to a CVE
+router.get('/cve/:cveId', getCveTicketInfo);
 
 
 // Other user routes (POST, PUT, DELETE, etc.)

@@ -14,13 +14,12 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { priorities, statuses } from "../data/data";
 import { Task } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<Task>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <div className="px-4 h-[50px] items-center flex">
+      <div className="px-4 items-center flex">
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -49,12 +48,12 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "id",
     header: ({ column }) => (
       <div className="px-2">
-        <DataTableColumnHeader column={column} title="Ticket" />
+        <DataTableColumnHeader column={column} title="ID" />
       </div>
     ),
     cell: ({ row }) => (
       <ScrollArea>
-        <div className="flex w-[80px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
+        <div className="flex space-x-2 h-[50px] w-[80px] items-center px-2 whitespace-nowrap">
           {row.getValue("id")}
           <ScrollBar orientation="horizontal" />
         </div>
@@ -72,7 +71,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       return (
         <ScrollArea>
-          <div className="flex min-w-[200px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
+          <div className="flex space-x-2 h-[50px] min-w-[200px] items-center px-2 whitespace-nowrap">
             {row.getValue("title")}
             <ScrollBar orientation="horizontal" />
           </div>
@@ -88,10 +87,13 @@ export const columns: ColumnDef<Task>[] = [
       </div>
     ),
     cell: ({ row }) => {
+      const teams: string[] | string = row.getValue("team");
+      const teamString = Array.isArray(teams) ? teams.join(", ") : teams;
+
       return (
         <ScrollArea>
-          <div className="flex space-x-2 h-[50px] w-[80px] items-center px-2 whitespace-nowrap">
-            {row.getValue("team")}
+          <div className="flex space-x-2 h-[50px]items-center px-2 whitespace-nowrap">
+            {teamString}
             <ScrollBar orientation="horizontal" />{" "}
           </div>
         </ScrollArea>
@@ -117,11 +119,13 @@ export const columns: ColumnDef<Task>[] = [
         return null;
       }
 
+      const iconColor = status.color || "text-muted-foreground";
+
       return (
         <ScrollArea>
-          <div className="flex w-[109px] h-[50px] items-center px-2 whitespace-nowrap">
+          <div className="flex h-[50px] items-center px-2 whitespace-nowrap">
             {status.icon && (
-              <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+              <status.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}
             <span>{status.label}</span>
             <ScrollBar orientation="horizontal" />{" "}
@@ -149,11 +153,13 @@ export const columns: ColumnDef<Task>[] = [
         return null;
       }
 
+      const iconColor = priority.color || "text-muted-foreground";
+
       return (
         <ScrollArea>
-          <div className="flex w-[96px] h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
+          <div className="flex h-[50px] items-center px-2 whitespace-nowrap">
             {priority.icon && (
-              <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+              <priority.icon className={`mr-2 h-4 w-4 ${iconColor}`} />
             )}
             <span>{priority.label}</span>
             <ScrollBar orientation="horizontal" />{" "}
@@ -173,18 +179,30 @@ export const columns: ColumnDef<Task>[] = [
       </div>
     ),
     cell: ({ row }) => {
+      const assignee: string[] = row.getValue("assignee");
+
+      function getInitials(name: string) {
+        return name
+          .toUpperCase()
+          .split(/\s+/) // Split by spaces
+          .map((word) => word[0]) // Get the first letter of each word
+          .join(""); // Join the letters back together
+      }
+
       return (
         <ScrollArea>
-          <div className="flex w-[80px] space-x-2 h-[50px] items-center overflow-x-auto px-2 whitespace-nowrap">
-            <HoverCard>
-              <HoverCardTrigger>
-                <Avatar className="h-[35px] w-[35px]">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </HoverCardTrigger>
-              <HoverCardContent>{row.getValue("assignee")}</HoverCardContent>
-            </HoverCard>
+          <div className="flex max-w-[80px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
+            {assignee.map((assigneeName) => (
+              <HoverCard>
+                <HoverCardTrigger>
+                  <Avatar className="h-[35px] w-[35px]">
+                    <AvatarImage src="https://githu" />
+                    <AvatarFallback>{getInitials(assigneeName)}</AvatarFallback>
+                  </Avatar>
+                </HoverCardTrigger>
+                <HoverCardContent>{assigneeName}</HoverCardContent>
+              </HoverCard>
+            ))}
             <ScrollBar orientation="horizontal" />{" "}
           </div>
         </ScrollArea>
@@ -193,13 +211,5 @@ export const columns: ColumnDef<Task>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => (
-      <div className="px-2 h-[50px] items-center flex">
-        <DataTableRowActions row={row} />
-      </div>
-    ),
   },
 ];

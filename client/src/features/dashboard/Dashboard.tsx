@@ -1,55 +1,57 @@
-import { useEffect, useState } from 'react';
-import { columns } from './components/columns';
-import { DataTable } from './components/data-table';
-import { getTicketsAsTasks } from './utils/ticketToTask';
-import MenuBar from "@/components/menuBar/menuBar";
-import { MainNav } from '@/components/navbar/main-nav';
-import './assets/css/dashboard.css'
-import { Task } from './types';
-import { useAuthContext } from '@/hooks/useAuthContext';
-import { User } from '@/types';
-import { UserNav } from '@/components/navbar/user-nav';
-import { Search } from '@/components/navbar/search';
+import { columns } from "./components/columns";
+import { DataTable } from "./components/data-table";
+import { getTicketsAsTasks } from "./utils/ticketToTask";
+import "./assets/css/dashboard.css";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { User } from "@/types";
+import Navbar from "@/components/navbar/navbar";
+import { useQuery } from "@tanstack/react-query";
+import { SidebarNav } from "@/components/menuBar/sidebar-nav";
+import { Task } from "./types";
 
 async function getData(user: User) {
   return getTicketsAsTasks(user);
 }
 
 export default function Dashboard() {
-  const [data, setData] = useState<Task[]>([]);
   const { user } = useAuthContext();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getData(user);
-        setData(result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const sidebarNavItems = [
+    {
+      title: "Dashboard",
+      href: "/",
+    },
+    {
+      title: "Organization",
+      href: "/organization",
+    },
+  ];
 
-    fetchData();
-  }, []); // Empty dependency array to run the effect once on component mount
+  const { isPending, data, refetch } = useQuery<Task[]>({
+    queryKey: ["taskData"],
+    queryFn: () => getData(user),
+  });
 
   return (
     <>
-      <div className="hidden flex-col md:flex">
-        <div className="border-b">
-          <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" />
-            <div className="ml-auto flex items-center space-x-4">
-              <Search />
-              <UserNav />
-            </div>
+      <Navbar />
+      <div className="hidden space-y-6 p-3 pb-16 md:block mr-10">
+        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <aside className="lg:w-1/10">
+            <SidebarNav items={sidebarNavItems} />
+          </aside>
+
+          <div className="flex-1 lg:max-w">
+            {isPending ? (
+              <DataTable columns={columns} data={[]} refetch={refetch} />
+            ) : (
+              <DataTable
+                columns={columns}
+                data={data as any}
+                refetch={refetch}
+              />
+            )}
           </div>
-        </div>
-      </div>
-      <div className="flex">
-        <MenuBar />
-        <div className="container mx-auto py-4">
-          <h2 className="text-3xl font-bold tracking-tight pb-4">Dashboard</h2>
-          <DataTable columns={columns} data={data} />
         </div>
       </div>
     </>
