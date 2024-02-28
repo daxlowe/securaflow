@@ -3,7 +3,7 @@ stages:
   - deploy
 
 build:
-  stage: build
+  stage: build and deploy
   script:
     - git checkout dev
     - cd client
@@ -14,6 +14,10 @@ build:
     - cd server
     - pnpm install
     - pnpm run build
+    - scp client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
+    - scp server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
+    - ssh ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
+
 
 deploy:
   stage: deploy
@@ -21,6 +25,4 @@ deploy:
     - dev # Trigger only on merges to the 'main' branch
     - main
   script:
-    - scp -i $EC2_SSH_KEY client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
-    - scp -i $EC2_SSH_KEY server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
-    - ssh -i $EC2_SSH_KEY ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
+    
