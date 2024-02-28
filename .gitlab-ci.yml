@@ -1,5 +1,5 @@
 stages:
-  - build
+  - build and deploy
 
 build:
   stage: build and deploy
