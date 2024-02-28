@@ -1,12 +1,6 @@
 stages:
-  - install
   - build
   - deploy
-
-install:
-  stage: install
-  script:
-    - apt-get install -y nodejs
 
 build:
   stage: build
