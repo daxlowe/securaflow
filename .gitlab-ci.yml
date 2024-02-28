@@ -4,6 +4,13 @@ stages:
 
 build:
   stage: build
+  before_script:
+        - whoami
+        - pwd
+        - locate npm
+        - echo ${PATH}
+        - which npm
+        - ls -lh $(which npm)
   script:
     - cd client
     - npm install
