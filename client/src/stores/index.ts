@@ -4,11 +4,7 @@ export const permissions = [
     description: "Admin-level access to all resources.",
   },
   {
-    title: "Viewer",
-    description: "Can view and comment.",
-  },
-  {
-    title: "Developer",
-    description: "Can view, comment and edit.",
+    title: "User",
+    description: "No access to Organization page.",
   },
 ];
