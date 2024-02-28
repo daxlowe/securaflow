@@ -14,7 +14,7 @@ build:
     - pnpm install
     - pnpm run build
     - cd ~/.ssh
-    - scp -i securaflow_server.pem /home/gitlab-runner/builds/1rsw31ci3/0/securaflow/securaflow/client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
-    - scp -i securaflow_server.pem /home/gitlab-runner/builds/1rsw31ci3/0/securaflow/securaflow/server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
+    - scp -i securaflow_server.pem -r /home/gitlab-runner/builds/1rsw31ci3/0/securaflow/securaflow/client/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/client
+    - scp -i securaflow_server.pem -r /home/gitlab-runner/builds/1rsw31ci3/0/securaflow/securaflow/server/* ubuntu@$EC2_IP_ADDRESS:/home/ubuntu/securaflow/server
     - ssh -i securaflow_server.pem ubuntu@$EC2_IP_ADDRESS 'cd /home/ubuntu/securaflow/server && npm install && pm2 restart all && cd /home/ubuntu/securaflow/client && npm install'
     
