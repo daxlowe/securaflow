@@ -5,6 +5,7 @@ stages:
 build:
   stage: build
   script:
+    - git checkout -b dev origin/dev
     - cd client
     - npm install
     - npm run build
