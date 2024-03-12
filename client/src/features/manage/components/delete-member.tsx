@@ -7,14 +7,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { toast } from "@/components/ui/use-toast";
 import { User } from "@/types";
 import { capitalize } from "@/utils/capitalize";
-import { removeUsers } from "../utils/removeUsers";
 
-export default function DeleteMember({ user, groupId }: { user: User, groupId: string }) {
-  async function submit() {
-    const response = await removeUsers(groupId, user);
-    console.log(response);
+export default function DeleteMember({ user }: { user: User }) {
+  function submit() {
+    toast({
+      title: "Success",
+      description:
+        capitalize(user.first_name) +
+        " " +
+        capitalize(user.last_name) +
+        " deleted",
+    });
   }
   return (
     <AlertDialogContent>

@@ -1,10 +1,11 @@
 import mongoose, { mongo } from "mongoose";
 import { Request, Response } from "express";
 import Ticket from "../models/Ticket";
-import Group from "../models/Group";
+import Group, { GroupDocument } from "../models/Group";
 import User from "../models/User";
 import { addGroupsToUser } from "./userController";
 import { setTicketTeam } from "./ticketController";
+import { removeUsersFromGroupService } from "../services/groupServices";
 
 // GET all users in a specific group
 const getAllUsersInGroup = async (req: Request, res: Response) => {
@@ -47,19 +48,6 @@ const getAllGroups = async (req: Request, res: Response) => {
   res.status(200).json(tickets);
 };
 
-// GET a single ticket
-const getSingleTicket = async (req: Request, res: Response) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({ error: "No such ticket" });
-
-  const ticket = await Ticket.findById(id);
-
-  if (!ticket) return res.status(404).json({ error: "No such ticket" });
-
-  res.status(200).json(ticket);
-};
 
 // POST a new ticket
 const createGroup = async (req: Request, res: Response) => {
@@ -69,23 +57,15 @@ const createGroup = async (req: Request, res: Response) => {
 
   if (!name) emptyFields.push("Name");
 
-  if (!permissions) emptyFields.push("Permissions");
-
-  if (!users) emptyFields.push("users");
-
-  if (!tickets) emptyFields.push("tickets");
-
   if (emptyFields.length > 0)
     return res
       .status(400)
       .json({ error: `Missing required fields: ${emptyFields}`, emptyFields });
 
   try {
-    const group: Group = await Group.create({
+    const group: GroupDocument = await Group.create({
       name,
-      permissions,
-      users,
-      tickets,
+      users
     });
 
     const filter = { _id: { $in: [...tickets] } };
@@ -133,7 +113,21 @@ const getGroupData = async (req: Request, res: Response) => {
 
   if (!group) return res.status(404).json({ error: "No such group" });
 
-  res.status(200).json(group);
+  return res.status(200).json(group);
 };
+
+export async function modifyGroup(request: Request, response: Response) 
+{
+  const groupID = request.params.groupId;
+  const userID = request.params.userId;
+}
+
+export async function removeUsersFromGroup(request: Request, response: Response)
+{
+  const groupID = request.params.groupId;
+  const users = request.body.users;
+  const modifiedGroup = await removeUsersFromGroupService({_id: groupID}, users);
+  return response.status(200).json(modifiedGroup);
+}
 
 export { createGroup, addTicketsToGroup, getGroupData, getAllUsersInGroup };

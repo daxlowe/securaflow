@@ -1,12 +1,10 @@
 import { toast } from "@/components/ui/use-toast";
-import { permissions } from "@/stores";
 import { User } from "@/types";
 import { capitalize } from "@/utils/capitalize";
 
-export const modifyPermission = async (
+export const removeUsers = async (
   groupId: string,
-  user: User,
-  permission: number
+  user: User
 ) => {
   const options = {
     method: "PATCH",
@@ -14,24 +12,23 @@ export const modifyPermission = async (
       "Content-Type": "application/json",
       Authorization: `Bearer ${user.token}`,
     },
-    body: JSON.stringify({ permission: permission }),
+    body: JSON.stringify({ users: [user._id] }),
   };
 
   toast({
     title: "Success",
     description:
-      "Changed " +
       capitalize(user.first_name) +
-      "'s permission level to " +
-      capitalize(permissions[permission].title) + 
-      user._id,
+      " " +
+      capitalize(user.last_name) +
+      " deleted",
   });
 
   let response;
   try {
     //response = await fetch('http://localhost:3000/api/user')
     response = await fetch(
-      `http://localhost:3000/api/user/${groupId}/modify/${user._id}`,
+      `http://localhost:3000/api/group/${groupId}/removeUsers`,
       options
     );
   } catch (error) {

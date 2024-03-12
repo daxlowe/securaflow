@@ -13,6 +13,7 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
@@ -51,10 +52,8 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
       <CardHeader>
         <div className="flex">
           <div>
-            <CardTitle>Organization Members</CardTitle>
-            <CardDescription>
-              Manage members of your Organization
-            </CardDescription>
+            <CardTitle>Team Members</CardTitle>
+            <CardDescription>Manage your team members</CardDescription>
           </div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -108,6 +107,7 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
                     </PopoverTrigger>
                     <PopoverContent className="p-0" align="end">
                       <Command>
+                        <CommandInput placeholder="Select new role..." />
                         <CommandList>
                           <CommandEmpty>No roles found.</CommandEmpty>
                           <CommandGroup>
@@ -149,7 +149,7 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
                         <UserRoundMinus className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteMember user={user} groupId={groupId} />
+                    <DeleteMember user={user} />
                   </AlertDialog>
                 </div>
               </div>

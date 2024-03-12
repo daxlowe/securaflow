@@ -16,6 +16,7 @@ export interface User
 	{
 		dark_mode: Boolean;
 	}
+	role: string
 }
 
 interface UserModel extends Model<User> {
@@ -47,7 +48,12 @@ const userSchema = new Schema<User, UserModel>(
 		settings:
 		{
 			type: Boolean, 
-			require: true
+			required: true
+		}, 
+		role: 
+		{
+			type: String, 
+			required: true
 		}
     }
 );
