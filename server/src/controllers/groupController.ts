@@ -5,6 +5,7 @@ import Group, { GroupDocument } from "../models/Group";
 import User from "../models/User";
 import { addGroupsToUser } from "./userController";
 import { setTicketTeam } from "./ticketController";
+import { removeUsersFromGroupService } from "../services/groupServices";
 
 // GET all users in a specific group
 const getAllUsersInGroup = async (req: Request, res: Response) => {
@@ -112,7 +113,21 @@ const getGroupData = async (req: Request, res: Response) => {
 
   if (!group) return res.status(404).json({ error: "No such group" });
 
-  res.status(200).json(group);
+  return res.status(200).json(group);
 };
+
+export async function modifyGroup(request: Request, response: Response) 
+{
+  const groupID = request.params.groupId;
+  const userID = request.params.userId;
+}
+
+export async function removeUsersFromGroup(request: Request, response: Response)
+{
+  const groupID = request.params.groupId;
+  const users = request.body.users;
+  const modifiedGroup = await removeUsersFromGroupService({_id: groupID}, users);
+  return response.status(200).json(modifiedGroup);
+}
 
 export { createGroup, addTicketsToGroup, getGroupData, getAllUsersInGroup };

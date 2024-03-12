@@ -149,7 +149,7 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
                         <UserRoundMinus className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteMember user={user} />
+                    <DeleteMember user={user} groupId={groupId} />
                   </AlertDialog>
                 </div>
               </div>
