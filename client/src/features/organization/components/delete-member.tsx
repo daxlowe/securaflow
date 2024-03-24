@@ -11,7 +11,13 @@ import { User } from "@/types";
 import { capitalize } from "@/utils/capitalize";
 import { removeUsers } from "../utils/removeUsers";
 
-export default function DeleteMember({ user, groupId }: { user: User, groupId: string }) {
+export default function DeleteMember({
+  user,
+  groupId,
+}: {
+  user: User;
+  groupId: string;
+}) {
   async function submit() {
     const response = await removeUsers(groupId, user);
     console.log(response);

@@ -1,46 +1,83 @@
 import {
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogDescription,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function AddMember() {
-  const accessCode = "3W!n86";
+  function onSubmit() {
+    // Retrieve input values
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
 
-  const copyToClipboard = () => {
-    navigator.clipboard
-      .writeText(accessCode)
-      .then(() => {
-        toast({
-          title: "Success",
-          description: "Access code copied to clipboard",
-        });
-      })
-      .catch(() => {
-        toast({ title: "Error", description: "Error copying to clipboard" });
+    // Perform null checks
+    if (!emailInput || !passwordInput) {
+      console.error("Email or password input not found.");
+      return;
+    }
+
+    // Validate email format
+    const email = emailInput.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
       });
-  };
+      emailInput.focus();
+      return;
+    }
+
+    // Retrieve password value after null check
+    const password = passwordInput.value;
+
+    // Display form submission toast
+    toast({
+      title: "Form Submitted",
+      description: `Email: ${email}, Password: ${password}`,
+    });
+  }
+
   return (
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Invite to Join</AlertDialogTitle>
-        <AlertDialogDescription>
-          This code can be used to join this organization
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <div>
-        <Button variant="link" className="text-3xl" onClick={copyToClipboard}>
-          {accessCode}
-        </Button>
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Create User</DialogTitle>
+        <DialogDescription>
+          Create an Account for Organization.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="email" className="text-right">
+            Email
+          </Label>
+          <Input
+            id="email"
+            defaultValue="name@domain.com"
+            className="col-span-3"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="passowrd" className="text-right">
+            Password
+          </Label>
+          <Input id="password" defaultValue="temp" className="col-span-3" />
+        </div>
       </div>
-      <AlertDialogFooter>
-        <AlertDialogAction>Continue</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
+      <DialogFooter>
+        <DialogClose>
+          <Button type="submit" onClick={onSubmit}>
+            Save changes
+          </Button>
+        </DialogClose>
+      </DialogFooter>
+    </DialogContent>
   );
 }

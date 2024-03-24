@@ -52,7 +52,6 @@ export function ProfileForm() {
   useEffect(() => {
     async function fetchData() {
       const data: User = await getUserData(user);
-      console.log(data);
       const initialValues: Partial<ProfileFormValues> = {
         name: data.first_name + " " + data.last_name,
         email: data.email,

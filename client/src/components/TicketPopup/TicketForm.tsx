@@ -100,7 +100,6 @@ async function getAssigneesData(user: User, teams: Group[] | undefined) {
     },
     []
   );
-  console.log(uniqueAssignees);
 
   return uniqueAssignees;
 }

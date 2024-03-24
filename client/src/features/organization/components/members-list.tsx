@@ -30,6 +30,7 @@ import { modifyPermission } from "../utils/modifyPermission";
 import { UserRoundMinus, UserRoundPlus } from "lucide-react";
 import DeleteMember from "./delete-member";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AddMember from "./add-member";
 
 interface TeamMembersProps {
@@ -56,8 +57,8 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
               Manage members of your Organization
             </CardDescription>
           </div>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+          <Dialog>
+            <DialogTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
@@ -65,9 +66,9 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
               >
                 <UserRoundPlus className="h-4 w-4" />
               </Button>
-            </AlertDialogTrigger>
+            </DialogTrigger>
             <AddMember />
-          </AlertDialog>
+          </Dialog>
         </div>
       </CardHeader>
       <ScrollArea className="h-[70vh]">
