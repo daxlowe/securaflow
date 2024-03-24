@@ -14,14 +14,10 @@ import { Input } from "@/components/ui/input";
 export default function AddMember() {
   function onSubmit() {
     // Retrieve input values
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-
-    // Perform null checks
-    if (!emailInput || !passwordInput) {
-      console.error("Email or password input not found.");
-      return;
-    }
+    const emailInput = document.getElementById("email") as HTMLInputElement;
+    const passwordInput = document.getElementById(
+      "password"
+    ) as HTMLInputElement;
 
     // Validate email format
     const email = emailInput.value;
@@ -35,7 +31,7 @@ export default function AddMember() {
       return;
     }
 
-    // Retrieve password value after null check
+    // Retrieve password value
     const password = passwordInput.value;
 
     // Display form submission toast
