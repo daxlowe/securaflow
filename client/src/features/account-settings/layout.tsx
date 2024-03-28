@@ -7,7 +7,7 @@ const sidebarNavItems = [
     href: "/settings/profile",
   },
   {
-    title: "Organizations",
+    title: "Teams",
     href: "/settings/teams",
   },
   {
