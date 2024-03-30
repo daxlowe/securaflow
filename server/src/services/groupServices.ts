@@ -1,6 +1,5 @@
 import Group, {GroupDocument} from '../models/Group';
-import { omit } from 'lodash';
-import { FilterQuery, Types, UpdateQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery } from 'mongoose';
 
 export async function createGroup(input: Omit<GroupDocument, 'createdAt' | 'updatedAt'> )
 {
@@ -22,5 +21,28 @@ export async function removeUsersFromGroupService(query: FilterQuery<GroupDocume
 {
     console.log("Query", query);
     console.log("UsersToRemove", usersToRemove);
-    return await Group.findByIdAndUpdate(query, {$pull: { users: {$in: usersToRemove }}});
+    return await Group.findByIdAndUpdate(query, {
+        $pull: {
+            users: {
+                $in: usersToRemove
+            }
+        }
+    },
+    {
+        new: true
+    });
+}
+
+export async function addUserToGroupService(query: FilterQuery<GroupDocument>, usersToAdd: Array<string>)
+{
+    return await Group.findByIdAndUpdate(query, {
+        $addToSet: {
+            users: {
+                $each: usersToAdd
+            }
+        }
+    },
+    {
+        new: true
+    });
 }

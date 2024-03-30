@@ -5,7 +5,7 @@ import Group, { GroupDocument } from "../models/Group";
 import User from "../models/User";
 import { addGroupsToUser } from "./userController";
 import { setTicketTeam } from "./ticketController";
-import { removeUsersFromGroupService } from "../services/groupServices";
+import { removeUsersFromGroupService, addUserToGroupService } from "../services/groupServices";
 
 // GET all users in a specific group
 const getAllUsersInGroup = async (req: Request, res: Response) => {
@@ -127,6 +127,14 @@ export async function removeUsersFromGroup(request: Request, response: Response)
   const groupID = request.params.groupId;
   const users = request.body.users;
   const modifiedGroup = await removeUsersFromGroupService({_id: groupID}, users);
+  return response.status(200).json(modifiedGroup);
+}
+
+export async function addUsersToGroup(req: Request, response: Response)
+{
+  const groupId = req.params.groupId;
+  const users = req.body.users;
+  const modifiedGroup = await addUserToGroupService({ _id: groupId }, users);
   return response.status(200).json(modifiedGroup);
 }
 

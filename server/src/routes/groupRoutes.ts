@@ -5,6 +5,7 @@ import {
   getAllUsersInGroup,
   modifyGroup,
   removeUsersFromGroup,
+  addUsersToGroup,
 } from "../controllers/groupController";
 import { requireAuth } from "../middleware/requireAuth";
 
@@ -19,5 +20,7 @@ router.get("/:groupId/users", getAllUsersInGroup);
 router.patch("/:groupId/modify/:userId", modifyGroup)
 
 router.patch("/:groupId/removeUsers", removeUsersFromGroup);
+
+router.patch("/:groupId/addUsers", addUsersToGroup);
 
 export default router;
