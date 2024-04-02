@@ -7,7 +7,8 @@ import
     createTicket, 
     deleteTicket,
     updateTicket,
-    getCveTicketInfo
+    getCveTicketInfo,
+    getJiraTicket
 } from '../controllers/ticketController';
 import { body } from 'express-validator';
 import { requireAuth } from '../middleware/requireAuth';
@@ -54,6 +55,9 @@ router.patch('/:id', updateTicket);
 
 // GET info related to a CVE
 router.get('/cve/:cveId', getCveTicketInfo);
+
+// GET ticket info from Jira
+router.get('/import/:jiraID', getJiraTicket);
 
 
 // Other user routes (POST, PUT, DELETE, etc.)

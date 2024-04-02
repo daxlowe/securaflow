@@ -199,6 +199,12 @@ const getCveInfo = async (
   }
 }
 
+const getJiraTicket = async (
+  jiraID: string,
+) => {
+
+};
+
 export {
   getAllPossibleTickets,
   getAllAssignedTickets,
@@ -208,4 +214,5 @@ export {
   updateTicket,
   setTicketTeam,
   getCveTicketInfo,
+  getJiraTicket
 };
