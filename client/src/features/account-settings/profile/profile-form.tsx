@@ -29,8 +29,7 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "First Name must not be longer than 30 characters.",
     })
-    .optional()
-    .nullable(),
+    .optional(),
   last_name: z
     .string()
     .min(2, {
@@ -39,9 +38,8 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "Last Name must not be longer than 30 characters.",
     })
-    .optional()
-    .nullable(),
-  email: z.string().email().optional().nullable(),
+    .optional(),
+  email: z.string().email().optional(),
   password: z
     .string()
     .min(6, {
@@ -50,8 +48,7 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "Password must not be longer than 30 characters.",
     })
-    .optional()
-    .nullable(),
+    .optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -113,10 +110,10 @@ export function ProfileForm() {
 
       // Construct the payload with null values for fields not filled
       const payload: ProfileFormValues = {
-        first_name: data.first_name || null,
-        last_name: data.last_name || null,
-        email: data.email || null,
-        password: data.password || null,
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        password: data.password || "",
       };
 
       // Remove null values from payload
@@ -156,7 +153,10 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder={defaultValues.first_name} {...field} />
+                <Input
+                  placeholder={defaultValues.first_name || ""}
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 This is the first name that will be displayed on your profile
@@ -173,7 +173,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input placeholder={defaultValues.last_name} {...field} />
+                <Input placeholder={defaultValues.last_name || ""} {...field} />
               </FormControl>
               <FormDescription>
                 This is the last name that will be displayed on your profile and
@@ -190,7 +190,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder={defaultValues.email} {...field} />
+                <Input placeholder={defaultValues.email || ""} {...field} />
               </FormControl>
               <FormDescription>
                 This is the email tied to your account.
