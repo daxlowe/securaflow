@@ -47,20 +47,33 @@ const signupUser = async (request: Request, response: Response) => {
 };
 
 const updateUser = async (request: Request, response: Response) => {
-  console.log(request.body);
-  const id = request.body.user;
-  console.log(id);
   try {
-    const password = await User.validatePassword(request.body.password);
-    const data = {
-      first_name: request.body.first_name,
-      last_name: request.body.last_name,
-      email: request.body.email,
-      password: password,
-    };
-    const user = await User.findByIdAndUpdate(id, data);
+    const userId = request.body.user;
+    const userData = request.body;
+
+    // Construct the data object based on the presence of each field
+    const data: { [key: string]: any } = {};
+    if (userData.first_name) {
+      data.first_name = userData.first_name;
+    }
+    if (userData.last_name) {
+      data.last_name = userData.last_name;
+    }
+    if (userData.email) {
+      data.email = userData.email;
+    }
+    if (userData.password) {
+      const password = await User.validatePassword(userData.password);
+      data.password = password;
+    }
+
+    console.log(data);
+    // Update the user only with the fields that are present and not null
+    const user = await User.findByIdAndUpdate(userId, data);
+
     response.status(200).json(user);
   } catch (error: any) {
+    console.error("Error updating user:", error.message);
     response.status(400).json({ error: error.message });
   }
 };
