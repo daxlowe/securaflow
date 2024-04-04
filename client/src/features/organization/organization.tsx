@@ -2,23 +2,35 @@ import Navbar from "@/components/navbar/navbar";
 import { TeamMembers } from "./components/members-list";
 import { SidebarNav } from "@/components/menuBar/sidebar-nav";
 import { useQuery } from "@tanstack/react-query";
-import { User } from "@/types";
-import getUsersInGroup from "@/utils/getUsersInGroup";
+import { Group, User } from "@/types";
+import getAllUsers from "@/utils/getAllUsers";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import Loading from "@/components/Loading";
+import getAllGroups from "@/utils/getAllGroups";
 
-async function getData(user: User, groupId: string) {
-  return getUsersInGroup(user, groupId);
+async function getUsers(user: User) {
+  return getAllUsers(user);
+}
+
+async function getGroups(user: User) {
+  return getAllGroups(user);
 }
 
 export default function Organization() {
-  const groupId = "65712e165fc8178ec0758361";
-
   const { user } = useAuthContext();
 
-  const { error, isPending, data } = useQuery<User[]>({
-    queryKey: [groupId + "Data"],
-    queryFn: () => getData(user, groupId),
+  const {
+    error: userError,
+    isPending: userIsPending,
+    data: userData,
+  } = useQuery<User[]>({
+    queryKey: ["AllUsers"],
+    queryFn: () => getUsers(user),
+  });
+
+  const { isPending: groupdIsPending, data: groupData } = useQuery<Group[]>({
+    queryKey: ["AllGroups"],
+    queryFn: () => getGroups(user),
   });
 
   const sidebarNavItems = [
@@ -32,7 +44,7 @@ export default function Organization() {
     },
   ];
 
-  if (isPending) {
+  if (userIsPending || groupdIsPending) {
     <>
       <Navbar />
       <div className="hidden space-y-6 p-3 pb-16 md:block mr-10">
@@ -48,12 +60,12 @@ export default function Organization() {
     </>;
   }
 
-  if (error) {
-    console.log(error.message);
-    return <>{error.message}</>;
+  if (userError) {
+    console.log(userError.message);
+    return <>{userError.message}</>;
   }
 
-  if (data) {
+  if (userData && groupData) {
     return (
       <>
         <Navbar />
@@ -63,7 +75,7 @@ export default function Organization() {
               <SidebarNav items={sidebarNavItems} />
             </aside>
             <div className="w-[600px]">
-              <TeamMembers data={data} groupId={groupId}></TeamMembers>
+              <TeamMembers users={userData} groups={groupData}></TeamMembers>
             </div>
           </div>
         </div>

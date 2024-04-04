@@ -78,6 +78,30 @@ const updateUser = async (request: Request, response: Response) => {
   }
 };
 
+const deleteUser = async (request: Request, response: Response) => {
+  try {
+    // Retrieve user ID from request parameters or request body
+    const { userId } = request.params; // Assuming user ID is passed as a route parameter
+
+    // Check if user exists
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return response.status(404).json({ error: "User not found" });
+    }
+
+    // Delete the user
+    await User.deleteOne({ _id: userId });
+
+    // Respond with success message
+    return response.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    // Respond with error message
+    return response.status(500).json({ error: "Internal server error" });
+  }
+};
+
 // Function to add any number of tickets to a user's tickets array
 const addGroupsToUser = async (
   userId: mongoose.Types.ObjectId,
@@ -125,6 +149,25 @@ const getUserGroups = async (request: Request, res: Response) => {
   }
 };
 
+const getAllUsers = async (request: Request, response: Response) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find();
+
+    // Check if users were found
+    if (!users || users.length === 0) {
+      return response.status(404).json({ message: "No users found" });
+    }
+
+    // If users were found, send them as a response
+    return response.status(200).json(users);
+  } catch (error) {
+    // If an error occurred, return an error response
+    console.error("Error fetching users:", error);
+    return response.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {
   addGroupsToUser,
   loginUser,
@@ -132,4 +175,6 @@ export {
   updateUser,
   getUserData,
   getUserGroups,
+  deleteUser,
+  getAllUsers,
 };

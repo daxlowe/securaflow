@@ -7,6 +7,8 @@ import {
   updateUser,
   getUserData,
   getUserGroups,
+  deleteUser,
+  getAllUsers,
 } from "../controllers/userController";
 
 const router = express.Router();
@@ -22,6 +24,10 @@ router.get("/", getUserData);
 router.patch("/", updateUser);
 
 router.get("/groups", getUserGroups);
+
+router.get("/all", getAllUsers);
+
+router.delete("/:userId", deleteUser);
 
 // Other user routes (POST, PUT, DELETE, etc.)
 

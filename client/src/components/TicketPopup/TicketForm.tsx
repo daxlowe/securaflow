@@ -31,8 +31,8 @@ import { TicketFormValues } from "@/features/dashboard/components/data-table-too
 import { useEffect, useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useQuery } from "@tanstack/react-query";
+import { getUsersGroups } from "@/utils/getUsersGroups";
 import getUsersInGroup from "@/utils/getUsersInGroup";
-import { getGroups } from "@/utils/getGroups";
 
 type TicketFormKey = keyof TicketFormValues;
 
@@ -52,7 +52,7 @@ interface TicketFormProps {
 }
 
 async function getTeamsData(user: User) {
-  return getGroups(user);
+  return getUsersGroups(user);
 }
 
 interface UserWithTeams extends User {

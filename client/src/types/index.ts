@@ -4,7 +4,7 @@ export type Group = {
   _id: string;
   name: string;
   permissions: Permissions;
-  users: Array<User>;
+  users: Array<string>;
 };
 
 export type Permissions = {

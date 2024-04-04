@@ -5,7 +5,10 @@ import Group, { GroupDocument } from "../models/Group";
 import User from "../models/User";
 import { addGroupsToUser } from "./userController";
 import { setTicketTeam } from "./ticketController";
-import { removeUsersFromGroupService, addUserToGroupService } from "../services/groupServices";
+import {
+  removeUsersFromGroupService,
+  addUserToGroupService,
+} from "../services/groupServices";
 
 // GET all users in a specific group
 const getAllUsersInGroup = async (req: Request, res: Response) => {
@@ -38,17 +41,6 @@ const getAllUsersInGroup = async (req: Request, res: Response) => {
   }
 };
 
-// GET all tickets
-const getAllGroups = async (req: Request, res: Response) => {
-  const user_id = req.body.user._id;
-  const groups = await User.findById(user_id).select("groups");
-  console.log(groups);
-  const tickets = await Ticket.find({ team: [groups] });
-  console.log(tickets);
-  res.status(200).json(tickets);
-};
-
-
 // POST a new ticket
 const createGroup = async (req: Request, res: Response) => {
   const { name, permissions, users, tickets } = req.body;
@@ -65,7 +57,7 @@ const createGroup = async (req: Request, res: Response) => {
   try {
     const group: GroupDocument = await Group.create({
       name,
-      users
+      users,
     });
 
     const filter = { _id: { $in: [...tickets] } };
@@ -116,26 +108,73 @@ const getGroupData = async (req: Request, res: Response) => {
   return res.status(200).json(group);
 };
 
-export async function modifyGroup(request: Request, response: Response) 
-{
+export async function modifyGroup(request: Request, response: Response) {
   const groupID = request.params.groupId;
   const userID = request.params.userId;
 }
 
-export async function removeUsersFromGroup(request: Request, response: Response)
-{
+export async function modifyAllGroups(request: Request, response: Response) {
+  try {
+    // Loop through each object in request.body and update the corresponding document
+    for (const groupData of request.body) {
+      const { _id, ...updateData } = groupData; // Extract _id and other update fields
+
+      // Update the document with the given _id
+      await Group.updateOne({ _id }, { $set: updateData });
+    }
+
+    response.json({ message: `${request.body.length} documents updated` });
+  } catch (error) {
+    console.error("Error updating documents:", error);
+    response
+      .status(500)
+      .json({ error: "An error occurred while updating documents" });
+  }
+}
+
+export async function removeUsersFromGroup(
+  request: Request,
+  response: Response
+) {
   const groupID = request.params.groupId;
   const users = request.body.users;
-  const modifiedGroup = await removeUsersFromGroupService({_id: groupID}, users);
+  const modifiedGroup = await removeUsersFromGroupService(
+    { _id: groupID },
+    users
+  );
   return response.status(200).json(modifiedGroup);
 }
 
-export async function addUsersToGroup(req: Request, response: Response)
-{
+export async function addUsersToGroup(req: Request, response: Response) {
   const groupId = req.params.groupId;
   const users = req.body.users;
   const modifiedGroup = await addUserToGroupService({ _id: groupId }, users);
   return response.status(200).json(modifiedGroup);
 }
 
-export { createGroup, addTicketsToGroup, getGroupData, getAllUsersInGroup };
+const getAllGroups = async (request: Request, response: Response) => {
+  try {
+    // Fetch all groups from the database
+    const groups = await Group.find();
+
+    // Check if groups were found
+    if (!groups || groups.length === 0) {
+      return response.status(404).json({ message: "No users found" });
+    }
+
+    // If groups were found, send them as a response
+    return response.status(200).json(groups);
+  } catch (error) {
+    // If an error occurred, return an error response
+    console.error("Error fetching users:", error);
+    return response.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export {
+  createGroup,
+  addTicketsToGroup,
+  getGroupData,
+  getAllUsersInGroup,
+  getAllGroups,
+};

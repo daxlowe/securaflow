@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Group, User } from "@/types";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { getGroups } from "@/utils/getGroups";
+import { getUsersGroups } from "@/utils/getUsersGroups";
 
 async function getData(user: User) {
-  return getGroups(user);
+  return getUsersGroups(user);
 }
 
 export function OrgsForm() {
