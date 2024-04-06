@@ -23,12 +23,12 @@ export function OrgsForm() {
     <>
       {isPending ? (
         <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-          Teams You Are Apart Of
+          Your Teams
         </h2>
       ) : (
         <>
           <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            Teams You Are Apart Of
+            Your Teams
           </h2>
           <ul className="my-6 ml-6 list-disc [&>li]:mt-2">
             {data.map((group) => (
