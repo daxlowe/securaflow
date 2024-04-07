@@ -11,6 +11,7 @@ import { CreateTicket } from "@/components/TicketPopup/Create";
 import { priorities, statuses } from "../data/data";
 import { ticketSchema } from "@/types";
 import { CreateTicketFromCVE } from "@/components/TicketPopup/CreateCVE";
+import { CreateTicketFromJira } from "@/components/TicketPopup/CreateJira";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { Task } from "../types";
 
@@ -98,6 +99,22 @@ export function DataTableToolbar<TData>({
         </DialogTrigger>
         <DialogContent>
           <CreateTicketFromCVE refetch={refetch} />
+        </DialogContent>
+      </Dialog>
+      {/* Dialog for "From JIRA" */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto h-8 lg:flex mr-2"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            JIRA
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <CreateTicketFromJira refetch={refetch} />
         </DialogContent>
       </Dialog>
 
