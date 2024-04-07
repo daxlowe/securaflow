@@ -48,6 +48,7 @@ export type User = {
   first_name: string;
   last_name: string;
   token?: string;
+  roles?: string[];
 };
 
 const ticketSchema = z.object({

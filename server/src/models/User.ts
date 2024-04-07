@@ -11,6 +11,7 @@ export interface User {
   last_name: string;
   email: string;
   password: string;
+  roles?: Array<"admin" | "user">;
 }
 
 interface UserModel extends Model<User> {
@@ -33,6 +34,10 @@ const userSchema = new Schema<User, UserModel>({
   password: {
     type: String,
     required: true,
+  },
+  roles: {
+    type: [String],
+    required: false,
   },
 });
 

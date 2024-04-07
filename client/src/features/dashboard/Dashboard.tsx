@@ -21,11 +21,16 @@ export default function Dashboard() {
       title: "Dashboard",
       href: "/",
     },
-    {
-      title: "Manage",
-      href: "/manage",
-    },
   ];
+
+  if ((user as User).roles?.includes("admin")) {
+    sidebarNavItems.push(
+      {
+        title: "Manage",
+        href: "/manage",
+      },
+    );
+  }
 
   const { isPending, data, refetch } = useQuery<Task[]>({
     queryKey: ["taskData"],
