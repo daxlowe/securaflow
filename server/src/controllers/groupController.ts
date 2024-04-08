@@ -43,40 +43,42 @@ const getAllUsersInGroup = async (req: Request, res: Response) => {
 
 // POST a new ticket
 const createGroup = async (req: Request, res: Response) => {
-  const { name, permissions, users, tickets } = req.body;
-
-  let emptyFields = [];
-
-  if (!name) emptyFields.push("Name");
-
-  if (emptyFields.length > 0)
-    return res
-      .status(400)
-      .json({ error: `Missing required fields: ${emptyFields}`, emptyFields });
+  const { name } = req.body;
 
   try {
-    const group: GroupDocument = await Group.create({
-      name,
-      users,
-    });
+    // Create a new group with the provided name
+    const group: GroupDocument = await Group.create({ name });
 
-    const filter = { _id: { $in: [...tickets] } };
-    const updateTicket = {
-      $set: {
-        team: group._id,
-      },
-    };
-    // Add the new ticket to each assignee's array of tickets
-    if (group.users && group.users.length > 0) {
-      await Promise.all([
-        group.users.map((userId) => addGroupsToUser(userId, [group._id])),
-        Ticket.updateMany(filter, updateTicket),
-      ]);
+    // Respond with the created group
+    res.status(201).json(group);
+  } catch (error) {
+    // If an error occurs, respond with a 400 status and the error message
+    console.error("Error creating group:", error);
+    res.status(400).json({ error: "Failed to create group" });
+  }
+};
+
+const deleteGroup = async (request: Request, response: Response) => {
+  try {
+    // Retrieve user ID from request parameters or request body
+    const { groupId } = request.params; // Assuming user ID is passed as a route parameter
+
+    // Check if user exists
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return response.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json(group);
+    // Delete the user
+    await Group.deleteOne({ _id: groupId });
+
+    // Respond with success message
+    return response.status(200).json({ message: "Team deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: error });
+    console.error("Error deleting team:", error);
+    // Respond with error message
+    return response.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -177,4 +179,5 @@ export {
   getGroupData,
   getAllUsersInGroup,
   getAllGroups,
+  deleteGroup,
 };

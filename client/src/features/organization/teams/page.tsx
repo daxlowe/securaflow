@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { Users } from "./users";
+import { Teams } from "./teams";
 
 export default function SettingsAppearancePage() {
   return (
@@ -12,7 +12,7 @@ export default function SettingsAppearancePage() {
         </p>
       </div>
       <Separator />
-      <Users />
+      <Teams />
     </div>
   );
 }

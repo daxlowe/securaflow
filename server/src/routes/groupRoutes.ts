@@ -8,6 +8,7 @@ import {
   addUsersToGroup,
   getAllGroups,
   modifyAllGroups,
+  deleteGroup,
 } from "../controllers/groupController";
 import { requireAuth } from "../middleware/requireAuth";
 
@@ -15,7 +16,9 @@ const router = express.Router();
 
 router.get("/all", getAllGroups);
 
-router.post("/create", createGroup);
+router.post("/", createGroup);
+
+router.delete("/:groupId", deleteGroup);
 
 router.get("/:id", getGroupData);
 

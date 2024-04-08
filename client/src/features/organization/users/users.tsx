@@ -1,6 +1,4 @@
-import Navbar from "@/components/navbar/navbar";
 import { TeamMembers } from "../components/members-list";
-import { SidebarNav } from "@/components/menuBar/sidebar-nav";
 import { useQuery } from "@tanstack/react-query";
 import { Group, User } from "@/types";
 import getAllUsers from "@/utils/getAllUsers";
@@ -16,7 +14,7 @@ async function getGroups(user: User) {
   return getAllGroups(user);
 }
 
-export function Organization() {
+export function Users() {
   const { user } = useAuthContext();
 
   const {
@@ -33,18 +31,7 @@ export function Organization() {
     queryFn: () => getGroups(user),
   });
 
-  const sidebarNavItems = [
-    {
-      title: "Dashboard",
-      href: "/",
-    },
-    {
-      title: "Manage",
-      href: "/manage",
-    },
-  ];
-
-  if (userIsPending) {
+  if (userIsPending || groupdIsPending) {
     <>
       <div className="hidden p-3 pb-16 md:block mr-10">
         <div className="flex flex-col lg:flex-row lg:space-x-12 lg:space-y-0">

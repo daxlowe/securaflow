@@ -6,7 +6,6 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { User } from "@/types";
 import Navbar from "@/components/navbar/navbar";
 import { useQuery } from "@tanstack/react-query";
-import { SidebarNav } from "@/components/menuBar/sidebar-nav";
 import { Task } from "./types";
 
 async function getData(user: User) {
@@ -24,7 +23,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="hidden space-y-6 p-3 pb-16 md:block mr-10">
+      <div className="hidden space-y-6 p-3 pb-16 md:block mx-10">
         <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
           <div className="flex-1 lg:max-w">
             {isPending ? (

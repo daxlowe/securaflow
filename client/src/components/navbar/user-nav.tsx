@@ -87,7 +87,7 @@ export function UserNav() {
           <DropdownMenuItem>User Settings</DropdownMenuItem>
         </Link>
         {userData && userData.roles?.includes("admin") ? (
-          <Link to="/settings/profile">
+          <Link to="/manage/users">
             <DropdownMenuItem>Admin Panel</DropdownMenuItem>
           </Link>
         ) : (

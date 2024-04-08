@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom"; // Assuming you have react-router-dom installed
 import SettingsLayout from "./layout";
-import { Organization } from "./users/organization";
+import { Users } from "./users/users";
+import { Teams } from "./teams/teams";
 
 import Navbar from "@/components/navbar/navbar";
 
@@ -12,7 +13,8 @@ export default function Settings() {
     <>
       <Navbar />
       <SettingsLayout>
-        {pathname === "/manage/users" && <Organization />}
+        {pathname === "/manage/users" && <Users />}
+        {pathname === "/manage/teams" && <Teams />}
       </SettingsLayout>
     </>
   );
