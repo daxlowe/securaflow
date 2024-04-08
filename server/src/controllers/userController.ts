@@ -66,6 +66,11 @@ const updateUser = async (request: Request, response: Response) => {
       const password = await User.validatePassword(userData.password);
       data.password = password;
     }
+    if (userData.roles) {
+      // Should be an array of strings. Empty array to remove all roles.
+      // Options include "user" and "admin".
+      data.roles = userData.roles;
+    }
 
     console.log(data);
     // Update the user only with the fields that are present and not null
