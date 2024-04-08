@@ -36,6 +36,14 @@ export default function App() {
             element={user ? <Organization /> : <Navigate to="/login" />}
           />
           <Route
+            path="/manage/users"
+            element={user ? <Organization /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage/teams"
+            element={user ? <Organization /> : <Navigate to="/login" />}
+          />
+          <Route
             path="/settings/profile"
             element={user ? <AccountSettings /> : <Navigate to="/login" />}
           />

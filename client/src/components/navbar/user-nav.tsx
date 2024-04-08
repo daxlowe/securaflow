@@ -13,7 +13,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { Link } from "react-router-dom";
 import { getUserData } from "@/utils/getUserData";
 import { User } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 async function getUser(user: User) {
   const data = await getUserData(user);
@@ -31,6 +31,23 @@ function getInitials(name: string) {
 export function UserNav() {
   const { logout } = useLogout();
   const { user } = useAuthContext();
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getUserData(user);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+
+    if (user) {
+      fetchData();
+    }
+  }, [user]); // Run this effect whenever the user changes
+
   const [userInitials, setUserInitials] = useState("");
 
   getUser(user).then((userData) => {
@@ -39,9 +56,6 @@ export function UserNav() {
     );
     setUserInitials(initials);
   });
-
-  //@ts-expect-error user is type never
-  const email = user.email;
 
   const handleLogout = () => {
     logout();
@@ -60,15 +74,25 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
+            <h1>
+              {userData ? userData.first_name + " " + userData.last_name : ""}
+            </h1>
             <p className="text-xs leading-none text-muted-foreground">
-              {email}
+              {userData ? userData.email : ""}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <Link to="/settings/profile">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>User Settings</DropdownMenuItem>
         </Link>
+        {userData && userData.roles?.includes("admin") ? (
+          <Link to="/settings/profile">
+            <DropdownMenuItem>Admin Panel</DropdownMenuItem>
+          </Link>
+        ) : (
+          <></>
+        )}
         <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

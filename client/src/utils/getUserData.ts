@@ -24,7 +24,7 @@ export const getUserData = async (user: User) => {
     throw new Error(response.statusText);
   }
 
-  const userData: User = await response.json();
+  const userData: any = await response.json();
 
   return userData;
 };

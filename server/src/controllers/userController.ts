@@ -119,14 +119,28 @@ const addGroupsToUser = async (
 
 const getUserData = async (request: Request, response: Response) => {
   const id = request.body.user;
-  if (!mongoose.Types.ObjectId.isValid(id))
+
+  // Check if the provided ID is a valid MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return response.status(404).json({ error: "No such user" });
+  }
 
-  const user = await User.findById(id).select("_id first_name last_name email");
+  try {
+    // Find the user by ID, excluding the password field
+    const user = await User.findById(id).select("-password");
 
-  if (!user) return response.status(404).json({ error: "No such user" });
+    // If user is not found, return 404 status with an error message
+    if (!user) {
+      return response.status(404).json({ error: "No such user" });
+    }
 
-  response.status(200).json(user);
+    // If user is found, return 200 status with the user data
+    response.status(200).json(user);
+  } catch (error) {
+    // If an error occurs during database query or processing, return 500 status with the error
+    console.error("Error fetching user data:", error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 const getUserGroups = async (request: Request, res: Response) => {
