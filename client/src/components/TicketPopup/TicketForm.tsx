@@ -332,7 +332,7 @@ export function TicketForm({
                                 </ScrollArea>
                               </DropdownMenuContent>
                             </DropdownMenu>
-                          ) : (
+                          ) : name !== "vuln_json" ? (
                             <Input
                               {...register(name as keyof TicketFormValues)}
                               onChange={(e) =>
@@ -343,6 +343,10 @@ export function TicketForm({
                               }
                               defaultValue={previous}
                             />
+                          ) : (
+                            <code>
+                              {JSON.stringify(previous, null, 2)}
+                            </code> 
                           )}
                         </FormControl>
                         <FormDescription></FormDescription>

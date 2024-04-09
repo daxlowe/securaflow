@@ -81,6 +81,10 @@ let formFields = [
     options: selectOptionsStatus,
   },
   { name: "comments", label: "Comment" },
+  {
+    name: "vuln_json",
+    label: "All Vuln Info",
+  },
 ];
 
 async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
@@ -91,19 +95,25 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
       if (field.name == "vuln_cve_id") {
         field = {
           ...field,
-          previous: response.cveId,
+          previous: response.summary.cveId,
         };
       }
       if (field.name == "vuln_priority") {
         field = {
           ...field,
-          previous: capitalize(response.baseSeverity),
+          previous: capitalize(response.summary.baseSeverity),
         };
       }
       if (field.name == "description") {
         field = {
           ...field,
-          previous: response.description,
+          previous: response.summary.description,
+        };
+      }
+      if (field.name == "vuln_json") {
+        field = {
+          ...field,
+          previous: response.all,
         };
       }
       return field;
