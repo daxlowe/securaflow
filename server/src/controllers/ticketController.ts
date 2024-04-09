@@ -204,6 +204,26 @@ const getCveInfo = async (
 
 const getJiraTicket = async (req: Request, resp: Response) => {
   const { username, apiKey, jiraId } = req.body;
+  const url = `https://securaflow.atlassian.net/rest/api/2/issue/${jiraId}`
+  const auth = Buffer.from(username + ":" + apiKey).toString('base64');
+  const response = await fetch(url,
+    {
+      method: "GET",
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Accept': 'application/json'
+      }
+    }
+  );
+
+  if(!response.ok) {
+    return null;
+  }
+
+  const data = response.json();
+  console.log(data);
+
+
 };
 
 export {
