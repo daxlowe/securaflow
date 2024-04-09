@@ -218,7 +218,8 @@ const getJiraTicket = async (req: Request, resp: Response) => {
     );
 
     if(!response.ok) {
-      return null;
+      resp.status(404).send('Error fetching Jira ticket');
+      return;
     }
 
     const data = await response.json();
@@ -226,14 +227,15 @@ const getJiraTicket = async (req: Request, resp: Response) => {
 
     const title = data.fields.summary;
     const description = data.fields.description;
-    const priority = data.fields.priority;
+    const priority = data.fields.priority.name;
 
-    return {
+    resp.status(200).json({
       jiraInfo: {title, description, priority}
-    };
+    });
   } catch (error) {
-    console.error("Failed to import Jira ticket: ", error)
-  };
+    console.error("Failed to import Jira ticket: ", error);
+    resp.status(500).send('Internal server error');
+  }
 };
 
 export {

@@ -18,7 +18,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ticketSchema } from "@/types";
 import { TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
 import { createTicket } from "@/utils/createTicket";
-import { capitalize } from "@/utils/capitalize";
 import { Task } from "@/features/dashboard/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
@@ -97,7 +96,7 @@ async function onSubmitJira(data: any) {
       if (field.name == "priority") {
         field = {
           ...field,
-          previous: capitalize(response.priority),
+          previous: response.priority,
         };
       }
       if (field.name == "description") {
