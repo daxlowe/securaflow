@@ -1,5 +1,5 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { Plus } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { CreateTicket } from "@/components/TicketPopup/Create";
 import { priorities, statuses } from "../data/data";
 import { ticketSchema } from "@/types";
 import { CreateTicketFromCVE } from "@/components/TicketPopup/CreateCVE";
+import { CreateTicketFromJira } from "@/components/TicketPopup/CreateJira";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { Task } from "../types";
 
@@ -19,6 +20,7 @@ export type TicketFormValues = z.infer<typeof ticketFormSchema>;
 
 export interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  data: TData[];
   refetch: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<Task[], Error>>;
@@ -27,6 +29,7 @@ export interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
   refetch,
+  data,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -91,13 +94,77 @@ export function DataTableToolbar<TData>({
             className="ml-auto h-8 lg:flex mr-2"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Create From CVE-ID
+            CVE-ID
           </Button>
         </DialogTrigger>
         <DialogContent>
           <CreateTicketFromCVE refetch={refetch} />
         </DialogContent>
       </Dialog>
+      {/* Dialog for "From JIRA" */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto h-8 lg:flex mr-2"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            JIRA
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <CreateTicketFromJira refetch={refetch} />
+        </DialogContent>
+      </Dialog>
+
+      {/* Button for "Export" */}
+      <Button
+        onClick={() => {
+          const tickets = data.map((row: any) => row.ticket);
+
+          const parsedData = tickets.map((entry) => ({
+            vulnerability: entry.vulnerability,
+            _id: entry._id,
+            title: entry.title,
+            team: entry.team.map((team: any) => ({
+              _id: team._id,
+              name: team.name,
+            })),
+            description: entry.description,
+            difficulty: entry.difficulty,
+            assignees: entry.assignees,
+            time_estimate: entry.time_estimate,
+            status_updates: entry.status_updates,
+            comments: entry.comments,
+            created_by: entry.created_by,
+          }));
+
+          // Convert JSON data to a JSON string
+          const jsonDataString = JSON.stringify(parsedData, null, 2);
+
+          // Create a Blob object to store the JSON data
+          const blob = new Blob([jsonDataString], { type: "application/json" });
+
+          // Create a temporary link element to trigger the download
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = "data.json";
+          document.body.appendChild(link);
+
+          // Simulate a click on the link to trigger the download
+          link.click();
+
+          // Remove the temporary link
+          document.body.removeChild(link);
+        }}
+        variant="outline"
+        size="sm"
+        className="ml-auto h-8 lg:flex mr-2"
+      >
+        <Download className="mr-2 h-4 w-4" />
+        Export
+      </Button>
 
       <DataTableViewOptions table={table} />
     </div>

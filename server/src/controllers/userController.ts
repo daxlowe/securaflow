@@ -47,21 +47,63 @@ const signupUser = async (request: Request, response: Response) => {
 };
 
 const updateUser = async (request: Request, response: Response) => {
-  console.log(request.body);
-  const id = request.body.user;
-  console.log(id);
   try {
-    const password = await User.validatePassword(request.body.password);
-    const data = {
-      first_name: request.body.first_name,
-      last_name: request.body.last_name,
-      email: request.body.email,
-      password: password,
-    };
-    const user = await User.findByIdAndUpdate(id, data);
+    const userId = request.body.user;
+    const userData = request.body;
+
+    // Construct the data object based on the presence of each field
+    const data: { [key: string]: any } = {};
+    if (userData.first_name) {
+      data.first_name = userData.first_name;
+    }
+    if (userData.last_name) {
+      data.last_name = userData.last_name;
+    }
+    if (userData.email) {
+      data.email = userData.email;
+    }
+    if (userData.password) {
+      const password = await User.validatePassword(userData.password);
+      data.password = password;
+    }
+    if (userData.roles) {
+      // Should be an array of strings. Empty array to remove all roles.
+      // Options include "user" and "admin".
+      data.roles = userData.roles;
+    }
+
+    console.log(data);
+    // Update the user only with the fields that are present and not null
+    const user = await User.findByIdAndUpdate(userId, data);
+
     response.status(200).json(user);
   } catch (error: any) {
+    console.error("Error updating user:", error.message);
     response.status(400).json({ error: error.message });
+  }
+};
+
+const deleteUser = async (request: Request, response: Response) => {
+  try {
+    // Retrieve user ID from request parameters or request body
+    const { userId } = request.params; // Assuming user ID is passed as a route parameter
+
+    // Check if user exists
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return response.status(404).json({ error: "User not found" });
+    }
+
+    // Delete the user
+    await User.deleteOne({ _id: userId });
+
+    // Respond with success message
+    return response.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    // Respond with error message
+    return response.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -82,14 +124,28 @@ const addGroupsToUser = async (
 
 const getUserData = async (request: Request, response: Response) => {
   const id = request.body.user;
-  if (!mongoose.Types.ObjectId.isValid(id))
+
+  // Check if the provided ID is a valid MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return response.status(404).json({ error: "No such user" });
+  }
 
-  const user = await User.findById(id).select("_id first_name last_name email");
+  try {
+    // Find the user by ID, excluding the password field
+    const user = await User.findById(id).select("-password");
 
-  if (!user) return response.status(404).json({ error: "No such user" });
+    // If user is not found, return 404 status with an error message
+    if (!user) {
+      return response.status(404).json({ error: "No such user" });
+    }
 
-  response.status(200).json(user);
+    // If user is found, return 200 status with the user data
+    response.status(200).json(user);
+  } catch (error) {
+    // If an error occurs during database query or processing, return 500 status with the error
+    console.error("Error fetching user data:", error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 const getUserGroups = async (request: Request, res: Response) => {
@@ -112,6 +168,25 @@ const getUserGroups = async (request: Request, res: Response) => {
   }
 };
 
+const getAllUsers = async (request: Request, response: Response) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find();
+
+    // Check if users were found
+    if (!users || users.length === 0) {
+      return response.status(404).json({ message: "No users found" });
+    }
+
+    // If users were found, send them as a response
+    return response.status(200).json(users);
+  } catch (error) {
+    // If an error occurred, return an error response
+    console.error("Error fetching users:", error);
+    return response.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export {
   addGroupsToUser,
   loginUser,
@@ -119,4 +194,6 @@ export {
   updateUser,
   getUserData,
   getUserGroups,
+  deleteUser,
+  getAllUsers,
 };

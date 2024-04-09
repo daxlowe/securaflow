@@ -43,6 +43,15 @@ const createDummyData = async (numTickets: number) => {
       { new: true }
     );
 
+    // Fisher-Yates shuffle function
+    function shuffleArray(array: any[]) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
     // Creating Tickets with varying properties and status updates
     const tickets = await Ticket.create(
       Array.from({ length: numTickets }, (_, index) => ({
@@ -50,7 +59,7 @@ const createDummyData = async (numTickets: number) => {
         description: faker.lorem.sentence(),
         difficulty: faker.number.int({ min: 1, max: 5 }),
         team: faker.helpers.arrayElements([group1._id, group2._id], 1),
-        assignees: faker.helpers.arrayElement(allUserIds),
+        assignees: [],
         time_estimate: faker.number.int({ min: 5, max: 30 }),
         status_updates: [
           {
@@ -83,24 +92,19 @@ const createDummyData = async (numTickets: number) => {
     for (let ticket of tickets) {
       const latestStatusUpdate = ticket.status_updates[0];
 
-      // Check if the latest status is 'Open' or if there are no assignees
-      if (latestStatusUpdate.body === "Open") {
-        continue;
+      // Check if the latest status is 'Open'
+      if (latestStatusUpdate.body !== "Open") {
+        const newAssignees = shuffleArray(
+          allUserIds.map((user) => user._id)
+        ).slice(0, Math.max(1, Math.floor(Math.random() * 4)));
+
+        // Use $push to add new assignees to the existing array
+        await Ticket.findByIdAndUpdate(
+          ticket._id,
+          { $push: { assignees: { $each: newAssignees } } },
+          { new: true }
+        );
       }
-
-      // Assuming you want to add only a few assignees, you can modify the logic here
-      const selectedAssignees = ticket.assignees.slice(0, 2); // Adjust the number of assignees as needed
-
-      await Promise.all(
-        selectedAssignees.map(async (userId) => {
-          // Update the ticket's assignees array
-          await Ticket.findByIdAndUpdate(
-            ticket._id,
-            { $push: { assignees: userId } },
-            { new: true }
-          );
-        })
-      );
     }
 
     console.log("Dummy data created successfully.");

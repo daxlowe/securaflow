@@ -2,43 +2,40 @@ import { toast } from "@/components/ui/use-toast";
 import { User } from "@/types";
 import { capitalize } from "@/utils/capitalize";
 
-export const removeUsers = async (
-  groupId: string,
-  user: User
-) => {
-  const options = {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${user.token}`,
-    },
-    body: JSON.stringify({ users: [user._id] }),
-  };
-
-  toast({
-    title: "Success",
-    description:
-      capitalize(user.first_name) +
-      " " +
-      capitalize(user.last_name) +
-      " deleted",
-  });
-
-  let response;
+export const removeUsers = async (userToDelete: User, user: User) => {
+  console.log(user);
   try {
-    //response = await fetch('http://localhost:3000/api/user')
-    response = await fetch(
-      `http://localhost:3000/api/group/${groupId}/removeUsers`,
-      options
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_DOMAIN}/api/user/${userToDelete._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    toast({
+      title: "Success",
+      description:
+        capitalize(userToDelete.first_name) +
+        " " +
+        capitalize(userToDelete.last_name) +
+        " deleted",
+    });
+
+    return response;
   } catch (error) {
     console.error(error);
+    toast({
+      title: "Error",
+      description: "Failed to remove user. Please try again later.",
+    });
     throw error;
   }
-
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
-
-  return response;
 };

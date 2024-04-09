@@ -81,13 +81,9 @@ let formFields = [
     options: selectOptionsStatus,
   },
   { name: "comments", label: "Comment" },
-  {
-    name: "vuln_json",
-    label: "All Vuln Info",
-  },
 ];
 
-async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
+async function onSubmitJira(data: z.infer<typeof cveFormSchema>) {
   const response = await lookupCve(data);
   if (response) {
     console.log(response);
@@ -95,25 +91,19 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
       if (field.name == "vuln_cve_id") {
         field = {
           ...field,
-          previous: response.summary.cveId,
+          previous: response.cveId,
         };
       }
       if (field.name == "vuln_priority") {
         field = {
           ...field,
-          previous: capitalize(response.summary.baseSeverity),
+          previous: capitalize(response.baseSeverity),
         };
       }
       if (field.name == "description") {
         field = {
           ...field,
-          previous: response.summary.description,
-        };
-      }
-      if (field.name == "vuln_json") {
-        field = {
-          ...field,
-          previous: response.all,
+          previous: response.description,
         };
       }
       return field;
@@ -124,7 +114,7 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
   return false;
 }
 
-export function CreateTicketFromCVE({
+export function CreateTicketFromJira({
   refetch,
 }: {
   refetch: (
@@ -154,7 +144,7 @@ export function CreateTicketFromCVE({
     <Form {...formCVE}>
       <form
         onSubmit={formCVE.handleSubmit(async (data) => {
-          const result = await onSubmitCVE(data);
+          const result = await onSubmitJira(data);
           if (result) {
             setShowTicket(true);
           }
