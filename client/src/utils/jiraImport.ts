@@ -2,7 +2,8 @@ import { toast } from "@/components/ui/use-toast";
 
 export interface jiraInfo {
     summary: string,
-    description: string
+    description: string,
+    priority: string
 };
 
 export const jiraImport = async (jiraData: any): Promise<jiraInfo | undefined> => {
