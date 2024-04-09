@@ -18,7 +18,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ticketSchema } from "@/types";
 import { TicketFormValues } from "@/features/dashboard/components/data-table-toolbar";
 import { createTicket } from "@/utils/createTicket";
-import { capitalize } from "@/utils/capitalize";
 import { Task } from "@/features/dashboard/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
@@ -98,12 +97,12 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
           previous: response.summary.cveId,
         };
       }
-      if (field.name == "vuln_priority") {
-        field = {
-          ...field,
-          previous: capitalize(response.summary.baseSeverity),
-        };
-      }
+      // if (field.name == "vuln_priority") {
+      //   field = {
+      //     ...field,
+      //     previous: capitalize(response.summary.baseSeverity),
+      //   };
+      // }
       if (field.name == "description") {
         field = {
           ...field,
