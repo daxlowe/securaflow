@@ -190,9 +190,12 @@ const getCveInfo = async (
     }
 
     return {
-      cveId: id,
-      description,
-      baseSeverity,
+      summary: {
+        cveId: id,
+        description,
+        baseSeverity,
+      },
+      all: vuln,
     };
   } catch (error) {
     console.error('Failed to fetch CVE info:', error);

@@ -69,6 +69,8 @@ const ticketSchema = z.object({
 
   comments: z.string().default(""),
   created_by: z.string().nullable().default(null),
+
+  vuln_json: z.lazy(() => z.record(z.any())).optional(),
 });
 
 const cveFormSchema = z.object({
