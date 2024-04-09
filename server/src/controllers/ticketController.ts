@@ -202,10 +202,8 @@ const getCveInfo = async (
   }
 }
 
-const getJiraTicket = async (
-  jiraID: string,
-) => {
-
+const getJiraTicket = async (req: Request, resp: Response) => {
+  const { username, apiKey, jiraId } = req.body;
 };
 
 export {

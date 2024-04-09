@@ -22,12 +22,6 @@ import { capitalize } from "@/utils/capitalize";
 import { Task } from "@/features/dashboard/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
-const cveFormSchema = z.object({
-  cve_id: z.string().regex(/^CVE-\d{4,}-\d+$/i, {
-    message: "CVE does not match expected format.",
-  }),
-});
-
 const ticketFormSchema = ticketSchema;
 
 const selectOptionsDifficulty = [
@@ -83,8 +77,8 @@ let formFields = [
   { name: "comments", label: "Comment" },
 ];
 
-async function onSubmitJira(data: z.infer<typeof cveFormSchema>) {
-  const response = await lookupCve(data);
+async function onSubmitJira(data: any) {
+  const response = await jiraImport(data);
   if (response) {
     console.log(response);
     formFields = formFields.map((field: any) => {

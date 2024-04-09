@@ -56,8 +56,8 @@ router.patch('/:id', updateTicket);
 // GET info related to a CVE
 router.get('/cve/:cveId', getCveTicketInfo);
 
-// GET ticket info from Jira
-router.get('/import/:jiraID', getJiraTicket);
+// Import ticket info from Jira to create a new ticket
+router.post('/import/jira', getJiraTicket);
 
 
 // Other user routes (POST, PUT, DELETE, etc.)
