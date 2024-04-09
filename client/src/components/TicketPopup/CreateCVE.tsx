@@ -20,6 +20,7 @@ import { TicketFormValues } from "@/features/dashboard/components/data-table-too
 import { createTicket } from "@/utils/createTicket";
 import { Task } from "@/features/dashboard/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { capitalize } from "@/utils/capitalize";
 
 const cveFormSchema = z.object({
   cve_id: z.string().regex(/^CVE-\d{4,}-\d+$/i, {
@@ -97,12 +98,12 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
           previous: response.summary.cveId,
         };
       }
-      // if (field.name == "vuln_priority") {
-      //   field = {
-      //     ...field,
-      //     previous: capitalize(response.summary.baseSeverity),
-      //   };
-      // }
+      if (field.name == "vuln_priority" && response.summary.baseSeverity) {
+        field = {
+          ...field,
+          previous: capitalize(response.summary.baseSeverity),
+        };
+      }
       if (field.name == "description") {
         field = {
           ...field,
