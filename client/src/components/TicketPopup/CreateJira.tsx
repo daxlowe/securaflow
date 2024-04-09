@@ -87,10 +87,10 @@ async function onSubmitJira(data: any) {
   if (response) {
     console.log(response);
     formFields = formFields.map((field: any) => {
-      if (field.name == "summary") {
+      if (field.name == "title") {
         field = {
           ...field,
-          previous: response.summary,
+          previous: response.title,
         };
       }
       if (field.name == "priority") {

@@ -1,7 +1,7 @@
 import { toast } from "@/components/ui/use-toast";
 
 export interface jiraInfo {
-    summary: string,
+    title: string,
     description: string,
     priority: string
 };
