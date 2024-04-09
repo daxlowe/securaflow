@@ -206,24 +206,34 @@ const getJiraTicket = async (req: Request, resp: Response) => {
   const { username, apiKey, jiraId } = req.body;
   const url = `https://securaflow.atlassian.net/rest/api/2/issue/${jiraId}`
   const auth = Buffer.from(username + ":" + apiKey).toString('base64');
-  const response = await fetch(url,
-    {
-      method: "GET",
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Accept': 'application/json'
+  try {
+    const response = await fetch(url,
+      {
+        method: "GET",
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Accept': 'application/json'
+        }
       }
+    );
+
+    if(!response.ok) {
+      return null;
     }
-  );
 
-  if(!response.ok) {
-    return null;
-  }
+    const data = await response.json();
+    console.log(data);
 
-  const data = response.json();
-  console.log(data);
+    const title = data.fields.summary;
+    const description = data.fields.description;
+    const priority = data.fields.priority;
 
-
+    return {
+      jiraInfo: {title, description, priority}
+    };
+  } catch (error) {
+    console.error("Failed to import Jira ticket: ", error)
+  };
 };
 
 export {
