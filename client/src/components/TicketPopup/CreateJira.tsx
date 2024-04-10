@@ -11,7 +11,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { z } from "zod";
-import { lookupCve } from "@/utils/lookupCve";
+import { jiraImport } from "@/utils/jiraImport";
 import TicketForm from "./TicketForm";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,12 +20,13 @@ import { TicketFormValues } from "@/features/dashboard/components/data-table-too
 import { createTicket } from "@/utils/createTicket";
 import { Task } from "@/features/dashboard/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
-import { capitalize } from "@/utils/capitalize";
 
-const cveFormSchema = z.object({
-  cve_id: z.string().regex(/^CVE-\d{4,}-\d+$/i, {
-    message: "CVE does not match expected format.",
+const jiraFormSchema = z.object({
+  username: z.string().email({
+    message: "username must be an email",
   }),
+  apiKey: z.string(),
+  jiraId: z.string(),
 });
 
 const ticketFormSchema = ticketSchema;
@@ -81,39 +82,30 @@ let formFields = [
     options: selectOptionsStatus,
   },
   { name: "comments", label: "Comment" },
-  {
-    name: "vuln_json",
-    label: "All Vuln Info",
-  },
 ];
 
-async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
-  const response = await lookupCve(data);
+async function onSubmitJira(data: any) {
+  const response = await jiraImport(data);
   if (response) {
     console.log(response);
+    console.log(response.jiraInfo.title);
     formFields = formFields.map((field: any) => {
-      if (field.name == "vuln_cve_id") {
+      if (field.name == "title") {
         field = {
           ...field,
-          previous: response.summary.cveId,
+          previous: response.jiraInfo.title,
         };
       }
-      if (field.name == "vuln_priority" && response.summary.baseSeverity) {
+      if (field.name == "vuln_priority") {
         field = {
           ...field,
-          previous: capitalize(response.summary.baseSeverity),
+          previous: response.jiraInfo.priority,
         };
       }
       if (field.name == "description") {
         field = {
           ...field,
-          previous: response.summary.description,
-        };
-      }
-      if (field.name == "vuln_json") {
-        field = {
-          ...field,
-          previous: response.all,
+          previous: response.jiraInfo.description,
         };
       }
       return field;
@@ -124,7 +116,7 @@ async function onSubmitCVE(data: z.infer<typeof cveFormSchema>) {
   return false;
 }
 
-export function CreateTicketFromCVE({
+export function CreateTicketFromJira({
   refetch,
 }: {
   refetch: (
@@ -132,7 +124,7 @@ export function CreateTicketFromCVE({
   ) => Promise<QueryObserverResult<Task[], Error>>;
 }) {
   const [showTicket, setShowTicket] = useState(false);
-  const formCVE = useForm<z.infer<typeof cveFormSchema>>();
+  const formJira = useForm<z.infer<typeof jiraFormSchema>>();
   const formTicket = useForm<TicketFormValues>({
     resolver: zodResolver(ticketFormSchema),
   });
@@ -151,10 +143,10 @@ export function CreateTicketFromCVE({
       formFields={formFields}
     />
   ) : (
-    <Form {...formCVE}>
+    <Form {...formJira}>
       <form
-        onSubmit={formCVE.handleSubmit(async (data) => {
-          const result = await onSubmitCVE(data);
+        onSubmit={formJira.handleSubmit(async (data) => {
+          const result = await onSubmitJira(data);
           if (result) {
             setShowTicket(true);
           }
@@ -162,16 +154,48 @@ export function CreateTicketFromCVE({
         className="space-y-8"
       >
         <FormField
-          control={formCVE.control}
-          name="cve_id"
+          control={formJira.control}
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>CVE-ID</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Enter CVE-ID" {...field} />
+                <Input placeholder="Enter Jira Username" {...field} />
               </FormControl>
               <FormDescription>
-                This is the CVE-ID you want to pull from
+                This is the email you use to log in to Jira
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={formJira.control}
+          name="apiKey"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>API Key</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter Jira API Key" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your API key generated for Jira
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={formJira.control}
+          name="jiraId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Jira Issue ID</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter Jira issue ID" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is unique ID for the Jira issue you want to import
               </FormDescription>
               <FormMessage />
             </FormItem>

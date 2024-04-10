@@ -1,9 +1,14 @@
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { deleteTicket } from "@/utils/deleteTicket";
-import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import {
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Task } from "@/features/dashboard/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
+import { Button } from "../ui/button";
 
 interface DeleteTicketProps {
   ticket_id: string;
@@ -34,16 +39,13 @@ export function DeleteTicket({ ticket_id, refetch }: DeleteTicketProps) {
       <DialogHeader>
         <DialogTitle>Are you sure you want to delete this ticket?</DialogTitle>
       </DialogHeader>
-      <DialogDescription>
-        <div className="flex space-x-2">
-          <DialogClose>Cancel</DialogClose>
-          <DialogClose>
-            <button type="submit" onClick={() => onDelete(ticket_id)}>
-              Delete
-            </button>
-          </DialogClose>
-        </div>
-      </DialogDescription>
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button type="submit" onClick={() => onDelete(ticket_id)}>
+            Delete
+          </Button>
+        </DialogClose>
+      </DialogFooter>
     </>
   );
 }

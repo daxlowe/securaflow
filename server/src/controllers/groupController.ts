@@ -1,10 +1,14 @@
 import mongoose, { mongo } from "mongoose";
 import { Request, Response } from "express";
 import Ticket from "../models/Ticket";
-import Group from "../models/Group";
+import Group, { GroupDocument } from "../models/Group";
 import User from "../models/User";
 import { addGroupsToUser } from "./userController";
 import { setTicketTeam } from "./ticketController";
+import {
+  removeUsersFromGroupService,
+  addUserToGroupService,
+} from "../services/groupServices";
 
 // GET all users in a specific group
 const getAllUsersInGroup = async (req: Request, res: Response) => {
@@ -37,74 +41,44 @@ const getAllUsersInGroup = async (req: Request, res: Response) => {
   }
 };
 
-// GET all tickets
-const getAllGroups = async (req: Request, res: Response) => {
-  const user_id = req.body.user._id;
-  const groups = await User.findById(user_id).select("groups");
-  console.log(groups);
-  const tickets = await Ticket.find({ team: [groups] });
-  console.log(tickets);
-  res.status(200).json(tickets);
-};
-
-// GET a single ticket
-const getSingleTicket = async (req: Request, res: Response) => {
-  const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return res.status(404).json({ error: "No such ticket" });
-
-  const ticket = await Ticket.findById(id);
-
-  if (!ticket) return res.status(404).json({ error: "No such ticket" });
-
-  res.status(200).json(ticket);
-};
-
 // POST a new ticket
 const createGroup = async (req: Request, res: Response) => {
-  const { name, permissions, users, tickets } = req.body;
-
-  let emptyFields = [];
-
-  if (!name) emptyFields.push("Name");
-
-  if (!permissions) emptyFields.push("Permissions");
-
-  if (!users) emptyFields.push("users");
-
-  if (!tickets) emptyFields.push("tickets");
-
-  if (emptyFields.length > 0)
-    return res
-      .status(400)
-      .json({ error: `Missing required fields: ${emptyFields}`, emptyFields });
+  const { name } = req.body;
 
   try {
-    const group: Group = await Group.create({
-      name,
-      permissions,
-      users,
-      tickets,
-    });
+    // Create a new group with the provided name
+    const group: GroupDocument = await Group.create({ name });
 
-    const filter = { _id: { $in: [...tickets] } };
-    const updateTicket = {
-      $set: {
-        team: group._id,
-      },
-    };
-    // Add the new ticket to each assignee's array of tickets
-    if (group.users && group.users.length > 0) {
-      await Promise.all([
-        group.users.map((userId) => addGroupsToUser(userId, [group._id])),
-        Ticket.updateMany(filter, updateTicket),
-      ]);
+    // Respond with the created group
+    res.status(201).json(group);
+  } catch (error) {
+    // If an error occurs, respond with a 400 status and the error message
+    console.error("Error creating group:", error);
+    res.status(400).json({ error: "Failed to create group" });
+  }
+};
+
+const deleteGroup = async (request: Request, response: Response) => {
+  try {
+    // Retrieve user ID from request parameters or request body
+    const { groupId } = request.params; // Assuming user ID is passed as a route parameter
+
+    // Check if user exists
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return response.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json(group);
+    // Delete the user
+    await Group.deleteOne({ _id: groupId });
+
+    // Respond with success message
+    return response.status(200).json({ message: "Team deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: error });
+    console.error("Error deleting team:", error);
+    // Respond with error message
+    return response.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -133,7 +107,77 @@ const getGroupData = async (req: Request, res: Response) => {
 
   if (!group) return res.status(404).json({ error: "No such group" });
 
-  res.status(200).json(group);
+  return res.status(200).json(group);
 };
 
-export { createGroup, addTicketsToGroup, getGroupData, getAllUsersInGroup };
+export async function modifyGroup(request: Request, response: Response) {
+  const groupID = request.params.groupId;
+  const userID = request.params.userId;
+}
+
+export async function modifyAllGroups(request: Request, response: Response) {
+  try {
+    // Loop through each object in request.body and update the corresponding document
+    for (const groupData of request.body) {
+      const { _id, ...updateData } = groupData; // Extract _id and other update fields
+
+      // Update the document with the given _id
+      await Group.updateOne({ _id }, { $set: updateData });
+    }
+
+    response.json({ message: `${request.body.length} documents updated` });
+  } catch (error) {
+    console.error("Error updating documents:", error);
+    response
+      .status(500)
+      .json({ error: "An error occurred while updating documents" });
+  }
+}
+
+export async function removeUsersFromGroup(
+  request: Request,
+  response: Response
+) {
+  const groupID = request.params.groupId;
+  const users = request.body.users;
+  const modifiedGroup = await removeUsersFromGroupService(
+    { _id: groupID },
+    users
+  );
+  return response.status(200).json(modifiedGroup);
+}
+
+export async function addUsersToGroup(req: Request, response: Response) {
+  const groupId = req.params.groupId;
+  const users = req.body.users;
+  const modifiedGroup = await addUserToGroupService({ _id: groupId }, users);
+  return response.status(200).json(modifiedGroup);
+}
+
+const getAllGroups = async (request: Request, response: Response) => {
+  try {
+    // Fetch all groups from the database
+    const groups = await Group.find();
+
+    // Check if groups were found
+    if (!groups || groups.length === 0) {
+      return response.status(404).json({ message: "No users found" });
+    }
+
+    // If groups were found, send them as a response
+    return response.status(200).json(groups);
+  } catch (error) {
+    // If an error occurred, return an error response
+    console.error("Error fetching users:", error);
+    return response.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export {
+  createGroup,
+  addTicketsToGroup,
+  getGroupData,
+  getAllUsersInGroup,
+  getAllGroups,
+  deleteGroup,
+};

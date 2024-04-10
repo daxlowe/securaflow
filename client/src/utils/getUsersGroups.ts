@@ -1,6 +1,6 @@
 import { User, Group } from "@/types";
 
-export const getGroups = async (user: User): Promise<Array<Group>> => {
+export const getUsersGroups = async (user: User): Promise<Array<Group>> => {
   let groups: Array<Group> = [];
 
   try {

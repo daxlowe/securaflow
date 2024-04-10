@@ -190,14 +190,53 @@ const getCveInfo = async (
     }
 
     return {
-      cveId: id,
-      description,
-      baseSeverity,
+      summary: {
+        cveId: id,
+        description,
+        baseSeverity,
+      },
+      all: vuln,
     };
   } catch (error) {
     console.error('Failed to fetch CVE info:', error);
   }
 }
+
+const getJiraTicket = async (req: Request, resp: Response) => {
+  const { username, apiKey, jiraId } = req.body;
+  const url = `https://securaflow.atlassian.net/rest/api/2/issue/${jiraId}`
+  const auth = Buffer.from(username + ":" + apiKey).toString('base64');
+  try {
+    const response = await fetch(url,
+      {
+        method: "GET",
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Accept': 'application/json'
+        }
+      }
+    );
+
+    if(!response.ok) {
+      resp.status(404).send('Error fetching Jira ticket');
+      return;
+    }
+
+    const data = await response.json();
+    console.log(data);
+
+    const title = data.fields.summary;
+    const description = data.fields.description;
+    const priority = data.fields.priority.name;
+
+    resp.status(200).json({
+      jiraInfo: {title, description, priority}
+    });
+  } catch (error) {
+    console.error("Failed to import Jira ticket: ", error);
+    resp.status(500).send('Internal server error');
+  }
+};
 
 export {
   getAllPossibleTickets,
@@ -208,4 +247,5 @@ export {
   updateTicket,
   setTicketTeam,
   getCveTicketInfo,
+  getJiraTicket
 };

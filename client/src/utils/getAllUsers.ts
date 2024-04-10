@@ -1,6 +1,6 @@
 import { User } from "@/types";
 
-const getUsersInGroup = async (user: User, groupId: string) => {
+const getAllUsers = async (user: User) => {
   const options = {
     method: "GET",
     headers: {
@@ -10,7 +10,7 @@ const getUsersInGroup = async (user: User, groupId: string) => {
   };
 
   const response = await fetch(
-    `${import.meta.env.VITE_SERVER_DOMAIN}/api/group/${groupId}/users`,
+    `${import.meta.env.VITE_SERVER_DOMAIN}/api/user/all`,
     options
   );
   if (!response.ok) {
@@ -21,4 +21,4 @@ const getUsersInGroup = async (user: User, groupId: string) => {
   return data;
 };
 
-export default getUsersInGroup;
+export default getAllUsers;

@@ -4,7 +4,7 @@ export type Group = {
   _id: string;
   name: string;
   permissions: Permissions;
-  users: Array<User>;
+  users: Array<string>;
 };
 
 export type Permissions = {
@@ -48,6 +48,7 @@ export type User = {
   first_name: string;
   last_name: string;
   token?: string;
+  roles?: string[];
 };
 
 const ticketSchema = z.object({
@@ -69,6 +70,8 @@ const ticketSchema = z.object({
 
   comments: z.string().default(""),
   created_by: z.string().nullable().default(null),
+
+  vuln_json: z.lazy(() => z.record(z.any())).optional(),
 });
 
 const cveFormSchema = z.object({

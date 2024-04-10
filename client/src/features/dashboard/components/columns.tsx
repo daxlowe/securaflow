@@ -192,8 +192,8 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <ScrollArea>
           <div className="flex max-w-[80px] space-x-2 h-[50px] items-center px-2 whitespace-nowrap">
-            {assignee.map((assigneeName) => (
-              <HoverCard>
+            {assignee.map((assigneeName, index) => (
+              <HoverCard key={index}>
                 <HoverCardTrigger>
                   <Avatar className="h-[35px] w-[35px]">
                     <AvatarImage src="https://githu" />

@@ -1,3 +1,4 @@
+import { isStrongPassword } from "validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,15 +21,25 @@ import { User } from "@/types/";
 import { useEffect, useState } from "react";
 
 const profileFormSchema = z.object({
-  name: z
+  first_name: z
     .string()
     .min(2, {
-      message: "Name must be at least 2 characters.",
+      message: "First Name must be at least 2 characters.",
     })
     .max(30, {
-      message: "Name must not be longer than 30 characters.",
-    }),
-  email: z.string().email(),
+      message: "First Name must not be longer than 30 characters.",
+    })
+    .optional(),
+  last_name: z
+    .string()
+    .min(2, {
+      message: "Last Name must be at least 2 characters.",
+    })
+    .max(30, {
+      message: "Last Name must not be longer than 30 characters.",
+    })
+    .optional(),
+  email: z.string().email().optional(),
   password: z
     .string()
     .min(6, {
@@ -47,16 +58,21 @@ export function ProfileForm() {
 
   const [defaultValues, setDefaultValues] = useState<
     Partial<ProfileFormValues>
-  >({ name: "", email: "", password: "" });
+  >({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+  });
 
   useEffect(() => {
     async function fetchData() {
       const data: User = await getUserData(user);
-      console.log(data);
       const initialValues: Partial<ProfileFormValues> = {
-        name: data.first_name + " " + data.last_name,
-        email: data.email,
-        password: "", // set to an empty string or some default value
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        password: "",
       };
 
       setDefaultValues(initialValues);
@@ -67,21 +83,64 @@ export function ProfileForm() {
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
     mode: "onChange",
   });
 
   async function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try {
+      // Check if at least one field is not null
+      if (!(data.first_name || data.last_name || data.email || data.password)) {
+        toast({
+          title: "Validation Error",
+          description:
+            "At least one of the fields (First Name, Last Name, Email, Password) must be filled.",
+        });
+        return; // Stop submission if all fields are null
+      }
 
-    modifyUser(data, user);
+      // Check if password is strong enough
+      if (data.password && !isStrongPassword(data.password)) {
+        toast({
+          title: "Password Weak",
+          description:
+            "Password must be at least 6 characters long and contain a combination of letters, numbers, and special characters.",
+        });
+        return; // Stop submission if password is weak
+      }
+
+      // Construct the payload with null values for fields not filled
+      const payload: ProfileFormValues = {
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        password: data.password || "",
+      };
+
+      // Remove null values from payload
+      const filteredPayload = Object.fromEntries(
+        Object.entries(payload).filter(([_, value]) => value !== null)
+      );
+
+      // Perform submission
+      toast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">
+              {JSON.stringify(filteredPayload, null, 2)}
+            </code>
+          </pre>
+        ),
+      });
+
+      modifyUser(filteredPayload, user);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again later.",
+      });
+    }
   }
 
   return (
@@ -89,16 +148,36 @@ export function ProfileForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
+          name="first_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder={defaultValues.name} {...field} />
+                <Input
+                  placeholder={defaultValues.first_name || ""}
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
-                This is the name that will be displayed on your profile and in
-                emails.
+                This is the first name that will be displayed on your profile
+                and in emails.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="last_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input placeholder={defaultValues.last_name || ""} {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the last name that will be displayed on your profile and
+                in emails.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -111,7 +190,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder={defaultValues.email} {...field} />
+                <Input placeholder={defaultValues.email || ""} {...field} />
               </FormControl>
               <FormDescription>
                 This is the email tied to your account.

@@ -2,9 +2,12 @@ import { toast } from "@/components/ui/use-toast";
 
 
 export interface cveInfo {
-  cveId: string;
-  description: string;
-  baseSeverity: "LOW" | "MEDIUM" | "HIGH";
+  summary: {
+    cveId: string;
+    description: string;
+    baseSeverity: "LOW" | "MEDIUM" | "HIGH";
+  };
+  all: any;
 }
 
 export const lookupCve = async (cveIdData: any): Promise<cveInfo | undefined> => {

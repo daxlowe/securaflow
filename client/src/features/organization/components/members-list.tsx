@@ -1,43 +1,37 @@
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { User } from "@/types";
+import { Group, User } from "@/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import { capitalize } from "@/utils/capitalize";
-import { permissions } from "@/stores";
-import { modifyPermission } from "../utils/modifyPermission";
-import { UserRoundMinus, UserRoundPlus } from "lucide-react";
+import { ChevronDown, UserRoundMinus, UserRoundPlus } from "lucide-react";
 import DeleteMember from "./delete-member";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import AddMember from "./add-member";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { modifyGroups } from "@/utils/modifyGroups";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface TeamMembersProps {
-  data: User[];
-  groupId: string;
+  users: User[];
+  groups: Group[];
 }
 
-export function TeamMembers({ data, groupId }: TeamMembersProps) {
+export function TeamMembers({ users, groups }: TeamMembersProps) {
   function getInitials(name: string) {
     return name
       .toUpperCase()
@@ -45,6 +39,8 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
       .map((word) => word[0]) // Get the first letter of each word
       .join(""); // Join the letters back together
   }
+
+  const { user } = useAuthContext();
 
   return (
     <Card>
@@ -56,8 +52,8 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
               Manage members of your Organization
             </CardDescription>
           </div>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+          <Dialog>
+            <DialogTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
@@ -65,80 +61,110 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
               >
                 <UserRoundPlus className="h-4 w-4" />
               </Button>
-            </AlertDialogTrigger>
+            </DialogTrigger>
             <AddMember />
-          </AlertDialog>
+          </Dialog>
         </div>
       </CardHeader>
-      <ScrollArea className="h-[70vh]">
+      <ScrollArea className="h-[60vh]">
         <CardContent className="grid gap-6">
-          {data.map((user) => {
-            const [open, setOpen] = useState(false);
-            const [value, setValue] = useState(permissions[0].title);
+          {users.map((currentUser: User) => {
+            let tempGroups: Group[] = [];
+            groups.map((group) => {
+              if (group.users.includes(currentUser._id)) {
+                tempGroups.push(group);
+              }
+            });
+
+            const [activeGroups, setActiveGroups] =
+              useState<Group[]>(tempGroups);
+
+            groups.map((group) => {
+              if (activeGroups.includes(group)) {
+                if (!group.users.includes(currentUser._id)) {
+                  group.users.push(currentUser._id);
+                }
+              } else {
+                if (group.users.includes(currentUser._id)) {
+                  group.users = group.users.filter(
+                    (prevUser) => prevUser !== currentUser._id
+                  );
+                }
+              }
+            });
+
             return (
               <div
                 className="flex items-center justify-between space-x-4"
-                key={user._id}
+                key={currentUser._id}
               >
                 <div className="flex items-center space-x-4">
                   <Avatar>
                     <AvatarImage src="/avatars/01.png" />
                     <AvatarFallback>
-                      {getInitials(user.first_name + " " + user.last_name)}
+                      {getInitials(
+                        currentUser.first_name + " " + currentUser.last_name
+                      )}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm font-medium leading-none">
-                      {capitalize(user.first_name) +
+                      {capitalize(currentUser.first_name) +
                         " " +
-                        capitalize(user.last_name)}
+                        capitalize(currentUser.last_name)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {user.email}
+                      {currentUser.email}
                     </p>
                   </div>
                 </div>
                 <div className="flex content-center align-center gap-5">
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="ml-auto">
-                        {value}{" "}
-                        <ChevronDownIcon className="ml-2 h-4 w-4 text-muted-foreground" />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        className="flex h-10 w-[200px] items-center justify-between overflow-hidden hover:bg-background"
+                        variant="outline"
+                      >
+                        <div className="w-[300px] overflow-hidden justify-start flex">
+                          {activeGroups.length > 0 ? (
+                            activeGroups.map((group) => group.name).join(", ")
+                          ) : (
+                            <span className="text-muted">No Active Teams</span>
+                          )}
+                        </div>
+                        <ChevronDown className="h-4 w-4 opacity-50" />
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="p-0" align="end">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>No roles found.</CommandEmpty>
-                          <CommandGroup>
-                            {permissions.map((permission, index) => (
-                              <CommandItem
-                                key={permission.title}
-                                className="teamaspace-y-1 flex flex-col items-start px-4 py-2"
-                                value={permission.title}
-                                onSelect={(currentValue) => {
-                                  if (currentValue != value) {
-                                    modifyPermission(groupId, user, index);
-                                  }
-                                  setValue(
-                                    currentValue === value
-                                      ? ""
-                                      : capitalize(currentValue)
-                                  );
-                                  setOpen(false);
-                                }}
-                              >
-                                <p>{permission.title}</p>
-                                <p className="text-sm text-muted-foreground">
-                                  {permission.description}
-                                </p>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-[200px]">
+                      <ScrollArea className="w-full h-[300px] overflow-hidden pr-[15px]">
+                        {groups.map((group) => (
+                          <DropdownMenuCheckboxItem
+                            key={group._id}
+                            checked={activeGroups.includes(group)}
+                            onCheckedChange={(checked) => {
+                              // Update active groups based on checked state
+                              if (checked) {
+                                setActiveGroups((prevActiveGroups) => [
+                                  ...prevActiveGroups,
+                                  group,
+                                ]);
+                              } else {
+                                setActiveGroups((prevActiveGroups) =>
+                                  prevActiveGroups.filter(
+                                    (prevGroup) => prevGroup._id !== group._id
+                                  )
+                                );
+                              }
+                            }}
+                          >
+                            {group.name}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </ScrollArea>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
@@ -149,7 +175,7 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
                         <UserRoundMinus className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteMember user={user} />
+                    <DeleteMember userToDelete={currentUser} />
                   </AlertDialog>
                 </div>
               </div>
@@ -157,6 +183,16 @@ export function TeamMembers({ data, groupId }: TeamMembersProps) {
           })}
         </CardContent>
       </ScrollArea>
+      <CardFooter className="mt-[20px] flex justify-end">
+        <Button
+          className="mr-[60px]"
+          onClick={() => {
+            modifyGroups(groups, user);
+          }}
+        >
+          Update Teams
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

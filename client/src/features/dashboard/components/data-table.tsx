@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="space-y-4">
-        <DataTableToolbar table={table} refetch={refetch} />
+        <DataTableToolbar table={table} data={data} refetch={refetch} />
         <div className="rounded-md border min-w-[575px] bg-card">
           <Table>
             <TableHeader>

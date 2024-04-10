@@ -10,25 +10,53 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLogout } from "@/hooks/useLogout";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import * as pfpPlaceholder from "@/assets/images/pfp-placeholder.jpg";
 import { Link } from "react-router-dom";
+import { getUserData } from "@/utils/getUserData";
+import { User } from "@/types";
+import { useEffect, useState } from "react";
+
+async function getUser(user: User) {
+  const data = await getUserData(user);
+  return data;
+}
+
+function getInitials(name: string) {
+  return name
+    .toUpperCase()
+    .split(/\s+/) // Split by spaces
+    .map((word) => word[0]) // Get the first letter of each word
+    .join(""); // Join the letters back together
+}
 
 export function UserNav() {
   const { logout } = useLogout();
   const { user } = useAuthContext();
+  const [userData, setUserData] = useState<any>(null);
 
-  //@ts-expect-error user is type never
-  const email = user.email;
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getUserData(user);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
 
-  //@ts-expect-error user is type never
-  const firstName = user.first;
+    if (user) {
+      fetchData();
+    }
+  }, [user]); // Run this effect whenever the user changes
 
-  //@ts-expect-error user is type never
-  const lastName = user.last;
+  const [userInitials, setUserInitials] = useState("");
 
-  const pfp = pfpPlaceholder.default;
+  getUser(user).then((userData) => {
+    const initials = getInitials(
+      userData.first_name + " " + userData.last_name
+    );
+    setUserInitials(initials);
+  });
 
-  console.log(user);
   const handleLogout = () => {
     logout();
   };
@@ -38,26 +66,33 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={pfp} alt="user" />
-            <AvatarFallback>P</AvatarFallback>
+            <AvatarImage src={"asdfa"} alt="user" />
+            <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {firstName} {lastName}
-            </p>
+            <h1>
+              {userData ? userData.first_name + " " + userData.last_name : ""}
+            </h1>
             <p className="text-xs leading-none text-muted-foreground">
-              {email}
+              {userData ? userData.email : ""}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <Link to="/settings/profile">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>User Settings</DropdownMenuItem>
         </Link>
+        {userData && userData.roles?.includes("admin") ? (
+          <Link to="/manage/users">
+            <DropdownMenuItem>Admin Panel</DropdownMenuItem>
+          </Link>
+        ) : (
+          <></>
+        )}
         <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

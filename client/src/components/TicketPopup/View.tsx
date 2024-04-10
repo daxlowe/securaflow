@@ -7,16 +7,16 @@ import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
-import { getGroups } from "@/utils/getGroups";
+import { getUsersGroups } from "@/utils/getUsersGroups";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import getUsersInGroup from "@/utils/getUsersInGroup";
 import { useQuery } from "@tanstack/react-query";
 import { capitalize } from "@/utils/capitalize";
+import getUsersInGroup from "@/utils/getUsersInGroup";
 
 const ticketFormSchema = ticketSchema;
 
 async function getTeamsData(user: User) {
-  return getGroups(user);
+  return getUsersGroups(user);
 }
 
 async function getAssigneesData(user: User, teams: Group[] | undefined) {

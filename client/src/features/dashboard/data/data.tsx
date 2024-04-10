@@ -62,24 +62,18 @@ export const priorities = [
     label: "High",
     value: "High",
     icon: ArrowUpIcon,
-    color: "text-muted-foreground", // Set the color property
+    color: "text-orange-500", // Set the color property
   },
   {
     label: "Medium",
     value: "Medium",
     icon: ArrowRightIcon,
-    color: "text-muted-foreground/60", // Set the color property
+    color: "text-yellow-500/60", // Set the color property
   },
   {
     label: "Low",
     value: "Low",
     icon: ArrowDownIcon,
-    color: "text-muted-foreground/30", // Set the color property
-  },
-  {
-    label: "Low",
-    value: "low",
-    icon: ArrowDownIcon,
-    color: "text-green-500", // Set the color property
+    color: "text-green-500/30", // Set the color property
   },
 ];
