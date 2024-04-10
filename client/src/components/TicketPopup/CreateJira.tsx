@@ -26,7 +26,7 @@ const jiraFormSchema = z.object({
     message: "username must be an email",
   }),
   apiKey: z.string(),
-  jiraId: z.string()
+  jiraId: z.string(),
 });
 
 const ticketFormSchema = ticketSchema;
@@ -69,8 +69,10 @@ let formFields = [
     label: "Difficulty",
     options: selectOptionsDifficulty,
   },
+  { name: "vuln_name", label: "Vulnerability Name" },
+  { name: "vuln_cve_id", label: "CVE ID" },
   {
-    name: "priority",
+    name: "vuln_priority",
     label: "Priority",
     options: selectOptionsPriority,
   },
@@ -94,7 +96,7 @@ async function onSubmitJira(data: any) {
           previous: response.jiraInfo.title,
         };
       }
-      if (field.name == "priority") {
+      if (field.name == "vuln_priority") {
         field = {
           ...field,
           previous: response.jiraInfo.priority,
