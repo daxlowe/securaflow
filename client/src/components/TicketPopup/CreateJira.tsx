@@ -86,23 +86,24 @@ async function onSubmitJira(data: any) {
   const response = await jiraImport(data);
   if (response) {
     console.log(response);
+    console.log(response.jiraInfo.title);
     formFields = formFields.map((field: any) => {
       if (field.name == "title") {
         field = {
           ...field,
-          previous: response.title,
+          previous: response.jiraInfo.title,
         };
       }
       if (field.name == "priority") {
         field = {
           ...field,
-          previous: response.priority,
+          previous: response.jiraInfo.priority,
         };
       }
       if (field.name == "description") {
         field = {
           ...field,
-          previous: response.description,
+          previous: response.jiraInfo.description,
         };
       }
       return field;

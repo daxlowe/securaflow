@@ -1,12 +1,12 @@
 import { toast } from "@/components/ui/use-toast";
 
-export interface jiraInfo {
-    title: string,
-    description: string,
-    priority: string
-};
+// export interface jiraInfo {
+//     title: string,
+//     description: string,
+//     priority: string
+// };
 
-export const jiraImport = async (jiraData: any): Promise<jiraInfo | undefined> => {
+export const jiraImport = async (jiraData: any): Promise<any | undefined> => {
     try {
         const storedData = localStorage.getItem("user");
         let authToken = "";
@@ -42,7 +42,7 @@ export const jiraImport = async (jiraData: any): Promise<jiraInfo | undefined> =
             const errorMessage = await response.text();
             throw new Error(`Failed to import Jira info: ${errorMessage}`);
         }
-        const responseJson: jiraInfo = JSON.parse(await response.text());
+        const responseJson = JSON.parse(await response.text());
         return responseJson;
     } catch (error: any) {
         console.error(error);
