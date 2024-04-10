@@ -136,7 +136,7 @@ export function ModifyTicket({
       form={form}
       onSubmit={onSubmit}
       title={"Edit Ticket"}
-      submitTitle={"Edit"}
+      submitTitle={"Save"}
       formFields={formFields}
     />
   );
