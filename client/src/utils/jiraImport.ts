@@ -1,11 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
 
-// export interface jiraInfo {
-//     title: string,
-//     description: string,
-//     priority: string
-// };
-
 export const jiraImport = async (jiraData: any): Promise<any | undefined> => {
     try {
         const storedData = localStorage.getItem("user");
